@@ -1,3 +1,5 @@
-print("Hello world")
-for i in range(10):
-    print(i)
+from new_func import foo
+
+print("Enter your name")
+name = input()
+foo(name)
