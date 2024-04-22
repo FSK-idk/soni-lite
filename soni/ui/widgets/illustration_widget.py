@@ -9,14 +9,14 @@ from PySide6.QtCore import (
 )
 
 # TODO: add functionality
-class AudioPlayerWidget(QWidget):
+class Illustration(QWidget):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         
-        self.setMinimumSize(30, 30)
+        self.setMinimumSize(300, 300)
 
         palette = QPalette()
-        palette.setColor(QPalette.ColorRole.Window, Qt.GlobalColor.magenta)
+        palette.setColor(QPalette.ColorRole.Window, Qt.GlobalColor.cyan)
 
         self.setAutoFillBackground(True)
         self.setPalette(palette)

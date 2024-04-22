@@ -4,11 +4,11 @@ from PySide6.QtWidgets import (
     QApplication,
 )
 
-from ui.windows.player_window import PlayerWindow
+from ui.windows.audio_player_window import AudioPlayerWindow
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyle("Fusion")
-    ex = PlayerWindow()
+    ex = AudioPlayerWindow()
     ex.show()
     sys.exit(app.exec())
