@@ -81,7 +81,7 @@ class AudioPlayerWindow(QMainWindow):
         # menu
         self.open_playlist_action = QAction("playlist", self)
         self.open_playlist_action.setCheckable(True)
-        self.open_playlist_action.triggered.connect(self.open_playlist)
+        self.open_playlist_action.triggered.connect(self.openPlaylist)
         self.menuBar().addAction(self.open_playlist_action)
 
         self.open_library_action = QAction("library", self)
@@ -92,5 +92,14 @@ class AudioPlayerWindow(QMainWindow):
         self.open_settings_action.triggered.connect(self.settings.show)
         self.menuBar().addAction(self.open_settings_action)
 
-    def open_playlist(self, checked):
+        self.test_action = QAction("test", self)
+        self.test_action.setCheckable(True)
+        self.test_action.triggered.connect(self.test)
+        self.menuBar().addAction(self.test_action)
+
+    def openPlaylist(self, checked):
         self.right_stack_layout.setCurrentIndex(1 if checked else 0)
+
+    def test(self, checked):
+        from modules.time import TimeFormat
+        self.time_line.setTimeFormat(TimeFormat.HHmmss if checked else TimeFormat.mmss)

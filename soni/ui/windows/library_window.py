@@ -38,8 +38,8 @@ class LibraryWindow(QMainWindow):
 
         # menu
         self.modify_track_action = QAction("modify", self)
-        self.modify_track_action.triggered.connect(self.modify_track)
+        self.modify_track_action.triggered.connect(self.modifyTrack)
         self.menuBar().addAction(self.modify_track_action)
 
-    def modify_track(self):
+    def modifyTrack(self):
         pass

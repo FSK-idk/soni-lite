@@ -1,22 +1,66 @@
 from PySide6.QtWidgets import (
     QWidget,
-)
-from PySide6.QtGui import (
-    QPalette,
+    QSlider,
+    QHBoxLayout,
+    QVBoxLayout,
 )
 from PySide6.QtCore import (
     Qt,
 )
 
-# TODO: add functionality
+from ui.widgets.clickable_label import ClickableLabel
+
+from modules.time import TimeFormat, TimeSpan
+
+
 class TimeLineWidget(QWidget):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         
-        self.setMinimumSize(30, 30)
+        # attributes
+        self.time_span = TimeSpan()
 
-        palette = QPalette()
-        palette.setColor(QPalette.ColorRole.Window, Qt.GlobalColor.green)
+        # TODO: for debug
+        self.time_span.set_end_time(12345)
 
-        self.setAutoFillBackground(True)
-        self.setPalette(palette)
+        # widgets
+        self.current_time = ClickableLabel(self.time_span.get_current_text(),self)
+        self.current_time.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.current_time.clicked.connect(self.setCurrentReversed)
+
+        self.end_time = ClickableLabel(self.time_span.get_end_text(), self)
+        self.end_time.setAlignment(Qt.AlignmentFlag.AlignRight)
+
+        self.time_line = QSlider(Qt.Orientation.Horizontal, self)
+        self.time_line.setMaximum(self.time_span.end.seconds)
+        self.time_line.valueChanged.connect(self.setCurrentSeconds)
+
+        # layout
+        self.time_layout = QHBoxLayout()
+        self.time_layout.addWidget(self.current_time)
+        self.time_layout.addStretch()
+        self.time_layout.addWidget(self.end_time)
+
+        self.main_layout = QVBoxLayout()
+        self.main_layout.addLayout(self.time_layout)
+        self.main_layout.addWidget(self.time_line)
+
+        self.setLayout(self.main_layout)
+
+    def setCurrentSeconds(self, seconds : int):
+        self.time_span.set_current_time(seconds)
+        self.current_time.setText(self.time_span.get_current_text())
+
+    def setCurrentReversed(self, reversed):
+        self.time_span.set_reversed(reversed)
+        self.current_time.setText(self.time_span.get_current_text())
+
+    def setEndSeconds(self, seconds : int):
+        self.time_span.set_end_time(seconds)
+        self.end_time.setText(self.time_span.get_end_text())
+
+    def setTimeFormat(self, time_format : TimeFormat):
+        self.time_span.set_time_format(time_format)
+        self.current_time.setText(self.time_span.get_current_text())
+        self.end_time.setText(self.time_span.get_end_text())
+
