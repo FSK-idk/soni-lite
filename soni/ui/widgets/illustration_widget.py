@@ -9,7 +9,7 @@ from PySide6.QtCore import (
 )
 
 # TODO: add functionality
-class Illustration(QWidget):
+class IllustrationWidget(QWidget):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         
