@@ -19,6 +19,7 @@ class ClickableLabel(QLabel):
         self.checked = False
     
     def mouseReleaseEvent(self, event : QMouseEvent) -> None:
+        # do not signal if the mouse is not on the label
         if self.rect().contains(event.pos()):
             self.checked = not self.checked
             self.clicked.emit(self.checked)

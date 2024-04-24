@@ -6,6 +6,7 @@ from PySide6.QtWidgets import (
 
 from ui.windows.audio_player_window import AudioPlayerWindow
 
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyle("Fusion")

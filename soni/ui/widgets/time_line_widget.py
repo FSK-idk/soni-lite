@@ -47,19 +47,19 @@ class TimeLineWidget(QWidget):
 
         self.setLayout(self.main_layout)
 
-    def setCurrentSeconds(self, seconds : int):
+    def setCurrentSeconds(self, seconds : int) -> None:
         self.time_span.set_current_time(seconds)
         self.current_time.setText(self.time_span.get_current_text())
 
-    def setCurrentReversed(self, reversed):
+    def setCurrentReversed(self, reversed) -> None:
         self.time_span.set_reversed(reversed)
         self.current_time.setText(self.time_span.get_current_text())
 
-    def setEndSeconds(self, seconds : int):
+    def setEndSeconds(self, seconds : int) -> None:
         self.time_span.set_end_time(seconds)
         self.end_time.setText(self.time_span.get_end_text())
 
-    def setTimeFormat(self, time_format : TimeFormat):
+    def setTimeFormat(self, time_format : TimeFormat) -> None:
         self.time_span.set_time_format(time_format)
         self.current_time.setText(self.time_span.get_current_text())
         self.end_time.setText(self.time_span.get_end_text())
