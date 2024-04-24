@@ -19,7 +19,7 @@ from PySide6.QtCore import (
     Qt
 )
 
-from ui.widgets.track_header_widget import TrackHeaderWidget
+from ui.widgets.header_widget import TrackHeaderWidget
 from ui.widgets.audio_player_widget import AudioPlayerWidget
 from ui.widgets.illustration_widget import IllustrationWidget
 from ui.widgets.time_line_widget import TimeLineWidget
@@ -38,12 +38,16 @@ class AudioPlayerWindow(QMainWindow):
 
         # geometry
         self.setGeometry(0, 0, 800, 400)
+        self.setMinimumSize(400, 300)
 
         # center window
         center = QScreen.availableGeometry(QApplication.primaryScreen()).center()
         geometry = self.geometry()
         geometry.moveCenter(center)
         self.move(geometry.topLeft())
+
+        # attributes
+        self.playlist_open = False
 
         # windows
         self.library = LibraryWindow()
@@ -52,7 +56,10 @@ class AudioPlayerWindow(QMainWindow):
         # widgets
         self.time_line = TimeLineWidget(self)
         self.illustration = IllustrationWidget(self)
+        
         self.track_header = TrackHeaderWidget(self)
+        self.track_header.clicked.connect(self.openPlaylist)
+
         self.audio_player = AudioPlayerWidget(self)
         self.playlist = PlaylistWidget(self)
 
@@ -97,8 +104,9 @@ class AudioPlayerWindow(QMainWindow):
         self.test_action.triggered.connect(self.test)
         self.menuBar().addAction(self.test_action)
 
-    def openPlaylist(self, checked):
-        self.right_stack_layout.setCurrentIndex(1 if checked else 0)
+    def openPlaylist(self):
+        self.playlist_open = not self.playlist_open
+        self.right_stack_layout.setCurrentIndex(1 if self.playlist_open else 0)
 
     def test(self, checked):
         from modules.time import TimeFormat

@@ -19,7 +19,7 @@ class IllustrationWidget(QWidget):
         super().__init__(parent)
 
         # attributes
-        self.fullness = 0.9
+        self.fullness = 0.8
         self.pixmap = QPixmap(":/images/icon.png")
 
         # widgets

@@ -6,22 +6,16 @@ from PySide6.QtGui import (
     QMouseEvent,
 )
 from PySide6.QtCore import (
-    Signal
+    Signal,
 )
 
 
 class ClickableLabel(QLabel):
-    # signals
-    clicked = Signal(bool)
+    clicked = Signal()
 
-    def __init__(self, text: str = "", parent: QWidget | None = None) -> None:
-        super().__init__(text, parent)
-        self.checked = False
-    
     def mouseReleaseEvent(self, event : QMouseEvent) -> None:
         # do not signal if the mouse is not on the label
         if self.rect().contains(event.pos()):
-            self.checked = not self.checked
-            self.clicked.emit(self.checked)
+            self.clicked.emit()
 
 

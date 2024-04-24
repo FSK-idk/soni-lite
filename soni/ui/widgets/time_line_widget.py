@@ -19,12 +19,13 @@ class TimeLineWidget(QWidget):
         
         # attributes
         self.time_span = TimeSpan()
+        self.time_reversed = False
 
         # TODO: for debug
         self.time_span.set_end_time(12345)
 
         # widgets
-        self.current_time = ClickableLabel(self.time_span.get_current_text(),self)
+        self.current_time = ClickableLabel(self.time_span.get_current_text(), self)
         self.current_time.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self.current_time.clicked.connect(self.setCurrentReversed)
 
@@ -51,8 +52,9 @@ class TimeLineWidget(QWidget):
         self.time_span.set_current_time(seconds)
         self.current_time.setText(self.time_span.get_current_text())
 
-    def setCurrentReversed(self, reversed) -> None:
-        self.time_span.set_reversed(reversed)
+    def setCurrentReversed(self) -> None:
+        self.time_reversed = not self.time_reversed
+        self.time_span.set_reversed(self.time_reversed)
         self.current_time.setText(self.time_span.get_current_text())
 
     def setEndSeconds(self, seconds : int) -> None:
