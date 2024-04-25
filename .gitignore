@@ -2,3 +2,4 @@
 .vscode
 test
 __pycache__
+soni/res/resources_rc.py
