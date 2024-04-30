@@ -2,6 +2,7 @@ class DataBaseQuery:
     create_table_audio = """
         CREATE TABLE IF NOT EXISTS Audio (
             id                      integer     PRIMARY KEY,
+            filepath                text,
             title                   text,
             album_id                integer,
             duration                integer,
@@ -105,6 +106,13 @@ class DataBaseQuery:
             id      integer PRIMARY KEY,
             name    text    UNIQUE,
             website text
+        )
+    """
+
+    create_table_playlist = """
+        CREATE TABLE IF NOT EXISTS Playlist (
+            id      integer PRIMARY KEY,
+            name    text    UNIQUE
         )
     """
 

@@ -29,6 +29,7 @@ class DataBase():
         QSqlQuery(DataBaseQuery.create_table_picture_mime_type, self.data_base).exec()
         QSqlQuery(DataBaseQuery.create_table_picture_artist, self.data_base).exec()
         QSqlQuery(DataBaseQuery.create_table_text_author, self.data_base).exec()
+        QSqlQuery(DataBaseQuery.create_table_playlist, self.data_base).exec()
 
         # store default data
 
