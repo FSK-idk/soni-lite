@@ -10,15 +10,20 @@ from PySide6.QtWidgets import (
     QPushButton,
     QSizePolicy,
     QMenuBar,
+    QTableView,
 )
 from PySide6.QtGui import (
     QScreen,
-    QAction
+    QAction,
 )
 from PySide6.QtCore import (
-    Qt
+    Qt,
+)
+from PySide6.QtSql import (
+    QSqlTableModel,
 )
 
+from modules.data_base import DataBase
 
 class LibraryWindow(QMainWindow):
     def __init__(self):
@@ -35,6 +40,17 @@ class LibraryWindow(QMainWindow):
         geometry = self.geometry()
         geometry.moveCenter(center)
         self.move(geometry.topLeft())
+
+        # attributes
+        self.data_base = DataBase()
+        self.model = QSqlTableModel(self, self.data_base.data_base)
+        self.model.setTable('Audio')
+        self.model.select()
+
+        self.table = QTableView()
+        self.table.setModel(self.model)
+
+        self.setCentralWidget(self.table)
 
         # menu
         self.modify_track_action = QAction("modify", self)
