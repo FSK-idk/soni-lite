@@ -49,8 +49,20 @@ class LibraryWindow(QMainWindow):
 
         self.table = QTableView()
         self.table.setModel(self.model)
+        
+        # new widget
+        self.label = QLabel("Search")
+        self.search_layout = QVBoxLayout()
+        self.search_layout.addWidget(self.label)
 
-        self.setCentralWidget(self.table)
+        self.main_layout = QHBoxLayout()
+        self.main_layout.addLayout(self.search_layout, 1)
+        self.main_layout.addWidget(self.table, 3)
+
+        # set layout
+        self.widget = QWidget(self)
+        self.widget.setLayout(self.main_layout)
+        self.setCentralWidget(self.widget)
 
         # menu
         self.modify_track_action = QAction("modify", self)
