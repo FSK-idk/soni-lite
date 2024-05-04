@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import (
     QWidget,
     QLabel,
+    QVBoxLayout,
 )
 from PySide6.QtGui import (
     QResizeEvent,
@@ -8,7 +9,6 @@ from PySide6.QtGui import (
 )
 from PySide6.QtCore import (
     Qt,
-    QSize
 )
 
 import res.resources_rc
@@ -18,6 +18,8 @@ class IllustrationWidget(QWidget):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
+        self.setMinimumSize(40,40)
+
         # attributes
         self.fullness = 0.8
         self.pixmap = QPixmap(":/images/icon.png")
@@ -25,17 +27,23 @@ class IllustrationWidget(QWidget):
         # widgets
         self.illustration = QLabel(self)
         self.illustration.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.illustration.setPixmap(self.pixmap.scaled(QSize(int(self.height() * self.fullness), int(self.height() * self.fullness))))
+        size = int(min(self.width(), self.height()) * self.fullness)
+        self.illustration.setPixmap(self.pixmap.scaled(size, size))
 
+        # layout
+        self.main_layout = QVBoxLayout()
+        self.main_layout.addWidget(self.illustration)
+
+        self.setLayout(self.main_layout)
 
     def resizeEvent(self, event : QResizeEvent) -> None:
-        self.setMinimumWidth(self.height())
-        self.illustration.resize(QSize(self.height(), self.height()))
-        self.illustration.setPixmap(self.pixmap.scaled(QSize(int(self.height() * self.fullness), int(self.height() * self.fullness))))
+        size = int(min(self.width(), self.height()) * self.fullness)
+        self.illustration.setPixmap(self.pixmap.scaled(size, size))
 
     def setFullness(self, fullness : int) -> None:
         self.fullness = fullness
     
     def setIllustration(self, pixmap : QPixmap) -> None:
         self.pixmap = pixmap
-        self.illustration.setPixmap(self.pixmap.scaled(QSize(int(self.height() * self.fullness), int(self.height() * self.fullness))))
+        size = int(min(self.width(), self.height()) * self.fullness)
+        self.illustration.setPixmap(self.pixmap.scaled(size, size))

@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtGui import (
     QScreen,
+    QResizeEvent,
     QAction
 )
 from PySide6.QtCore import (
@@ -48,6 +49,7 @@ class AudioPlayerWindow(QMainWindow):
 
         # attributes
         self.playlist_open = False
+        self.minimum_window_ratio = 2
 
         # windows
         self.library = LibraryWindow()
@@ -73,8 +75,8 @@ class AudioPlayerWindow(QMainWindow):
         self.right_side_layout.addLayout(self.right_stack_layout)
 
         self.center_layout = QHBoxLayout()
-        self.center_layout.addWidget(self.illustration)
-        self.center_layout.addLayout(self.right_side_layout)
+        self.center_layout.addWidget(self.illustration, 1)
+        self.center_layout.addLayout(self.right_side_layout, 3)
 
         self.main_layout = QVBoxLayout()
         self.main_layout.addLayout(self.center_layout)
@@ -103,6 +105,12 @@ class AudioPlayerWindow(QMainWindow):
         self.test_action.setCheckable(True)
         self.test_action.triggered.connect(self.test)
         self.menuBar().addAction(self.test_action)
+
+    # def resizeEvent(self, event : QResizeEvent):
+        # if (event.size().width() / event.size().height() < self.minimum_window_ratio):
+            # return
+        # QMainWindow.resizeEvent(self, event)
+        # pass
 
     def openPlaylist(self):
         self.playlist_open = not self.playlist_open
