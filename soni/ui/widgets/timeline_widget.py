@@ -13,7 +13,7 @@ from ui.widgets.clickable_label import ClickableLabel
 from modules.time import TimeFormat, TimeSpan
 
 
-class TimeLineWidget(QWidget):
+class TimelineWidget(QWidget):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         
@@ -22,7 +22,7 @@ class TimeLineWidget(QWidget):
         self.time_reversed = False
 
         # TODO: for debug
-        self.time_span.set_end_time(12345)
+        self.time_span.set_end_time(123456)
 
         # widgets
         self.current_time = ClickableLabel(self.time_span.get_current_text(), self)
@@ -32,9 +32,9 @@ class TimeLineWidget(QWidget):
         self.end_time = ClickableLabel(self.time_span.get_end_text(), self)
         self.end_time.setAlignment(Qt.AlignmentFlag.AlignRight)
 
-        self.time_line = QSlider(Qt.Orientation.Horizontal, self)
-        self.time_line.setMaximum(self.time_span.end.seconds)
-        self.time_line.valueChanged.connect(self.setCurrentSeconds)
+        self.timeline = QSlider(Qt.Orientation.Horizontal, self)
+        self.timeline.setMaximum(self.time_span.end.milliseconds)
+        self.timeline.valueChanged.connect(self.setCurrentMilliseconds)
 
         # layout
         self.time_layout = QHBoxLayout()
@@ -44,22 +44,24 @@ class TimeLineWidget(QWidget):
 
         self.main_layout = QVBoxLayout()
         self.main_layout.addLayout(self.time_layout)
-        self.main_layout.addWidget(self.time_line)
+        self.main_layout.addWidget(self.timeline)
 
         self.setLayout(self.main_layout)
 
-    def setCurrentSeconds(self, seconds : int) -> None:
-        self.time_span.set_current_time(seconds)
+    def setCurrentMilliseconds(self, milliseconds : int) -> None:
+        self.time_span.set_current_time(milliseconds)
         self.current_time.setText(self.time_span.get_current_text())
+        self.timeline.setValue(milliseconds)
 
     def setCurrentReversed(self) -> None:
         self.time_reversed = not self.time_reversed
         self.time_span.set_reversed(self.time_reversed)
         self.current_time.setText(self.time_span.get_current_text())
 
-    def setEndSeconds(self, seconds : int) -> None:
-        self.time_span.set_end_time(seconds)
+    def setEndMilliseconds(self, milliseconds : int) -> None:
+        self.time_span.set_end_time(milliseconds)
         self.end_time.setText(self.time_span.get_end_text())
+        self.timeline.setMaximum(milliseconds)
 
     def setTimeFormat(self, time_format : TimeFormat) -> None:
         self.time_span.set_time_format(time_format)

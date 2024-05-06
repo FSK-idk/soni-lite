@@ -23,7 +23,7 @@ from PySide6.QtCore import (
 from ui.widgets.header_widget import TrackHeaderWidget
 from ui.widgets.audio_player_widget import AudioPlayerWidget
 from ui.widgets.illustration_widget import IllustrationWidget
-from ui.widgets.time_line_widget import TimeLineWidget
+from ui.widgets.timeline_widget import TimelineWidget
 from ui.widgets.playlist_widget import PlaylistWidget
 
 from ui.windows.library_window import LibraryWindow
@@ -56,7 +56,7 @@ class AudioPlayerWindow(QMainWindow):
         self.settings = SettingsWindow()
 
         # widgets
-        self.time_line = TimeLineWidget(self)
+        self.timeline = TimelineWidget(self)
         self.illustration = IllustrationWidget(self)
         
         self.track_header = TrackHeaderWidget(self)
@@ -64,6 +64,9 @@ class AudioPlayerWindow(QMainWindow):
 
         self.audio_player = AudioPlayerWidget(self)
         self.playlist = PlaylistWidget(self)
+
+        self.audio_player.durationChanged.connect(self.timeline.setEndMilliseconds)
+        self.audio_player.timeChanged.connect(self.timeline.setCurrentMilliseconds)
 
         # layout
         self.right_stack_layout = QStackedLayout()
@@ -80,7 +83,7 @@ class AudioPlayerWindow(QMainWindow):
 
         self.main_layout = QVBoxLayout()
         self.main_layout.addLayout(self.center_layout)
-        self.main_layout.addWidget(self.time_line)
+        self.main_layout.addWidget(self.timeline)
 
         # set layout
         self.widget = QWidget(self)
@@ -106,16 +109,10 @@ class AudioPlayerWindow(QMainWindow):
         self.test_action.triggered.connect(self.test)
         self.menuBar().addAction(self.test_action)
 
-    # def resizeEvent(self, event : QResizeEvent):
-        # if (event.size().width() / event.size().height() < self.minimum_window_ratio):
-            # return
-        # QMainWindow.resizeEvent(self, event)
-        # pass
-
     def openPlaylist(self):
         self.playlist_open = not self.playlist_open
         self.right_stack_layout.setCurrentIndex(1 if self.playlist_open else 0)
 
     def test(self, checked):
         from modules.time import TimeFormat
-        self.time_line.setTimeFormat(TimeFormat.HHmmss if checked else TimeFormat.mmss)
+        self.timeline.setTimeFormat(TimeFormat.HHmmss if checked else TimeFormat.mmss)

@@ -9,6 +9,7 @@ from PySide6.QtGui import (
 from PySide6.QtCore import (
     Qt,
     QUrl,
+    Signal,
 )
 from PySide6.QtMultimedia import (
     QMediaPlayer,
@@ -17,11 +18,25 @@ from PySide6.QtMultimedia import (
 
 # TODO: add functionality
 class AudioPlayerWidget(QWidget):
+    durationChanged = Signal(int)
+    timeChanged = Signal(int)
+
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         
         self.setMinimumSize(30, 30)
 
+        # attributes
+        self.audio_player = QMediaPlayer()
+        self.audioOutput = QAudioOutput()
+
+        self.audio_player.setAudioOutput(self.audioOutput)
+        self.audio_player.durationChanged.connect(self.durationChanged.emit)
+        self.audio_player.positionChanged.connect(self.timeChanged.emit)
+
+        self.audioOutput.setVolume(50)
+
+        # TODO: debug
         palette = QPalette()
         palette.setColor(QPalette.ColorRole.Window, Qt.GlobalColor.magenta)
 
@@ -43,13 +58,6 @@ class AudioPlayerWidget(QWidget):
         self.button_track_selection.clicked.connect(self.seletcion_track)
 
     def play(self):
-        self.audio_player = QMediaPlayer()
-        
-        self.audioOutput = QAudioOutput()
-        self.audio_player.setAudioOutput(self.audioOutput)
-        self.audio_player.setSource(QUrl.fromLocalFile(self.dialogue[0]))
-        self.audioOutput.setVolume(50)
-
         self.audio_player.play()
  
     def pause(self):
@@ -57,4 +65,5 @@ class AudioPlayerWidget(QWidget):
 
     def seletcion_track(self):
         self.dialogue = QFileDialog.getOpenFileName(self,"Выбрать файл", '', '*mp3')
+        self.audio_player.setSource(QUrl.fromLocalFile(self.dialogue[0]))
         print(self.dialogue[0])
