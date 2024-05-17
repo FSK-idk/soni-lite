@@ -1,3 +1,5 @@
+import os
+
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -20,6 +22,8 @@ from PySide6.QtCore import (
     Qt
 )
 
+from modules.data_base import data_base
+
 from ui.widgets.header_widget import TrackHeaderWidget
 from ui.widgets.audio_player_widget import AudioPlayerWidget
 from ui.widgets.illustration_widget import IllustrationWidget
@@ -33,6 +37,11 @@ from ui.windows.settings_window import SettingsWindow
 class AudioPlayerWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+
+        # basic init
+        
+        os.environ['QT_MULTIMEDIA_PREFERRED_PLUGINS'] = 'windowsmediafoundation'
+        data_base.init()
 
         # name
         self.setWindowTitle("soni")

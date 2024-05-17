@@ -11,7 +11,8 @@ from PySide6.QtWidgets import (
     QSizePolicy,
     QMenuBar,
     QTableView,
-    QScrollArea
+    QScrollArea,
+    QDialog
 )
 from PySide6.QtGui import (
     QScreen,
@@ -25,8 +26,10 @@ from PySide6.QtSql import (
     QSqlTableModel,
 )
 
-from modules.data_base import DataBase
+from modules.data_base import data_base
+
 from ui.widgets.search_panel_widget import SearchPanelWidget
+from ui.dialogs.new_audio_dialog import NewAudioDialog
 
 class LibraryWindow(QMainWindow):
     def __init__(self):
@@ -45,8 +48,7 @@ class LibraryWindow(QMainWindow):
         self.move(geometry.topLeft())
 
         # attributes
-        self.data_base = DataBase()
-        self.model = QSqlTableModel(self, self.data_base.data_base)
+        self.model = QSqlTableModel(self, data_base.data_base)
         self.model.setTable('Audio')
         self.model.select()
 
@@ -72,9 +74,18 @@ class LibraryWindow(QMainWindow):
         self.setCentralWidget(self.widget)
 
         # menu
+        self.new_track_action = QAction("new", self)
+        self.new_track_action.triggered.connect(self.newAudio)
+        self.menuBar().addAction(self.new_track_action)
+
         self.modify_track_action = QAction("modify", self)
         self.modify_track_action.triggered.connect(self.modifyTrack)
         self.menuBar().addAction(self.modify_track_action)
 
     def modifyTrack(self):
         pass
+
+    def newAudio(self):
+        dlg = NewAudioDialog(self)
+        if dlg.exec():
+            print ("OK")

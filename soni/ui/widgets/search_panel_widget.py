@@ -15,6 +15,7 @@ from PySide6.QtCore import (
 )
 
 from modules.data_base_default import DataBaseDefault
+from modules.search_info import SearchInfo
 
 from ui.tiles.line_edit_tile import LineEditTile
 from ui.tiles.combo_box_tile import ComboBoxTile
@@ -45,9 +46,9 @@ class SearchPanelWidget(QWidget):
         self.genre = ComboBoxTile(self)
         self.genre.setTitle("Genre")
         self.genre.addItems(DataBaseDefault.genres)
-        self.language = ComboBoxTile(self)
-        self.language.setTitle("Language")
-        self.language.addItems(list(DataBaseDefault.languages.keys()))
+        # self.language = ComboBoxTile(self)
+        # self.language.setTitle("Language")
+        # self.language.addItems(list(DataBaseDefault.languages.keys()))
         # TODO: rating
         # TODO: BPM
         self.performer = ComboBoxTile(self)
@@ -92,8 +93,8 @@ class SearchPanelWidget(QWidget):
         # self.show_duration_check_box.setTitle("Show duration")
         self.show_genre_check_box = CheckBoxTile(self)
         self.show_genre_check_box.setTitle("Show genre")
-        self.show_language_check_box = CheckBoxTile(self)
-        self.show_language_check_box.setTitle("Show language")
+        # self.show_language_check_box = CheckBoxTile(self)
+        # self.show_language_check_box.setTitle("Show language")
         # self.show_rating_check_box = CheckBoxTile(self)
         # self.show_rating_check_box.setTitle("Show rating")
         # self.show_bpm_check_box = CheckBoxTile(self)
@@ -142,7 +143,7 @@ class SearchPanelWidget(QWidget):
             self.title,
             self.album_title,
             self.genre,
-            self.language,
+            # self.language,
             self.performer,
             self.text_author,
         ]
@@ -166,7 +167,7 @@ class SearchPanelWidget(QWidget):
             self.show_title_check_box,
             self.show_album_title_check_box,
             self.show_genre_check_box,
-            self.show_language_check_box,
+            # self.show_language_check_box,
             self.show_performer_check_box,
             self.show_composer_check_box,
             self.show_publisher_check_box,
@@ -187,7 +188,7 @@ class SearchPanelWidget(QWidget):
             self.show_title_check_box,
             self.show_album_title_check_box,
             self.show_genre_check_box,
-            self.show_language_check_box,
+            # self.show_language_check_box,
             self.show_performer_check_box,
             self.show_text_author_check_box,
         ]
@@ -246,3 +247,27 @@ class SearchPanelWidget(QWidget):
     def openExtended(self):
         self.extended_open = not self.extended_open
         self.main_layout.setCurrentIndex(1 if self.extended_open else 0)
+
+    def getInfo(self) -> SearchInfo:
+        info = SearchInfo()
+
+        info.playlist = self.playlist.text()
+        info.title = self.title.text()
+        info.album_title = self.album_title.text()
+        info.genre = self.genre.text()
+        # info.language = self.language.text()
+        info.performer = self.performer.text()
+        info.composer = self.composer.text()
+        info.publisher = self.publisher.text()
+        info.modified_by = self.modified_by.text()
+        info.picture_artist = self.picture_artist.text()
+        info.text_author = self.text_author.text()
+        info.original_title = self.original_title.text()
+        info.original_album_title = self.original_album_title.text()
+        info.original_performer = self.original_performer.text()
+        info.original_composer = self.original_composer.text()
+        info.original_publisher = self.original_publisher.text()
+        info.original_text_author = self.text_author.text()
+        info.isrc = self.isrc.text()
+
+        return info

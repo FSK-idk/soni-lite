@@ -8,7 +8,7 @@ from modules.data_base_query import DataBaseQuery
 
 
 class DataBase():
-    def __init__(self) -> None:
+    def init(self) -> None:
         self.data_base = QSqlDatabase("QSQLITE")
         self.data_base.setDatabaseName("./soni/data/library.sqlite")
         self.data_base.open()
@@ -52,3 +52,7 @@ class DataBase():
         for type in DataBaseDefault.picture_mime_types:
             query.bindValue(":type", type)
             query.exec()
+
+    
+
+data_base = DataBase()

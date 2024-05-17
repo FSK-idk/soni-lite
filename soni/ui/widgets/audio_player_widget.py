@@ -13,7 +13,8 @@ from PySide6.QtCore import (
 )
 from PySide6.QtMultimedia import (
     QMediaPlayer,
-    QAudioOutput
+    QAudioOutput,
+    QMediaDevices
 )
 
 # TODO: add functionality
@@ -28,13 +29,13 @@ class AudioPlayerWidget(QWidget):
 
         # attributes
         self.audio_player = QMediaPlayer()
-        self.audioOutput = QAudioOutput()
+        self.audio_output = QAudioOutput()
 
-        self.audio_player.setAudioOutput(self.audioOutput)
+        self.audio_player.setAudioOutput(self.audio_output)
         self.audio_player.durationChanged.connect(self.durationChanged.emit)
         self.audio_player.positionChanged.connect(self.timeChanged.emit)
 
-        self.audioOutput.setVolume(50)
+        self.audio_output.setVolume(50)
 
         # TODO: debug
         palette = QPalette()
