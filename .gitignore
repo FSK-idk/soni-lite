@@ -1,6 +1,7 @@
 .venv
 .vscode
 test
+soni/ui/style
 __pycache__
 soni/res/resources_rc.py
 soni/data/library.sqlite

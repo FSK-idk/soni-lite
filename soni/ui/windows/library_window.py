@@ -11,10 +11,12 @@ from PySide6.QtWidgets import (
     QSizePolicy,
     QMenuBar,
     QTableView,
+    QScrollArea
 )
 from PySide6.QtGui import (
     QScreen,
     QAction,
+    QFont
 )
 from PySide6.QtCore import (
     Qt,
@@ -24,6 +26,7 @@ from PySide6.QtSql import (
 )
 
 from modules.data_base import DataBase
+from ui.widgets.search_panel_widget import SearchPanelWidget
 
 class LibraryWindow(QMainWindow):
     def __init__(self):
@@ -49,12 +52,16 @@ class LibraryWindow(QMainWindow):
 
         self.table = QTableView()
         self.table.setModel(self.model)
+        self.table.horizontalHeader().setFont(QFont(":/fonts/NotoSans.ttf",10))
         
-        # new widget
-        self.label = QLabel("Search")
-        self.search_layout = QVBoxLayout()
-        self.search_layout.addWidget(self.label)
+        self.search_panel = SearchPanelWidget()
+        self.search_button = QPushButton("Search")
 
+        self.search_layout = QVBoxLayout()
+        self.search_layout.addWidget(self.search_panel)
+        self.search_layout.addWidget(self.search_button)
+
+        # layout
         self.main_layout = QHBoxLayout()
         self.main_layout.addLayout(self.search_layout, 1)
         self.main_layout.addWidget(self.table, 3)
