@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QPushButton,
     QSizePolicy,
     QMenuBar,
+    QTextEdit,
 )
 from PySide6.QtGui import (
     QScreen,
@@ -25,6 +26,9 @@ from ui.widgets.pyside.line_edit_widget import LineEditWidget
 from ui.widgets.pyside.check_box_widget import CheckBoxWidget
 from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
 from ui.widgets.pyside.combo_box_widget import ComboBoxWidget
+from ui.widgets.pyside.text_edit_widget import TextEditWidget
+
+from ui.tiles.file_line_edit_tile import FileLineEditTile
 
 class SettingsWindow(QMainWindow):
     def __init__(self):
@@ -52,14 +56,21 @@ class SettingsWindow(QMainWindow):
 
         self.combo_box = ComboBoxWidget(self)
 
+        self.file_line_edit = FileLineEditTile(self)
+        self.file_line_edit.setTitle("File line edit")
+
+        self.text_edit = TextEditWidget(self)
+
         # layout
 
         self.main_layout = VBoxLayoutWidget()
         self.main_layout.setContentsMargins(4, 4, 4, 4)
         self.main_layout.addWidget(self.button)
+        self.main_layout.addWidget(self.file_line_edit)
         self.main_layout.addWidget(self.label)
         self.main_layout.addWidget(self.line_edit)
         self.main_layout.addWidget(self.check_box)
+        self.main_layout.addWidget(self.text_edit)
         self.main_layout.addWidget(self.combo_box)
 
         print(self.button.height())

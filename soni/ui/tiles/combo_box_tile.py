@@ -1,19 +1,7 @@
 from typing import List
 
-from PySide6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QComboBox,
-    QLabel,
-    QSizePolicy,
-)
-from PySide6.QtGui import (
-    QFont
-)
-from PySide6.QtCore import (
-    Qt,
-    Signal,
-)
+from PySide6.QtWidgets import QWidget, QSizePolicy
+from PySide6.QtCore import Signal
 
 from ui.widgets.pyside.label_widget import LabelWidget
 from ui.widgets.pyside.combo_box_widget import ComboBoxWidget
@@ -30,8 +18,8 @@ class ComboBoxTile(QWidget):
         # widgets
 
         self.title = LabelWidget(self)
-
         self.combo_box = ComboBoxWidget(self)
+
         self.combo_box.currentIndexChanged.connect(self.textChanged.emit)
 
         # layout
@@ -42,7 +30,7 @@ class ComboBoxTile(QWidget):
 
         self.setLayout(self.main_layout)
 
-        # geometry
+        # self
 
         self.setMaximumHeight(self.main_layout.minimumSize().height())
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)

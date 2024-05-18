@@ -16,9 +16,9 @@ class AudioInfo:
         # self.release_date
         # self.copyright
         # self.comments
-        # self.picture_filepath
+        self.picture_filepath = ""
         self.picture_artist = ""
-        # self.text = ""
+        self.text = ""
         self.text_author = ""
         self.original_title = ""
         self.original_album_title = ""

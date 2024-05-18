@@ -17,7 +17,7 @@ from ui.widgets.audio_info_panel_widget import AudioInfoPanelWidget
 
 from ui.tiles.text_edit_tile import TextEditTile
 
-class NewAudioDialog(QDialog):
+class ModifyAudioDialog(QDialog):
     def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
 
@@ -54,10 +54,10 @@ class NewAudioDialog(QDialog):
         self.main_layout.addLayout(self.right_layout, 3)
 
         self.setLayout(self.main_layout)
-        
+
         # self
 
-        self.setWindowTitle("New audio")
+        self.setWindowTitle("Modify audio")
         self.setGeometry(0, 0, 600, 400)
         self.setMinimumSize(400, 400)
         self.setContentsMargins(10, 10, 10, 10)

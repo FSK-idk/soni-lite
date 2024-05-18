@@ -28,7 +28,7 @@ from PySide6.QtSql import (
 
 from modules.data_base import data_base
 
-from ui.widgets.audio_info_panel_widget import AudioInfoPanelWidget
+from ui.widgets.search_info_panel_widget import SearchInfoPanelWidget
 from ui.dialogs.new_audio_dialog import NewAudioDialog
 
 class LibraryWindow(QMainWindow):
@@ -56,7 +56,7 @@ class LibraryWindow(QMainWindow):
         self.table.setModel(self.model)
         self.table.horizontalHeader().setFont(QFont(":/fonts/NotoSans.ttf",10))
         
-        self.search_panel = AudioInfoPanelWidget()
+        self.search_panel = SearchInfoPanelWidget()
         self.search_button = QPushButton("Search")
 
         self.search_layout = QVBoxLayout()
