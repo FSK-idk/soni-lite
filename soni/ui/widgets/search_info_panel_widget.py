@@ -14,12 +14,11 @@ from modules.audio_info import AudioInfo
 from modules.config import config
 
 from ui.tiles.combo_box_tile import ComboBoxTile
-from ui.tiles.slider_tile import SliderTile
 from ui.tiles.line_edit_tile import LineEditTile
 
 from ui.widgets.pyside.label_widget import LabelWidget
-from ui.widgets.pyside.check_box_widget import CheckBoxWidget
 from ui.widgets.pyside.push_button_widget import PushButtonWidget
+from ui.widgets.pyside.check_box_widget import CheckBoxWidget
 from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
 
 
@@ -268,7 +267,7 @@ class SearchInfoPanelWidget(QWidget):
 
         self.setLayout(self.main_layout)
 
-    def openAdvanced(self):
+    def openAdvanced(self) -> None:
         self.advanced_open = not self.advanced_open
         self.main_layout.setCurrentIndex(1 if self.advanced_open else 0)
 

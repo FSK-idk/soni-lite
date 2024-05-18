@@ -1,17 +1,5 @@
-from PySide6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QLabel,
-    QSizePolicy,
-    QSlider,
-)
-from PySide6.QtGui import (
-    QFont
-)
-from PySide6.QtCore import (
-    Qt,
-    Signal,
-)
+from PySide6.QtWidgets import QWidget, QSizePolicy
+from PySide6.QtCore import Qt, Signal
 
 from ui.widgets.pyside.label_widget import LabelWidget
 from ui.widgets.pyside.slider_widget import SliderWidget
@@ -42,8 +30,8 @@ class SliderTile(QWidget):
 
         # geometry
 
-        self.setMaximumHeight(self.main_layout.minimumSize().height())
-        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.setFixedHeight(self.main_layout.minimumSize().height())
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
     def setTitle(self, text: str) -> None:
         self.title.setText(text)

@@ -1,11 +1,5 @@
-from PySide6.QtWidgets import (
-    QWidget,
-    QSizePolicy,
-    QLabel,
-)
-from PySide6.QtGui import (
-    QFont,
-)
+from PySide6.QtWidgets import QWidget, QSizePolicy, QLabel
+from PySide6.QtGui import QFont
 
 class LabelWidget(QLabel):
     def __init__(self, parent: QWidget | None = None) -> None:

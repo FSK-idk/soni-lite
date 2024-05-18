@@ -1,10 +1,5 @@
-from PySide6.QtWidgets import (
-    QWidget,
-    QSizePolicy,
-)
-from PySide6.QtCore import (
-    Signal,
-)
+from PySide6.QtWidgets import QWidget, QSizePolicy
+from PySide6.QtCore import Signal
 
 from ui.widgets.pyside.label_widget import LabelWidget
 from ui.widgets.pyside.line_edit_widget import LineEditWidget
@@ -35,8 +30,8 @@ class LineEditTile(QWidget):
 
         # geometry
 
-        self.setMaximumHeight(self.main_layout.minimumSize().height())
-        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.setFixedHeight(self.main_layout.minimumSize().height())
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
     def setTitle(self, text: str) -> None:
         self.title.setText(text)

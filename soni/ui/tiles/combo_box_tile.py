@@ -32,8 +32,8 @@ class ComboBoxTile(QWidget):
 
         # self
 
-        self.setMaximumHeight(self.main_layout.minimumSize().height())
-        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.setFixedHeight(self.main_layout.minimumSize().height())
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
     def setTitle(self, text: str) -> None:
         self.title.setText(text)

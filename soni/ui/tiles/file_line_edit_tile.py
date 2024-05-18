@@ -44,8 +44,8 @@ class FileLineEditTile(QWidget):
 
         # geometry
 
-        self.setMaximumHeight(self.main_layout.minimumSize().height())
-        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.setFixedHeight(self.main_layout.minimumSize().height())
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
     def setFilter(self, filter: str):
         self.filter = filter

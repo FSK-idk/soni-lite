@@ -1,10 +1,4 @@
-from PySide6.QtWidgets import (
-    QWidget,
-    QSizePolicy,
-)
-from PySide6.QtCore import (
-    Signal,
-)
+from PySide6.QtWidgets import QWidget, QSizePolicy
 
 from ui.widgets.pyside.label_widget import LabelWidget
 from ui.widgets.pyside.text_edit_widget import TextEditWidget

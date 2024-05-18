@@ -1,15 +1,6 @@
-from PySide6.QtWidgets import (
-    QWidget,
-    QSizePolicy,
-    QComboBox,
-)
-from PySide6.QtGui import (
-    QFont,
-    QWheelEvent
-)
-from PySide6.QtCore import (
-    Qt
-)
+from PySide6.QtWidgets import QWidget, QSizePolicy, QComboBox
+from PySide6.QtGui import QFont, QWheelEvent
+from PySide6.QtCore import Qt
 
 class ComboBoxWidget(QComboBox):
     def __init__(self, parent: QWidget | None = None) -> None:

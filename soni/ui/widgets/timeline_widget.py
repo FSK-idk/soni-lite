@@ -1,17 +1,13 @@
 from PySide6.QtWidgets import (
     QWidget,
-    QSlider,
-    QHBoxLayout,
-    QVBoxLayout,
 )
 from PySide6.QtCore import (
     Qt,
 )
 
-from ui.widgets.pyside.clickable_label import ClickableLabelWidget
-
 from modules.time import TimeFormat, TimeSpan
 
+from ui.widgets.pyside.clickable_label import ClickableLabelWidget
 from ui.widgets.pyside.slider_widget import SliderWidget
 from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
 from ui.widgets.pyside.h_box_layout_widget import HBoxLayoutWidget
@@ -43,6 +39,7 @@ class TimelineWidget(QWidget):
         self.timeline.valueChanged.connect(self.setCurrentMilliseconds)
 
         # layout
+        
         self.time_layout = HBoxLayoutWidget()
         self.time_layout.addWidget(self.current_time)
         self.time_layout.addStretch()
@@ -54,9 +51,7 @@ class TimelineWidget(QWidget):
 
         self.setLayout(self.main_layout)
 
-        print(self.timeline.height())
-
-    def setCurrentMilliseconds(self, milliseconds : int) -> None:
+    def setCurrentMilliseconds(self, milliseconds: int) -> None:
         self.time_span.set_current_time(milliseconds)
         self.current_time.setText(self.time_span.get_current_text())
         self.timeline.setValue(milliseconds)
@@ -66,12 +61,12 @@ class TimelineWidget(QWidget):
         self.time_span.set_reversed(self.time_reversed)
         self.current_time.setText(self.time_span.get_current_text())
 
-    def setEndMilliseconds(self, milliseconds : int) -> None:
+    def setEndMilliseconds(self, milliseconds: int) -> None:
         self.time_span.set_end_time(milliseconds)
         self.end_time.setText(self.time_span.get_end_text())
         self.timeline.setMaximum(milliseconds)
 
-    def setTimeFormat(self, time_format : TimeFormat) -> None:
+    def setTimeFormat(self, time_format: TimeFormat) -> None:
         self.time_span.set_time_format(time_format)
         self.current_time.setText(self.time_span.get_current_text())
         self.end_time.setText(self.time_span.get_end_text())

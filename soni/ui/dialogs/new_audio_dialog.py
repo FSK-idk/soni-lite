@@ -50,6 +50,7 @@ class NewAudioDialog(QDialog):
         self.right_layout.addLayout(self.buttons_layout)
 
         self.main_layout = HBoxLayoutWidget()
+        self.main_layout.setContentsMargins(10, 10, 10, 10)
         self.main_layout.addLayout(self.left_layout, 2)
         self.main_layout.addLayout(self.right_layout, 3)
 
@@ -60,7 +61,6 @@ class NewAudioDialog(QDialog):
         self.setWindowTitle("New audio")
         self.setGeometry(0, 0, 600, 400)
         self.setMinimumSize(400, 400)
-        self.setContentsMargins(10, 10, 10, 10)
 
         # center window
         center = QScreen.availableGeometry(QApplication.primaryScreen()).center()

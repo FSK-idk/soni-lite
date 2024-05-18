@@ -14,7 +14,6 @@ from PySide6.QtCore import (
 from PySide6.QtMultimedia import (
     QMediaPlayer,
     QAudioOutput,
-    QMediaDevices
 )
 
 # TODO: add functionality
@@ -28,6 +27,7 @@ class AudioPlayerWidget(QWidget):
         self.setMinimumSize(30, 30)
 
         # attributes
+
         self.audio_player = QMediaPlayer()
         self.audio_output = QAudioOutput()
 
@@ -44,7 +44,8 @@ class AudioPlayerWidget(QWidget):
         self.setAutoFillBackground(True)
         self.setPalette(palette)
 
-        # Creating Buttons
+        # creating Buttons
+
         self.button_play = QPushButton('Play', self)
         self.button_play.resize(50, 50)
         self.button_play.move(0, 210)
@@ -56,15 +57,15 @@ class AudioPlayerWidget(QWidget):
         self.button_track_selection = QPushButton('Select', self)
         self.button_track_selection.resize(50, 50)
         self.button_track_selection.move(100, 210)
-        self.button_track_selection.clicked.connect(self.seletcion_track)
+        self.button_track_selection.clicked.connect(self.selectAudio)
 
-    def play(self):
+    def play(self) -> None:
         self.audio_player.play()
  
-    def pause(self):
+    def pause(self) -> None:
         pass
 
-    def seletcion_track(self):
+    def selectAudio(self) -> None:
         self.dialogue = QFileDialog.getOpenFileName(self,"Выбрать файл", '', '*mp3')
         self.audio_player.setSource(QUrl.fromLocalFile(self.dialogue[0]))
         print(self.dialogue[0])

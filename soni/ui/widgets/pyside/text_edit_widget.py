@@ -1,14 +1,5 @@
-from PySide6.QtWidgets import (
-    QWidget,
-    QSizePolicy,
-    QTextEdit,
-)
-from PySide6.QtGui import (
-    QFont,
-)
-from PySide6.QtCore import (
-    Qt
-)
+from PySide6.QtWidgets import QWidget, QSizePolicy, QTextEdit
+from PySide6.QtGui import QFont
 
 class TextEditWidget(QTextEdit):
     def __init__(self, parent: QWidget | None = None) -> None:
