@@ -16,6 +16,7 @@ from PySide6.QtCore import (
     Qt
 )
 
+from modules.audio_info import AudioInfo
 from modules.data_base import data_base
 
 from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
@@ -124,5 +125,7 @@ class AudioPlayerWindow(QMainWindow):
         self.right_stack_layout.setCurrentIndex(1 if self.playlist_open else 0)
 
     def test(self, checked: bool) -> None:
+        print("test")
+
         from modules.time import TimeFormat
         self.timeline.setTimeFormat(TimeFormat.HHmmss if checked else TimeFormat.mmss)

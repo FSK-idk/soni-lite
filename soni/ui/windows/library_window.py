@@ -30,6 +30,10 @@ from modules.data_base import data_base
 
 from ui.dialogs.new_audio_dialog import NewAudioDialog
 
+from ui.widgets.pyside.push_button_widget import PushButtonWidget
+from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
+from ui.widgets.pyside.h_box_layout_widget import HBoxLayoutWidget
+
 from ui.widgets.search_info_panel_widget import SearchInfoPanelWidget
 
 class LibraryWindow(QMainWindow):
@@ -39,23 +43,25 @@ class LibraryWindow(QMainWindow):
         # attributes
 
         self.model = QSqlTableModel(self, data_base.data_base)
+        self.table = QTableView()
+        self.search_panel = SearchInfoPanelWidget(self)
+        self.search_button = PushButtonWidget(self)
+
         self.model.setTable('Audio')
         self.model.select()
 
-        self.table = QTableView()
         self.table.setModel(self.model)
         self.table.horizontalHeader().setFont(QFont(":/fonts/NotoSans.ttf",10))
-        
-        self.search_panel = SearchInfoPanelWidget()
-        self.search_button = QPushButton("Search")
 
-        self.search_layout = QVBoxLayout()
-        self.search_layout.addWidget(self.search_panel)
-        self.search_layout.addWidget(self.search_button)
+        self.search_button.setText("Search")
 
         # layout
 
-        self.main_layout = QHBoxLayout()
+        self.search_layout = VBoxLayoutWidget()
+        self.search_layout.addWidget(self.search_panel)
+        self.search_layout.addWidget(self.search_button)
+
+        self.main_layout = HBoxLayoutWidget()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
         self.main_layout.addLayout(self.search_layout, 1)
         self.main_layout.addWidget(self.table, 3)
@@ -89,6 +95,7 @@ class LibraryWindow(QMainWindow):
         pass
 
     def newAudio(self) -> None:
-        dlg = NewAudioDialog(self)
-        if dlg.exec():
-            print ("OK")
+        dialog = NewAudioDialog(self)
+        if dialog.exec():
+            data_base.insert_audio(dialog.info)
+            self.model.select()
