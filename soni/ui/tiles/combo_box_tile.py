@@ -15,7 +15,10 @@ from PySide6.QtCore import (
     Signal,
 )
 
-# TODO: add functionality
+from ui.widgets.pyside.label_widget import LabelWidget
+from ui.widgets.pyside.combo_box_widget import ComboBoxWidget
+from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
+
 class ComboBoxTile(QWidget):
     # signals
 
@@ -26,28 +29,14 @@ class ComboBoxTile(QWidget):
 
         # widgets
 
-        self.title = QLabel(self)
-        self.title.setMinimumWidth(1)
-        self.title.setFixedHeight(20)
-        self.title.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        self.title.setFont(QFont(":/fonts/NotoSans.ttf",12))
+        self.title = LabelWidget(self)
 
-        self.combo_box = QComboBox(self)
-        self.combo_box.setMinimumWidth(1)
-        self.combo_box.setFixedHeight(25)
-        self.combo_box.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        self.combo_box.setFont(QFont(":/fonts/NotoSans.ttf",12))
-        self.combo_box.setMaxVisibleItems(5)
-        self.combo_box.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-        self.combo_box.view().setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.combo_box = ComboBoxWidget(self)
         self.combo_box.currentIndexChanged.connect(self.textChanged.emit)
 
         # layout
 
-        self.main_layout = QVBoxLayout()
-        self.main_layout.setContentsMargins(0,0,0,0)
-        self.main_layout.setSpacing(5)
-
+        self.main_layout = VBoxLayoutWidget()
         self.main_layout.addWidget(self.title)
         self.main_layout.addWidget(self.combo_box)
 
@@ -60,6 +49,9 @@ class ComboBoxTile(QWidget):
 
     def setTitle(self, text: str) -> None:
         self.title.setText(text)
+
+    def addItem(self, item: str) -> None:
+        self.combo_box.addItem(item)
 
     def addItems(self, items: List[str]) -> None:
         self.combo_box.addItems(items)

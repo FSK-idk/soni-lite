@@ -13,7 +13,10 @@ from PySide6.QtCore import (
     Signal,
 )
 
-# TODO: add functionality
+from ui.widgets.pyside.label_widget import LabelWidget
+from ui.widgets.pyside.slider_widget import SliderWidget
+from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
+
 class SliderTile(QWidget):
     # signals
 
@@ -24,26 +27,14 @@ class SliderTile(QWidget):
 
         # widgets
 
-        self.title = QLabel(self)
-        self.title.setMinimumWidth(1)
-        self.title.setFixedHeight(20)
-        self.title.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        self.title.setFont(QFont(":/fonts/NotoSans.ttf",12))
+        self.title = LabelWidget(self)
 
-        self.slider = QSlider(Qt.Orientation.Horizontal, self)
-        self.slider.setMinimumWidth(1)
-        self.slider.setFixedHeight(25)
-        self.slider.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        self.slider.setFont(QFont(":/fonts/NotoSans.ttf",12))
-        self.slider.setMaximum(10)
-        self.slider.valueChanged.connect(self.valueChanged.emit)
+        self.slider = SliderWidget(self)
+        self.slider.setOrientation(Qt.Orientation.Horizontal)
 
         # layout
 
-        self.main_layout = QVBoxLayout()
-        self.main_layout.setContentsMargins(0,0,0,0)
-        self.main_layout.setSpacing(5)
-
+        self.main_layout = VBoxLayoutWidget()
         self.main_layout.addWidget(self.title)
         self.main_layout.addWidget(self.slider)
 
@@ -54,7 +45,7 @@ class SliderTile(QWidget):
         self.setMaximumHeight(self.main_layout.minimumSize().height())
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
-    def setTitle(self, text : str) -> None:
+    def setTitle(self, text: str) -> None:
         self.title.setText(text)
 
     def value(self) -> int:

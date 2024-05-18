@@ -1,18 +1,15 @@
 from PySide6.QtWidgets import (
     QWidget,
-    QVBoxLayout,
-    QLabel,
-    QLineEdit,
     QSizePolicy,
-)
-from PySide6.QtGui import (
-    QFont,
 )
 from PySide6.QtCore import (
     Signal,
 )
 
-# TODO: add functionality
+from ui.widgets.pyside.label_widget import LabelWidget
+from ui.widgets.pyside.line_edit_widget import LineEditWidget
+from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
+
 class LineEditTile(QWidget):
     # signals
 
@@ -23,25 +20,14 @@ class LineEditTile(QWidget):
 
         # widgets
 
-        self.title = QLabel(self)
-        self.title.setMinimumWidth(1)
-        self.title.setFixedHeight(20)
-        self.title.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        self.title.setFont(QFont(":/fonts/NotoSans.ttf",12))
+        self.title = LabelWidget(self)
+        self.line_edit = LineEditWidget(self)
 
-        self.line_edit = QLineEdit(self)
-        self.line_edit.setMinimumWidth(1)
-        self.line_edit.setFixedHeight(25)
-        self.line_edit.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        self.line_edit.setFont(QFont(":/fonts/NotoSans.ttf",12))
         self.line_edit.textChanged.connect(self.textChanged.emit)
 
         # layout
 
-        self.main_layout = QVBoxLayout()
-        self.main_layout.setContentsMargins(0,0,0,0)
-        self.main_layout.setSpacing(5)
-
+        self.main_layout = VBoxLayoutWidget()
         self.main_layout.addWidget(self.title)
         self.main_layout.addWidget(self.line_edit)
 

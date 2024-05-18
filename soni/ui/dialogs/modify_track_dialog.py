@@ -32,7 +32,7 @@ from PySide6.QtSql import (
 )
 
 from ui.widgets.illustration_widget import IllustrationWidget
-from ui.widgets.search_panel_widget import SearchPanelWidget
+from ui.widgets.audio_info_panel_widget import AudioInfoPanelWidget
 
 class NewAudioDialog(QDialog):
     def __init__(self, parent: QWidget | None = None):
@@ -60,7 +60,7 @@ class NewAudioDialog(QDialog):
         self.path_line_edit = QLineEdit()
         self.path_button = QPushButton()
         self.audio_text = QTextEdit()
-        self.search_panel = SearchPanelWidget()
+        self.search_panel = AudioInfoPanelWidget()
 
         self.path_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
 

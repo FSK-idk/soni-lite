@@ -13,7 +13,8 @@ from PySide6.QtCore import (
     Signal,
 )
 
-from ui.widgets.clickable_label import ClickableLabel
+from ui.widgets.pyside.clickable_label import ClickableLabelWidget
+from ui.widgets.pyside.h_box_layout_widget import HBoxLayoutWidget
 
 
 class TrackHeaderWidget(QWidget):
@@ -25,13 +26,14 @@ class TrackHeaderWidget(QWidget):
         self.setMinimumSize(100, 30)
 
         # widgets
-        self.header = ClickableLabel("Track name", self)
+        self.header = ClickableLabelWidget(self)
+        self.header.setText("Track name")
         self.header.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.header.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.header.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         self.header.clicked.connect(self.headerClickedEvent)
 
         # layout
-        self.main_layout = QHBoxLayout()
+        self.main_layout = HBoxLayoutWidget()
         self.main_layout.addWidget(self.header)
         
         self.setLayout(self.main_layout)

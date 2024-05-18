@@ -8,9 +8,13 @@ from PySide6.QtCore import (
     Qt,
 )
 
-from ui.widgets.clickable_label import ClickableLabel
+from ui.widgets.pyside.clickable_label import ClickableLabelWidget
 
 from modules.time import TimeFormat, TimeSpan
+
+from ui.widgets.pyside.slider_widget import SliderWidget
+from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
+from ui.widgets.pyside.h_box_layout_widget import HBoxLayoutWidget
 
 
 class TimelineWidget(QWidget):
@@ -25,28 +29,32 @@ class TimelineWidget(QWidget):
         self.time_span.set_end_time(123456)
 
         # widgets
-        self.current_time = ClickableLabel(self.time_span.get_current_text(), self)
+        self.current_time = ClickableLabelWidget(self)
+        self.current_time.setText(self.time_span.get_current_text())
         self.current_time.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self.current_time.clicked.connect(self.setCurrentReversed)
 
-        self.end_time = ClickableLabel(self.time_span.get_end_text(), self)
+        self.end_time = ClickableLabelWidget(self)
+        self.end_time.setText(self.time_span.get_end_text())
         self.end_time.setAlignment(Qt.AlignmentFlag.AlignRight)
 
-        self.timeline = QSlider(Qt.Orientation.Horizontal, self)
+        self.timeline = SliderWidget(self)
         self.timeline.setMaximum(self.time_span.end.milliseconds)
         self.timeline.valueChanged.connect(self.setCurrentMilliseconds)
 
         # layout
-        self.time_layout = QHBoxLayout()
+        self.time_layout = HBoxLayoutWidget()
         self.time_layout.addWidget(self.current_time)
         self.time_layout.addStretch()
         self.time_layout.addWidget(self.end_time)
 
-        self.main_layout = QVBoxLayout()
+        self.main_layout = VBoxLayoutWidget()
         self.main_layout.addLayout(self.time_layout)
         self.main_layout.addWidget(self.timeline)
 
         self.setLayout(self.main_layout)
+
+        print(self.timeline.height())
 
     def setCurrentMilliseconds(self, milliseconds : int) -> None:
         self.time_span.set_current_time(milliseconds)
