@@ -37,7 +37,7 @@ class AudioPlayerWindow(QMainWindow):
         super().__init__()
 
         # init
-        
+
         os.environ['QT_MULTIMEDIA_PREFERRED_PLUGINS'] = 'windowsmediafoundation'
         data_base.init()
 
@@ -85,7 +85,6 @@ class AudioPlayerWindow(QMainWindow):
         self.widget = QWidget(self)
         self.widget.setLayout(self.main_layout)
         self.setCentralWidget(self.widget)
-
 
         # menu
 

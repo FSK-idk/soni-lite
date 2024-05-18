@@ -58,6 +58,9 @@ class DataBase():
             query.exec()
 
     def select_album(self, name: str) -> int | None:
+        if name == "":
+            return None
+        
         query = QSqlQuery(self.data_base)
         query.prepare(DataBaseQuery.select_album_id)
         query.bindValue(':name', name)
@@ -73,6 +76,9 @@ class DataBase():
             return query.lastInsertId()
 
     def select_genre(self, name: str) -> int | None:
+        if name == "":
+            return None
+        
         query = QSqlQuery(self.data_base)
         query.prepare(DataBaseQuery.select_genre_id)
         query.bindValue(':name', name)
@@ -84,6 +90,9 @@ class DataBase():
             return None
         
     def select_performer(self, name: str) -> int | None:
+        if name == "":
+            return None
+        
         query = QSqlQuery(self.data_base)
         query.prepare(DataBaseQuery.select_performer_id)
         query.bindValue(':name', name)
@@ -99,6 +108,9 @@ class DataBase():
             return query.lastInsertId()
         
     def select_composer(self, name: str) -> int | None:
+        if name == "":
+            return None
+        
         query = QSqlQuery(self.data_base)
         query.prepare(DataBaseQuery.select_composer_id)
         query.bindValue(':name', name)
@@ -114,6 +126,9 @@ class DataBase():
             return query.lastInsertId()
         
     def select_publisher(self, name: str) -> int | None:
+        if name == "":
+            return None
+        
         query = QSqlQuery(self.data_base)
         query.prepare(DataBaseQuery.select_publisher_id)
         query.bindValue(':name', name)
@@ -129,6 +144,9 @@ class DataBase():
             return query.lastInsertId()
         
     def select_modified_by(self, name: str) -> int | None:
+        if name == "":
+            return None
+        
         query = QSqlQuery(self.data_base)
         query.prepare(DataBaseQuery.select_modified_by_id)
         query.bindValue(':name', name)
@@ -168,6 +186,9 @@ class DataBase():
             return None
 
     def select_picture_artist(self, name: str) -> int | None:
+        if name == "":
+            return None
+        
         query = QSqlQuery(self.data_base)
         query.prepare(DataBaseQuery.select_picture_artist_id)
         query.bindValue(':name', name)
@@ -183,6 +204,9 @@ class DataBase():
             return query.lastInsertId()
 
     def select_text_author(self, name: str) -> int | None:
+        if name == "":
+            return None
+        
         query = QSqlQuery(self.data_base)
         query.prepare(DataBaseQuery.select_text_author_id)
         query.bindValue(':name', name)

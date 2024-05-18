@@ -12,7 +12,8 @@ from PySide6.QtWidgets import (
     QMenuBar,
     QTableView,
     QScrollArea,
-    QDialog
+    QDialog,
+    QAbstractItemView,
 )
 from PySide6.QtGui import (
     QScreen,
@@ -21,6 +22,7 @@ from PySide6.QtGui import (
 )
 from PySide6.QtCore import (
     Qt,
+    Signal
 )
 from PySide6.QtSql import (
     QSqlTableModel,
@@ -29,6 +31,7 @@ from PySide6.QtSql import (
 from modules.data_base import data_base
 
 from ui.dialogs.new_audio_dialog import NewAudioDialog
+from ui.dialogs.modify_audio_dialog import ModifyAudioDialog
 
 from ui.widgets.pyside.push_button_widget import PushButtonWidget
 from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
@@ -37,6 +40,11 @@ from ui.widgets.pyside.h_box_layout_widget import HBoxLayoutWidget
 from ui.widgets.search_info_panel_widget import SearchInfoPanelWidget
 
 class LibraryWindow(QMainWindow):
+    # signals
+
+    audioAdded = Signal()
+    audioModified = Signal()
+
     def __init__(self) -> None:
         super().__init__()
 
@@ -52,6 +60,9 @@ class LibraryWindow(QMainWindow):
 
         self.table.setModel(self.model)
         self.table.horizontalHeader().setFont(QFont(":/fonts/NotoSans.ttf",10))
+        self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.table.verticalHeader().hide()
 
         self.search_button.setText("Search")
 
@@ -79,7 +90,7 @@ class LibraryWindow(QMainWindow):
         self.modify_track_action = QAction("modify", self)
         self.modify_track_action.triggered.connect(self.modifyTrack)
         self.menuBar().addAction(self.modify_track_action)
-        
+
         # self
 
         self.setWindowTitle("soni.library")
@@ -92,10 +103,15 @@ class LibraryWindow(QMainWindow):
         self.move(geometry.topLeft())
 
     def modifyTrack(self) -> None:
-        pass
+        dialog = ModifyAudioDialog(self)
+        if dialog.exec():
+            # data_base.insert_audio(dialog.info)
+            self.model.select()
+            self.audioModified.emit()
 
     def newAudio(self) -> None:
         dialog = NewAudioDialog(self)
         if dialog.exec():
             data_base.insert_audio(dialog.info)
+            self.audioAdded.emit()
             self.model.select()

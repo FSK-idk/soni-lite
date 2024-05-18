@@ -67,6 +67,7 @@ class AudioInfoPanelWidget(QScrollArea):
         # self.duration
         self.genre.setTitle("Genre")
         self.genre.addItems(DataBaseDefault.genres) # TODO: From db
+        self.genre.combo_box.setEditable(False)
         # self.language
         # self.rating
         # self.bpm

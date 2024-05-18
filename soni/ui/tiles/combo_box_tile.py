@@ -1,7 +1,7 @@
 from typing import List
 
 from PySide6.QtWidgets import QWidget, QSizePolicy
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Signal, QAbstractItemModel
 
 from ui.widgets.pyside.label_widget import LabelWidget
 from ui.widgets.pyside.combo_box_widget import ComboBoxWidget
@@ -34,6 +34,15 @@ class ComboBoxTile(QWidget):
 
         self.setFixedHeight(self.main_layout.minimumSize().height())
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+
+    def setEditable(self, editable: bool) -> None:
+        self.combo_box.setEditable(editable)
+
+    def setModel(self, model: QAbstractItemModel) -> None:
+        self.combo_box.setModel(model)
+
+    def setModelColumn(self, column: int) -> None:
+        self.combo_box.setModelColumn(column)
 
     def setTitle(self, text: str) -> None:
         self.title.setText(text)

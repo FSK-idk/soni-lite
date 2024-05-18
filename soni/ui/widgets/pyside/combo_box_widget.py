@@ -13,6 +13,7 @@ class ComboBoxWidget(QComboBox):
         self.setMaxVisibleItems(5)
         self.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self.view().setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setEditable(True)
 
     def wheelEvent(self, event: QWheelEvent):
         event.ignore()

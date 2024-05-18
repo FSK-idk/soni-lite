@@ -8,10 +8,14 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import (
     Qt,
 )
+from PySide6.QtSql import (
+    QSqlTableModel,
+)
 
 from modules.data_base_default import DataBaseDefault
 from modules.audio_info import AudioInfo
 from modules.config import config
+from modules.data_base import data_base
 
 from ui.tiles.combo_box_tile import ComboBoxTile
 from ui.tiles.line_edit_tile import LineEditTile
@@ -29,6 +33,24 @@ class SearchInfoPanelWidget(QWidget):
         # attributes
 
         self.advanced_open = False
+
+        self.genre_model = QSqlTableModel(self, data_base.data_base)
+        self.genre_model.setTable('Genre')
+        self.genre_column = self.genre_model.fieldIndex('name')
+        self.genre_model.setSort(self.genre_column, Qt.SortOrder.AscendingOrder)
+        self.genre_model.select()
+
+        # self.album_model = QSqlTableModel(self, data_base.data_base)
+        # self.album_model.setTable('Album')
+        # self.album_column = self.album_model.fieldIndex('name')
+        # self.album_model.setSort(self.album_column, Qt.SortOrder.AscendingOrder)
+        # self.album_model.select()
+
+        self.performer_model = QSqlTableModel(self, data_base.data_base)
+        self.performer_model.setTable('Performer')
+        self.performer_column = self.performer_model.fieldIndex('name')
+        self.performer_model.setSort(self.performer_column, Qt.SortOrder.AscendingOrder)
+        self.performer_model.select()
 
         # widgets
 
@@ -104,11 +126,16 @@ class SearchInfoPanelWidget(QWidget):
         self.album_title.setTitle("Album title")
         # self.duration
         self.genre.setTitle("Genre")
-        self.genre.addItems(DataBaseDefault.genres) # TODO: From db
+        # self.genre.addItems(DataBaseDefault.genres) # TODO: From db
+        self.genre.setEditable(False)
+        self.genre.setModel(self.genre_model)
+        self.genre.setModelColumn(self.genre_column)
         # self.language
         # self.rating
         # self.bpm
         self.performer.setTitle("Performer")
+        self.performer.setModel(self.performer_model)
+        self.performer.setModelColumn(self.performer_column)
         self.composer.setTitle("Composer")
         self.publisher.setTitle("Publisher")
         self.modified_by.setTitle("Modified by")

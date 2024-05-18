@@ -8,6 +8,8 @@ from PySide6.QtGui import (
     QScreen,
 )
 
+from modules.audio_info import AudioInfo
+
 from ui.widgets.pyside.push_button_widget import PushButtonWidget
 from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
 from ui.widgets.pyside.h_box_layout_widget import HBoxLayoutWidget
@@ -20,6 +22,10 @@ from ui.tiles.text_edit_tile import TextEditTile
 class ModifyAudioDialog(QDialog):
     def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
+
+        # attributes
+
+        self.info = AudioInfo()
 
         # widgets
 
@@ -69,8 +75,8 @@ class ModifyAudioDialog(QDialog):
         self.move(geometry.topLeft())
     
     def save(self):
-        info = self.search_panel.getAudioInfo()
-        if info.title == "":
+        self.info = self.search_panel.getAudioInfo()
+        if self.info.title == "":
             dlg = QMessageBox(self)
             dlg.setWindowTitle("Attention")
             dlg.setText("You have not entered title")
@@ -78,6 +84,7 @@ class ModifyAudioDialog(QDialog):
             dlg.setIcon(QMessageBox.Icon.Warning)
             button = dlg.exec()            
             return
+        self.info.text = self.text.text()
         self.accept()
 
     def cancel(self):
