@@ -109,7 +109,7 @@ class SearchInfoPanelWidget(QWidget):
 
         # self.duration
         self.genre.setTitle("Genre")
-        self.genre.setReadOnly(True)
+        # self.genre.setReadOnly(True)
         self.genre.setTable("Genre")
         # self.language
         # self.rating

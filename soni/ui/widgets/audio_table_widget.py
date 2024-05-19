@@ -16,15 +16,16 @@ from PySide6.QtWidgets import (
     QAbstractItemView,
     QHeaderView,
     QLineEdit,
-    QStyledItemDelegate
+    QStyledItemDelegate,
 )
 from PySide6.QtGui import (
     QScreen,
     QAction,
-    QFont
+    QFont,
 )
 from PySide6.QtCore import (
     Qt,
+    QSortFilterProxyModel,
     Signal
 )
 from PySide6.QtSql import (
@@ -32,7 +33,7 @@ from PySide6.QtSql import (
     QSqlRelationalTableModel,
     QSqlRelation,
     QSqlQuery,
-    QSqlQueryModel
+    QSqlQueryModel,
 )
 
 from modules.data_base import data_base
@@ -86,6 +87,12 @@ class AudioTableWidget(QWidget):
         # widgets
         
         self.table = QTableView(self)
+        self.table.setSortingEnabled(True)
+
+        proxyModel =  QSortFilterProxyModel(self)
+
+        proxyModel.setSourceModel(self.model)
+        self.table.setModel(proxyModel)
 
         self.table.setModel(self.model)
         self.table.horizontalHeader().setFont(QFont(":/fonts/NotoSans.ttf",10))
@@ -93,6 +100,9 @@ class AudioTableWidget(QWidget):
         self.table.verticalHeader().hide()
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
         self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        self.table.horizontalHeader().sortIndicatorChanged.connect(self.onSortIndicatorChanged)
+
+        self.sort_data = (True, 0)
 
         # layout
 
@@ -101,8 +111,12 @@ class AudioTableWidget(QWidget):
 
         self.setLayout(self.main_layout)
 
+    def onSortIndicatorChanged(self, logicalIndex: int, order: Qt.SortOrder):
+        self.sort_data = (order != Qt.SortOrder.AscendingOrder, logicalIndex)
+        self.onTableUpdate()
+
     def onTableUpdate(self):
-        query = QSqlQuery(self.model.query().executedQuery(), data_base.data_base)
+        query = QSqlQuery(Queries.select_audio(self.sort_data[0], self.sort_data[1]), data_base.data_base)
         self.model.setQuery(query)
 
     def onShownParametersChanged(self):
