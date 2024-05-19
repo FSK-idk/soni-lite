@@ -18,6 +18,7 @@ from PySide6.QtCore import (
 
 from modules.audio_info import AudioInfo
 from modules.data_base import data_base
+from modules.query import Queries
 
 from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
 from ui.widgets.pyside.h_box_layout_widget import HBoxLayoutWidget
@@ -125,6 +126,11 @@ class AudioPlayerWindow(QMainWindow):
 
     def test(self, checked: bool) -> None:
         print("test")
+
+        # data_base.query_select_all("Genre", ["id", "name"])
+        # print(', '.join(["qwe", 'None',"qw1"]))
+        # print(Queries.qcreate_table_audio())
+        return
 
         from modules.time import TimeFormat
         self.timeline.setTimeFormat(TimeFormat.HHmmss if checked else TimeFormat.mmss)

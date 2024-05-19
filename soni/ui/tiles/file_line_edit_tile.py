@@ -62,5 +62,8 @@ class FileLineEditTile(QWidget):
     def setTitle(self, text: str) -> None:
         self.title.setText(text)
 
+    def setText(self, text: str) -> None:
+        self.line_edit.setText(text)
+
     def text(self) -> str:
         return self.line_edit.text()

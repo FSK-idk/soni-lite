@@ -7,6 +7,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import (
     Qt,
+    Signal
 )
 from PySide6.QtSql import (
     QSqlTableModel,
@@ -27,30 +28,16 @@ from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
 
 
 class SearchInfoPanelWidget(QWidget):
+    # signals
+
+    shownParametersChanged = Signal()
+
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         
         # attributes
 
         self.advanced_open = False
-
-        self.genre_model = QSqlTableModel(self, data_base.data_base)
-        self.genre_model.setTable('Genre')
-        self.genre_column = self.genre_model.fieldIndex('name')
-        self.genre_model.setSort(self.genre_column, Qt.SortOrder.AscendingOrder)
-        self.genre_model.select()
-
-        # self.album_model = QSqlTableModel(self, data_base.data_base)
-        # self.album_model.setTable('Album')
-        # self.album_column = self.album_model.fieldIndex('name')
-        # self.album_model.setSort(self.album_column, Qt.SortOrder.AscendingOrder)
-        # self.album_model.select()
-
-        self.performer_model = QSqlTableModel(self, data_base.data_base)
-        self.performer_model.setTable('Performer')
-        self.performer_column = self.performer_model.fieldIndex('name')
-        self.performer_model.setSort(self.performer_column, Qt.SortOrder.AscendingOrder)
-        self.performer_model.select()
 
         # widgets
 
@@ -85,116 +72,130 @@ class SearchInfoPanelWidget(QWidget):
 
         self.show_parameters_label = LabelWidget(self)
 
-        # self.filepath_check_box
-        self.playlist_check_box = CheckBoxWidget(self)
-        self.title_check_box = CheckBoxWidget(self)
-        self.album_title_check_box = CheckBoxWidget(self)
-        # self.duration_check_box
-        self.genre_check_box = CheckBoxWidget(self)
-        # self.language_check_box
-        # self.rating_check_box
-        # self.bpm_check_box
-        self.performer_check_box = CheckBoxWidget(self)
-        self.composer_check_box = CheckBoxWidget(self)
-        self.publisher_check_box = CheckBoxWidget(self)
-        self.modified_by_check_box = CheckBoxWidget(self)
-        # self.release_date_check_box
-        # self.copyright_check_box
-        # self.comments_check_box
-        # self.picture_filepath_check_box
-        self.picture_artist_check_box = CheckBoxWidget(self)
-        # self.text_check_box
-        self.text_author_check_box = CheckBoxWidget(self)
-        self.original_title_check_box = CheckBoxWidget(self)
-        self.original_album_title_check_box = CheckBoxWidget(self)
-        self.original_performer_check_box = CheckBoxWidget(self)
-        self.original_composer_check_box = CheckBoxWidget(self)
-        self.original_publisher_check_box = CheckBoxWidget(self)
-        # self.original_release_date_check_box
-        self.original_text_author_check_box = CheckBoxWidget(self)
-        self.isrc_check_box = CheckBoxWidget(self)
-        # self.website_check_box
-        # self.copyright_website_check_box
+        self.parameters_check_boxes = {
+            # 'filepath'
+            'playlist': CheckBoxWidget(self),
+            'title': CheckBoxWidget(self),
+            'album_title': CheckBoxWidget(self),
+            # 'duration'
+            'genre': CheckBoxWidget(self),
+            # 'language'
+            # 'rating'
+            # 'bpm'
+            'performer': CheckBoxWidget(self),
+            'composer': CheckBoxWidget(self),
+            'publisher': CheckBoxWidget(self),
+            'modified_by': CheckBoxWidget(self),
+            # 'release_date'
+            # 'copyright'
+            # 'comments'
+            # 'picture_filepath'
+            'picture_artist': CheckBoxWidget(self),
+            # 'text'
+            'text_author': CheckBoxWidget(self),
+            'original_title': CheckBoxWidget(self),
+            'original_album_title': CheckBoxWidget(self),
+            'original_performer': CheckBoxWidget(self),
+            'original_composer': CheckBoxWidget(self),
+            'original_publisher': CheckBoxWidget(self),
+            # 'original_release_date'
+            'original_text_author': CheckBoxWidget(self),
+            'isrc': CheckBoxWidget(self),
+            # 'website'
+            # 'copyright_website'
+        }
+
 
         self.advanced_button = PushButtonWidget(self)
         self.standard_button = PushButtonWidget(self)
+        self.apply_button = PushButtonWidget(self)
 
         # setup widgets
 
         self.playlist.setTitle("Playlist")
         self.title.setTitle("Title")
         self.album_title.setTitle("Album title")
+
         # self.duration
         self.genre.setTitle("Genre")
-        # self.genre.addItems(DataBaseDefault.genres) # TODO: From db
-        self.genre.setEditable(False)
-        self.genre.setModel(self.genre_model)
-        self.genre.setModelColumn(self.genre_column)
+        self.genre.setReadOnly(True)
+        self.genre.setTable("Genre")
         # self.language
         # self.rating
         # self.bpm
         self.performer.setTitle("Performer")
-        self.performer.setModel(self.performer_model)
-        self.performer.setModelColumn(self.performer_column)
+        self.performer.setTable("Performer")
         self.composer.setTitle("Composer")
+        self.composer.setTable("Composer")
         self.publisher.setTitle("Publisher")
+        self.publisher.setTable("Publisher")
         self.modified_by.setTitle("Modified by")
+        self.modified_by.setTable("ModifiedBy")
         # self.release_date
         # self.copyright
         # self.comments
         # self.picture_filepath
         self.picture_artist.setTitle("Picture artist")
+        self.picture_artist.setTable("PictureArtist")
         # self.text
         self.text_author.setTitle("Text author")
+        self.text_author.setTable("TextAuthor")
         self.original_title.setTitle("Original title")
         self.original_album_title.setTitle("Original album title")
         self.original_performer.setTitle("Original performer")
+        self.original_performer.setTable("Performer")
         self.original_composer.setTitle("Original composer")
+        self.original_composer.setTable("Composer")
         self.original_publisher.setTitle("Original publisher")
+        self.original_publisher.setTable("Publisher")
         # self.original_release_date
         self.original_text_author.setTitle("Original text author")
+        self.original_text_author.setTable("TextAuthor")
         self.isrc.setTitle("ISRC")
         # self.website
         # self.copyright_website
 
+        self.clearInput()
+
         self.show_parameters_label.setText("Shown parameters")
 
-        # self.filepath_check_box
-        self.playlist_check_box.setText("Show playlist")
-        self.title_check_box.setText("Show title")
-        self.album_title_check_box.setText("Show album title")
-        # self.duration_check_box
-        self.genre_check_box.setText("Show genre")
-        # self.language_check_box
-        # self.rating_check_box
-        # self.bpm_check_box
-        self.performer_check_box.setText("Show performer")
-        self.composer_check_box.setText("Show composer")
-        self.publisher_check_box.setText("Show publisher")
-        self.modified_by_check_box.setText("Show modified by")
-        # self.release_date_check_box
-        # self.copyright_check_box
-        # self.comments_check_box
-        # self.picture_filepath_check_box
-        self.picture_artist_check_box.setText("Show picture artist")
-        # self.text_check_box
-        self.text_author_check_box.setText("Show text author")
-        self.original_title_check_box.setText("Show original title")
-        self.original_album_title_check_box.setText("Show original album title")
-        self.original_performer_check_box.setText("Show original performer")
-        self.original_composer_check_box.setText("Show original composer")
-        self.original_publisher_check_box.setText("Show original publisher")
-        # self.original_release_date_check_box
-        self.original_text_author_check_box.setText("Show original text author")
-        self.isrc_check_box.setText("Show ISRC")
-        # self.website_check_box
-        # self.copyright_website_check_box
-
+        # filepath
+        self.parameters_check_boxes['playlist'].setText("Show playlist")
+        self.parameters_check_boxes['title'].setText("Show title")
+        self.parameters_check_boxes['album_title'].setText("Show album title")
+        # duration_check_box
+        self.parameters_check_boxes['genre'].setText("Show genre")
+        # language
+        # rating
+        # bpm
+        self.parameters_check_boxes['performer'].setText("Show performer")
+        self.parameters_check_boxes['composer'].setText("Show composer")
+        self.parameters_check_boxes['publisher'].setText("Show publisher")
+        self.parameters_check_boxes['modified_by'].setText("Show modified by")
+        # release_date
+        # copyright
+        # comments
+        # picture_filepath
+        self.parameters_check_boxes['picture_artist'].setText("Show picture artist")
+        # text
+        self.parameters_check_boxes['text_author'].setText("Show text author")
+        self.parameters_check_boxes['original_title'].setText("Show original title")
+        self.parameters_check_boxes['original_album_title'].setText("Show original album title")
+        self.parameters_check_boxes['original_performer'].setText("Show original performer")
+        self.parameters_check_boxes['original_composer'].setText("Show original composer")
+        self.parameters_check_boxes['original_publisher'].setText("Show original publisher")
+        # original_release_date
+        self.parameters_check_boxes['original_text_author'].setText("Show original text author")
+        self.parameters_check_boxes['isrc'].setText("Show ISRC")
+        # website_check_box
+        # copyright_website_check_box
 
         self.advanced_button.setText("Advanced")
         self.advanced_button.clicked.connect(self.openAdvanced)
         self.standard_button.setText("Standard")
         self.standard_button.clicked.connect(self.openAdvanced)
+        self.apply_button.setText("Apply")
+        self.apply_button.clicked.connect(self.applyParameters)
 
         # grouping
 
@@ -202,54 +203,19 @@ class SearchInfoPanelWidget(QWidget):
         self.advanced_parameters: List[QWidget] = []
 
         # get from config
-        config_data = config.items('Search Panel Parameters')
-        for key, value in config_data:
-            match value:
+        for parameter, _ in self.parameters_check_boxes.items():
+            match config['Search Panel Parameters'][parameter]:
                 case 'Standard':
-                    self.standard_parameters.append(getattr(self, key))
+                    self.standard_parameters.append(getattr(self, parameter))
                 case 'Advanced':
-                    self.advanced_parameters.append(getattr(self, key))
+                    self.advanced_parameters.append(getattr(self, parameter))
 
         self.shown_parameters: List[CheckBoxWidget] = []
 
-        config_data = config.items('Library Shown Parameters')
-        for key, value in config_data:
-            match value:
+        for parameter, check_box in self.parameters_check_boxes.items():
+            match config['Library Shown Parameters'][parameter]:
                 case 'True':
-                    self.shown_parameters.append(getattr(self, key + '_check_box'))
-
-        self.parameters_check_boxes = [
-            # self.filepath_check_box,
-            self.playlist_check_box,
-            self.title_check_box,
-            self.album_title_check_box,
-            # self.duration_check_box,
-            self.genre_check_box,
-            # self.language_check_box,
-            # self.rating_check_box,
-            # self.bpm_check_box,
-            self.performer_check_box,
-            self.composer_check_box,
-            self.publisher_check_box,
-            self.modified_by_check_box,
-            # self.release_date_check_box,
-            # self.copyright_check_box,
-            # self.comments_check_box,
-            # self.picture_filepath_check_box,
-            self.picture_artist_check_box,
-            # self.text_check_box,
-            self.text_author_check_box,
-            self.original_title_check_box,
-            self.original_album_title_check_box,
-            self.original_performer_check_box,
-            self.original_composer_check_box,
-            self.original_publisher_check_box,
-            # self.original_release_date_check_box,
-            self.original_text_author_check_box,
-            self.isrc_check_box,
-            # self.website_check_box,
-            # self.copyright_website_check_box,
-        ]
+                    self.shown_parameters.append(check_box)
 
         for check_box in self.shown_parameters:
             check_box.setChecked(True)
@@ -268,8 +234,9 @@ class SearchInfoPanelWidget(QWidget):
         for parameter in self.advanced_parameters:
             self.extended_layout.addWidget(parameter)
         self.extended_layout.addWidget(self.show_parameters_label)
-        for check_box in self.parameters_check_boxes:
+        for _, check_box in self.parameters_check_boxes.items():
             self.extended_layout.addWidget(check_box)
+        self.extended_layout.addWidget(self.apply_button)
         self.extended_layout.addWidget(self.standard_button)
 
         self.standard_widget = QWidget(self)
@@ -297,6 +264,60 @@ class SearchInfoPanelWidget(QWidget):
     def openAdvanced(self) -> None:
         self.advanced_open = not self.advanced_open
         self.main_layout.setCurrentIndex(1 if self.advanced_open else 0)
+
+    def onTableUpdate(self) -> None:
+        self.playlist.onTableUpdate()
+        self.genre.onTableUpdate()
+        self.performer.onTableUpdate()
+        self.composer.onTableUpdate()
+        self.publisher.onTableUpdate()
+        self.modified_by.onTableUpdate()
+        self.picture_artist.onTableUpdate()
+        self.text_author.onTableUpdate()
+        self.original_performer.onTableUpdate()
+        self.original_composer.onTableUpdate()
+        self.original_publisher.onTableUpdate()
+        self.original_text_author.onTableUpdate()
+
+    def clearInput(self) -> None:
+        self.playlist.clearInput()
+        self.title.setText("")
+        self.album_title.setText("")
+        # self.duration
+        self.genre.clearInput()
+        # self.language
+        # self.rating
+        # self.bpm
+        self.performer.clearInput()
+        self.composer.clearInput()
+        self.publisher.clearInput()
+        self.modified_by.clearInput()
+        # self.release_date
+        # self.copyright
+        self.picture_artist.clearInput()
+        self.text_author.clearInput()
+        self.original_title.setText("")
+        self.original_album_title.setText("")
+        self.original_performer.clearInput()
+        self.original_composer.clearInput()
+        self.original_publisher.clearInput()
+        # self.original_release_date
+        self.original_text_author.clearInput()
+        self.isrc.setText("")
+        # self.website
+        # self.copyright_website
+
+    def applyParameters(self) -> None:
+
+        for parameter, check_box in self.parameters_check_boxes.items():
+            if check_box.isChecked():
+                config['Library Shown Parameters'][parameter] = 'True'
+            else:
+                config['Library Shown Parameters'][parameter] = 'False'
+
+        config.write()
+
+        self.shownParametersChanged.emit()
 
     def getAudioInfo(self) -> AudioInfo:
         info = AudioInfo()

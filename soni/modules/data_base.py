@@ -1,5 +1,6 @@
 import imghdr
 import os
+from typing import List
 
 from PySide6.QtSql import (
     QSqlDatabase,
@@ -8,7 +9,7 @@ from PySide6.QtSql import (
 
 from modules.audio_info import AudioInfo
 from modules.data_base_default import DataBaseDefault
-from modules.data_base_query import DataBaseQuery
+from modules.query import Queries
 
 
 class DataBase():
@@ -22,37 +23,37 @@ class DataBase():
     def create_data_base(self) -> None:
         # create tables
 
-        QSqlQuery(DataBaseQuery.create_table_audio, self.data_base).exec()
-        QSqlQuery(DataBaseQuery.create_table_album, self.data_base).exec()
-        QSqlQuery(DataBaseQuery.create_table_genre, self.data_base).exec()
-        QSqlQuery(DataBaseQuery.create_table_language, self.data_base).exec()
-        QSqlQuery(DataBaseQuery.create_table_performer, self.data_base).exec()
-        QSqlQuery(DataBaseQuery.create_table_composer, self.data_base).exec()
-        QSqlQuery(DataBaseQuery.create_table_composer, self.data_base).exec()
-        QSqlQuery(DataBaseQuery.create_table_modified_by, self.data_base).exec()
-        QSqlQuery(DataBaseQuery.create_table_picture_mime_type, self.data_base).exec()
-        QSqlQuery(DataBaseQuery.create_table_picture_artist, self.data_base).exec()
-        QSqlQuery(DataBaseQuery.create_table_text_author, self.data_base).exec()
-        QSqlQuery(DataBaseQuery.create_table_playlist, self.data_base).exec()
+        QSqlQuery(Queries.create_table_audio(), self.data_base).exec()
+        QSqlQuery(Queries.create_table_album(), self.data_base).exec()
+        QSqlQuery(Queries.create_table_genre(), self.data_base).exec()
+        QSqlQuery(Queries.create_table_language(), self.data_base).exec()
+        QSqlQuery(Queries.create_table_performer(), self.data_base).exec()
+        QSqlQuery(Queries.create_table_composer(), self.data_base).exec()
+        QSqlQuery(Queries.create_table_publisher(), self.data_base).exec()
+        QSqlQuery(Queries.create_table_modified_by(), self.data_base).exec()
+        QSqlQuery(Queries.create_table_picture_mime_type(), self.data_base).exec()
+        QSqlQuery(Queries.create_table_picture_artist(), self.data_base).exec()
+        QSqlQuery(Queries.create_table_text_author(), self.data_base).exec()
+        QSqlQuery(Queries.create_table_playlist, self.data_base).exec()
 
         # store default data
 
         query = QSqlQuery(self.data_base)
-        query.prepare(DataBaseQuery.insert_genre)
+        query.prepare(Queries.insert_genre)
         for name in DataBaseDefault.genres:
             query.bindValue(':name', name)
             query.exec()
 
 
         query = QSqlQuery(self.data_base)
-        query.prepare(DataBaseQuery.insert_language)
+        query.prepare(Queries.insert_language)
         for code, name in DataBaseDefault.languages.items():
             query.bindValue(':name', name)
             query.bindValue(':code', code)
             query.exec()
         
         query = QSqlQuery(self.data_base)
-        query.prepare(DataBaseQuery.insert_picture_mime_type)
+        query.prepare(Queries.insert_picture_mime_type)
         for type in DataBaseDefault.picture_mime_types:
             query.bindValue(':type', type)
             query.exec()
@@ -62,7 +63,7 @@ class DataBase():
             return None
         
         query = QSqlQuery(self.data_base)
-        query.prepare(DataBaseQuery.select_album_id)
+        query.prepare(Queries.select_album_id)
         query.bindValue(':name', name)
         query.exec()
         
@@ -70,7 +71,7 @@ class DataBase():
             return query.value(0)
         else:
             query = QSqlQuery(self.data_base)
-            query.prepare(DataBaseQuery.insert_album)
+            query.prepare(Queries.insert_album)
             query.bindValue(':name', name)
             query.exec()
             return query.lastInsertId()
@@ -80,7 +81,7 @@ class DataBase():
             return None
         
         query = QSqlQuery(self.data_base)
-        query.prepare(DataBaseQuery.select_genre_id)
+        query.prepare(Queries.select_genre_id)
         query.bindValue(':name', name)
         query.exec()
         
@@ -94,7 +95,7 @@ class DataBase():
             return None
         
         query = QSqlQuery(self.data_base)
-        query.prepare(DataBaseQuery.select_performer_id)
+        query.prepare(Queries.select_performer_id)
         query.bindValue(':name', name)
         query.exec()
         
@@ -102,7 +103,7 @@ class DataBase():
             return query.value(0)
         else:
             query = QSqlQuery(self.data_base)
-            query.prepare(DataBaseQuery.insert_performer)
+            query.prepare(Queries.insert_performer)
             query.bindValue(':name', name)
             query.exec()
             return query.lastInsertId()
@@ -112,7 +113,7 @@ class DataBase():
             return None
         
         query = QSqlQuery(self.data_base)
-        query.prepare(DataBaseQuery.select_composer_id)
+        query.prepare(Queries.select_composer_id)
         query.bindValue(':name', name)
         query.exec()
         
@@ -120,7 +121,7 @@ class DataBase():
             return query.value(0)
         else:
             query = QSqlQuery(self.data_base)
-            query.prepare(DataBaseQuery.insert_composer)
+            query.prepare(Queries.insert_composer)
             query.bindValue(':name', name)
             query.exec()
             return query.lastInsertId()
@@ -130,7 +131,7 @@ class DataBase():
             return None
         
         query = QSqlQuery(self.data_base)
-        query.prepare(DataBaseQuery.select_publisher_id)
+        query.prepare(Queries.select_publisher_id)
         query.bindValue(':name', name)
         query.exec()
         
@@ -138,7 +139,7 @@ class DataBase():
             return query.value(0)
         else:
             query = QSqlQuery(self.data_base)
-            query.prepare(DataBaseQuery.insert_publisher)
+            query.prepare(Queries.insert_publisher)
             query.bindValue(':name', name)
             query.exec()
             return query.lastInsertId()
@@ -148,7 +149,7 @@ class DataBase():
             return None
         
         query = QSqlQuery(self.data_base)
-        query.prepare(DataBaseQuery.select_modified_by_id)
+        query.prepare(Queries.select_modified_by_id)
         query.bindValue(':name', name)
         query.exec()
         
@@ -156,7 +157,7 @@ class DataBase():
             return query.value(0)
         else:
             query = QSqlQuery(self.data_base)
-            query.prepare(DataBaseQuery.insert_modified_by)
+            query.prepare(Queries.insert_modified_by)
             query.bindValue(':name', name)
             query.exec()
             return query.lastInsertId()
@@ -176,7 +177,7 @@ class DataBase():
         type = imghdr.what(filepath)
 
         query = QSqlQuery(self.data_base)
-        query.prepare(DataBaseQuery.select_picture_mime_type_id)
+        query.prepare(Queries.select_picture_mime_type_id)
         query.bindValue(':type', type)
         query.exec()
         
@@ -190,7 +191,7 @@ class DataBase():
             return None
         
         query = QSqlQuery(self.data_base)
-        query.prepare(DataBaseQuery.select_picture_artist_id)
+        query.prepare(Queries.select_picture_artist_id)
         query.bindValue(':name', name)
         query.exec()
         
@@ -198,7 +199,7 @@ class DataBase():
             return query.value(0)
         else:
             query = QSqlQuery(self.data_base)
-            query.prepare(DataBaseQuery.insert_picture_artist)
+            query.prepare(Queries.insert_picture_artist)
             query.bindValue(':name', name)
             query.exec()
             return query.lastInsertId()
@@ -208,7 +209,7 @@ class DataBase():
             return None
         
         query = QSqlQuery(self.data_base)
-        query.prepare(DataBaseQuery.select_text_author_id)
+        query.prepare(Queries.select_text_author_id)
         query.bindValue(':name', name)
         query.exec()
         
@@ -216,14 +217,14 @@ class DataBase():
             return query.value(0)
         else:
             query = QSqlQuery(self.data_base)
-            query.prepare(DataBaseQuery.insert_text_author)
+            query.prepare(Queries.insert_text_author)
             query.bindValue(':name', name)
             query.exec()
             return query.lastInsertId()
         
     def insert_audio(self, info: AudioInfo) -> None:
         query = QSqlQuery(self.data_base)
-        query.prepare(DataBaseQuery.insert_audio)
+        query.prepare(Queries.insert_audio)
 
         query.bindValue(':filepath', info.filepath)
         query.bindValue(':title', info.title)
@@ -260,5 +261,11 @@ class DataBase():
 
     def search(self, info: AudioInfo) -> None:
         pass
+
+    def query_select_all(self, table_name: str, attributes: List[str]) -> QSqlQuery:
+        query = QSqlQuery(self.data_base)
+        query.prepare(f"SELECT {', '.join(attributes)} FROM {table_name}")
+        query.exec()
+        return query
 
 data_base = DataBase()

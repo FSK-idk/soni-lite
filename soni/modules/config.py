@@ -12,6 +12,8 @@ class Config:
 
         if not os.path.isfile(self.filepath):
             self.create_config()
+        
+        self.config.read(self.filepath)
 
     def create_config(self):
         self.config['Theme'] = {
@@ -92,25 +94,16 @@ class Config:
         with open(self.filepath, 'w') as file:
             self.config.write(file)
 
-    def get(self, section: str, option: str) -> str:
-        self.config.read(self.filepath)
-        return self.config.get(section=section, option=option)
-
-    def get_int(self, section: str, option: str) -> int:
-        self.config.read(self.filepath)
-        return self.config.getint(section=section, option=option)
+    def __getitem__(self, index):
+        return self.config[index]
     
-    def get_flaot(self, section: str, option: str) -> float:
-        self.config.read(self.filepath)
-        return self.config.getfloat(section=section, option=option)
-    
-    def get_boolean(self, section: str, option: str) -> bool:
-        self.config.read(self.filepath)
-        return self.config.getboolean(section=section, option=option)
-
     def items(self, section: str) -> List[Tuple[str, str]]:
         self.config.read(self.filepath)
         return self.config.items(section)
+    
+    def write(self):
+        with open(self.filepath, 'w') as file:
+            self.config.write(file)
 
 
 config = Config()

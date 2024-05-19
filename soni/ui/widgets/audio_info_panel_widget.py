@@ -22,10 +22,6 @@ class AudioInfoPanelWidget(QScrollArea):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         
-        # attributes
-
-        self.advanced_open = False
-
         # widgets
 
         self.filepath = FileLineEditTile(self)
@@ -66,33 +62,45 @@ class AudioInfoPanelWidget(QScrollArea):
         self.album_title.setTitle("Album title")
         # self.duration
         self.genre.setTitle("Genre")
-        self.genre.addItems(DataBaseDefault.genres) # TODO: From db
-        self.genre.combo_box.setEditable(False)
+        self.genre.setReadOnly(True)
+        self.genre.setTable("Genre")
         # self.language
         # self.rating
         # self.bpm
         self.performer.setTitle("Performer")
+        self.performer.setTable("Performer")
         self.composer.setTitle("Composer")
+        self.composer.setTable("Composer")
         self.publisher.setTitle("Publisher")
+        self.publisher.setTable("Publisher")
         self.modified_by.setTitle("Modified by")
+        self.modified_by.setTable("ModifiedBy")
         # self.release_date
         # self.copyright
         # self.comments
         self.picture_filepath.setTitle("Picture filepath")
         self.picture_filepath.setFilter("Image files (*.png *.jpeg *.svg);;All files (*.*)")
         self.picture_artist.setTitle("Picture artist")
+        self.picture_artist.setTable("PictureArtist")
         # self.text
         self.text_author.setTitle("Text author")
+        self.text_author.setTable("TextAuthor")
         self.original_title.setTitle("Original title")
         self.original_album_title.setTitle("Original album title")
         self.original_performer.setTitle("Original performer")
+        self.original_performer.setTable("Performer")
         self.original_composer.setTitle("Original composer")
+        self.original_composer.setTable("Composer")
         self.original_publisher.setTitle("Original publisher")
+        self.original_publisher.setTable("Publisher")
         # self.original_release_date
         self.original_text_author.setTitle("Original text author")
+        self.original_text_author.setTable("TextAuthor")
         self.isrc.setTitle("ISRC")
         # self.website
         # self.copyright_website
+
+        self.clearInput()
 
         # grouping
 
@@ -141,6 +149,37 @@ class AudioInfoPanelWidget(QScrollArea):
         self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.setWidgetResizable(True)
+
+    def clearInput(self) -> None:
+        self.filepath.setText("")
+        self.title.setText("")
+        self.album_title.setText("")
+        # self.duration
+        self.genre.clearInput()
+        # self.language
+        # self.rating
+        # self.bpm
+        self.performer.clearInput()
+        self.composer.clearInput()
+        self.publisher.clearInput()
+        self.modified_by.clearInput()
+        # self.release_date
+        # self.copyright
+        # self.comments
+        self.picture_filepath.setText("")
+        self.picture_artist.clearInput()
+        # self.text
+        self.text_author.clearInput()
+        self.original_title.setText("")
+        self.original_album_title.setText("")
+        self.original_performer.clearInput()
+        self.original_composer.clearInput()
+        self.original_publisher.clearInput()
+        # self.original_release_date
+        self.original_text_author.clearInput()
+        self.isrc.setText("")
+        # self.website
+        # self.copyright_website
 
     def getAudioInfo(self) -> AudioInfo:
         info = AudioInfo()
