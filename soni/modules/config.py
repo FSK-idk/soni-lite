@@ -59,36 +59,27 @@ class Config:
         }
 
         self.config['Library Shown Parameters'] = {
-            'filepath': 'False',
-            'playlist': 'True',
-            'title': 'True',
             'album_title': 'True',
-            # 'duration'
+            'duration': 'False',
             'genre': 'True',
-            # 'language'
-            # 'rating'
-            # 'bpm'
+            'language': 'False',
+            'rating': 'False',
+            'bpm': 'False',
             'performer': 'True',
             'composer': 'False',
             'publisher': 'False',
             'modified_by': 'False',
-            # 'release_date'
-            # 'copyright'
-            # 'comments'
-            # 'picture_filepath'
+            'release_date': 'False',
             'picture_artist': 'False',
-            # 'text'
             'text_author': 'True',
             'original_title': 'False',
             'original_album_title': 'False',
             'original_performer': 'False',
             'original_composer': 'False',
             'original_publisher': 'False',
-            # 'original_release_date'
+            'original_release_date': 'False',
             'original_text_author': 'False',
             'isrc': 'False',
-            # 'website'
-            # 'copyright_website'
         }
 
         with open(self.filepath, 'w') as file:

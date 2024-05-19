@@ -14,6 +14,9 @@ from PySide6.QtWidgets import (
     QScrollArea,
     QDialog,
     QAbstractItemView,
+    QHeaderView,
+    QLineEdit,
+    QStyledItemDelegate
 )
 from PySide6.QtGui import (
     QScreen,
@@ -34,6 +37,7 @@ from PySide6.QtSql import (
 
 from modules.data_base import data_base
 from modules.config import config
+from modules.query import Queries
 
 from ui.dialogs.new_audio_dialog import NewAudioDialog
 from ui.dialogs.modify_audio_dialog import ModifyAudioDialog
@@ -44,6 +48,31 @@ from ui.widgets.pyside.h_box_layout_widget import HBoxLayoutWidget
 
 from ui.widgets.search_info_panel_widget import SearchInfoPanelWidget
 
+header_titles = {
+    'title':                   'Title',
+    'album_title':             'Album title',
+    'duration':                'Duration',
+    'genre':                   'Genre',
+    'language':                'Language',
+    'rating':                  'Rating',
+    'bpm':                     'BPM',
+    'performer':               'Performer',
+    'composer':                'Composer',
+    'publisher':               'Publisher',
+    'modified_by':             'Modified by',
+    'release_date':            'Release date',
+    'picture_artist':          'Picture artist',
+    'text_author':             'Text author',
+    'original_title':          'Original title',
+    'original_album_title':    'Original album title',
+    'original_performer':      'Original performer',
+    'original_composer':       'Original composer',
+    'original_publisher':      'Original publisher',
+    'original_release_date':   'Original release date',
+    'original_text_author':    'Original text author',
+    'isrc':                    'ISRC',
+}
+
 class AudioTableWidget(QWidget):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -51,7 +80,7 @@ class AudioTableWidget(QWidget):
         # attributes
     
         self.model = QSqlQueryModel(self)
-        query = QSqlQuery("SELECT * FROM Audio", data_base.data_base)
+        query = QSqlQuery(Queries.select_audio(), data_base.data_base)
         self.model.setQuery(query)
 
         # widgets
@@ -60,11 +89,11 @@ class AudioTableWidget(QWidget):
 
         self.table.setModel(self.model)
         self.table.horizontalHeader().setFont(QFont(":/fonts/NotoSans.ttf",10))
-        self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.table.verticalHeader().hide()
+        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
+        self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
 
-        self.setColumns()
         # layout
 
         self.main_layout = VBoxLayoutWidget()
@@ -74,15 +103,15 @@ class AudioTableWidget(QWidget):
 
     def onTableUpdate(self):
         query = QSqlQuery(self.model.query().executedQuery(), data_base.data_base)
-        self.model.clear()
-        self.model.query().clear()
         self.model.setQuery(query)
 
-    def setColumns(self):
-        return
-        for parameter, shown in config.items('Library Shown Parameters'):
-            match shown:
-                case 'True':
-                    self.table.showColumn(self.model.fieldIndex(parameter))
-                case 'False':
-                    self.table.hideColumn(self.model.fieldIndex(parameter))
+    def onShownParametersChanged(self):
+        query = QSqlQuery(Queries.select_audio(), data_base.data_base)
+        self.model.setQuery(query)
+        self.model.setHeaderData(0, Qt.Orientation.Horizontal, "ID")
+        self.model.setHeaderData(1, Qt.Orientation.Horizontal, "Title")
+        col = 2
+        for key, val in config.items("Library Shown Parameters"):
+            if val == 'True':
+                self.model.setHeaderData(col, Qt.Orientation.Horizontal, header_titles[key])
+                col+=1

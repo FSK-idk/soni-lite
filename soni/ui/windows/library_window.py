@@ -49,7 +49,7 @@ class LibraryWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
 
-        # attributes
+        # widgets
 
         self.table = AudioTableWidget()
         self.search_panel = SearchInfoPanelWidget(self)
@@ -57,8 +57,11 @@ class LibraryWindow(QMainWindow):
         self.clear_button = PushButtonWidget(self)
 
         self.search_button.setText("Search")
+        self.search_panel.shownParametersChanged.connect(self.table.onShownParametersChanged)
         self.clear_button.setText("Clear")
         self.clear_button.clicked.connect(self.search_panel.clearInput)
+
+        self.table.onShownParametersChanged()
 
         # layout
 

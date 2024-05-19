@@ -1,6 +1,33 @@
 from typing import List, Dict
 
 from modules.query_objects import CreateTableObject
+from modules.config import config
+
+# attribute select join
+selection_attributes = {
+    'title':                   ('Audio.title',                  ''),
+    'album_title':             ('Album.name',                   'LEFT JOIN Album ON (Audio.album_id = Album.id)'),
+    'duration':                ('Audio.duration',               ''),
+    'genre':                   ('Genre.name',                   'LEFT JOIN Genre ON Audio.genre_id = Genre.id'),
+    'language':                ('Language.name',                'LEFT JOIN Language ON Audio.language_id = Language.id'),
+    'rating':                  ('Audio.rating',                 ''),
+    'bpm':                     ('Audio.bpm',                    ''),
+    'performer':               ('Performer.name',               'LEFT JOIN Performer ON Audio.performer_id = Performer.id'),
+    'composer':                ('Composer.name',                'LEFT JOIN Composer ON Audio.composer_id = Composer.id'),
+    'publisher':               ('Publisher.name',               'LEFT JOIN Publisher ON Audio.publisher_id = Publisher.id'),
+    'modified_by':             ('ModifiedBy.name',              'LEFT JOIN ModifiedBy ON Audio.modified_by_id = ModifiedBy.id'),
+    'release_date':            ('Audio.release_date',           ''),
+    'picture_artist':          ('PictureArtist.name',           'LEFT JOIN PictureArtist ON Audio.picture_artist_id = PictureArtist.id'),
+    'text_author':             ('TextAuthor.name',              'LEFT JOIN TextAuthor ON Audio.text_author_id = TextAuthor.id'),
+    'original_title':          ('Audio.original_title',         ''),
+    'original_album_title':    ('OriginalAlbum.name',           'LEFT JOIN Album AS OriginalAlbum ON (Audio.original_album_id = OriginalAlbum.id)'),
+    'original_performer':      ('OriginalPerformer.name',       'LEFT JOIN Performer AS OriginalPerformer ON (Audio.original_performer_id = OriginalPerformer.id)'),
+    'original_composer':       ('OriginalComposer.name',        'LEFT JOIN Composer AS OriginalComposer ON (Audio.original_composer_id = OriginalComposer.id)'),
+    'original_publisher':      ('OriginalPublisher.name',       'LEFT JOIN Publisher AS OriginalPublisher ON (Audio.original_publisher_id = OriginalPublisher.id)'),
+    'original_release_date':   ('Audio.original_release_date',  ''),
+    'original_text_author':    ('OriginalTextAuthor.name',      'LEFT JOIN TextAuthor AS OriginalTextAuthor ON (Audio.original_text_author_id = OriginalTextAuthor.id)'),
+    'isrc':                    ('Audio.isrc',                   ''),
+}
 
 class Queries:
     # ! DANGER ZONE: F-STRING
@@ -22,6 +49,21 @@ class Queries:
     def select_all(table_name: str, attributes: List[str]) -> str:
         return f"""
             SELECT {', '.join(attributes)} FROM {table_name}
+        """
+
+    @staticmethod
+    def select_audio() -> str:
+        attributes = ['Audio.id', 'Audio.title']
+        joins = []
+        for key, val in config.items("Library Shown Parameters"):
+            if val == 'True':
+                attributes.append(selection_attributes[key][0])
+                joins.append(selection_attributes[key][1])
+        
+        return f"""
+            SELECT {', '.join(attributes)}
+            FROM Audio
+            {'\n'.join(joins)}
         """
 
     @staticmethod
@@ -169,7 +211,6 @@ class Queries:
         ]
         columns = list(map(list, zip(*columns)))
         return Queries.create_table(table_name, columns[0], columns[1], columns[2])
-
 
     create_table_playlist = """
         CREATE TABLE IF NOT EXISTS Playlist (

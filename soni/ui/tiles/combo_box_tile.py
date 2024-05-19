@@ -50,6 +50,7 @@ class ComboBoxTile(QWidget):
 
     def setTable(self, table_name: str) -> None:
         self.model.setQuery(Queries.select_all(table_name, ["name"]), data_base.data_base)
+        self.model.sort(0, Qt.SortOrder.AscendingOrder)
         self.combo_box.setModel(self.model)
         self.combo_box.setModelColumn(0)
 
@@ -57,9 +58,11 @@ class ComboBoxTile(QWidget):
         self.combo_box.lineEdit().setReadOnly(read_only)
 
     def onTableUpdate(self) -> None:
+        text = self.combo_box.currentText()
         query = QSqlQuery(self.model.query().executedQuery(), data_base.data_base)
         self.model.setQuery(query)
         self.combo_box.clearFocus()
+        self.combo_box.setCurrentText(text)
 
     def setCurrentIndex(self, index: int) -> None:
         self.combo_box.setCurrentIndex(index)

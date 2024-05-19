@@ -73,36 +73,27 @@ class SearchInfoPanelWidget(QWidget):
         self.show_parameters_label = LabelWidget(self)
 
         self.parameters_check_boxes = {
-            # 'filepath'
-            'playlist': CheckBoxWidget(self),
-            'title': CheckBoxWidget(self),
             'album_title': CheckBoxWidget(self),
-            # 'duration'
+            'duration': CheckBoxWidget(self),
             'genre': CheckBoxWidget(self),
-            # 'language'
-            # 'rating'
-            # 'bpm'
+            'language': CheckBoxWidget(self),
+            'rating': CheckBoxWidget(self),
+            'bpm': CheckBoxWidget(self),
             'performer': CheckBoxWidget(self),
             'composer': CheckBoxWidget(self),
             'publisher': CheckBoxWidget(self),
             'modified_by': CheckBoxWidget(self),
-            # 'release_date'
-            # 'copyright'
-            # 'comments'
-            # 'picture_filepath'
+            'release_date': CheckBoxWidget(self),
             'picture_artist': CheckBoxWidget(self),
-            # 'text'
             'text_author': CheckBoxWidget(self),
             'original_title': CheckBoxWidget(self),
             'original_album_title': CheckBoxWidget(self),
             'original_performer': CheckBoxWidget(self),
             'original_composer': CheckBoxWidget(self),
             'original_publisher': CheckBoxWidget(self),
-            # 'original_release_date'
+            'original_release_date': CheckBoxWidget(self),
             'original_text_author': CheckBoxWidget(self),
             'isrc': CheckBoxWidget(self),
-            # 'website'
-            # 'copyright_website'
         }
 
 
@@ -160,35 +151,27 @@ class SearchInfoPanelWidget(QWidget):
         self.show_parameters_label.setText("Shown parameters")
 
         # filepath
-        self.parameters_check_boxes['playlist'].setText("Show playlist")
-        self.parameters_check_boxes['title'].setText("Show title")
         self.parameters_check_boxes['album_title'].setText("Show album title")
-        # duration_check_box
+        self.parameters_check_boxes['duration'].setText("Show duration")
         self.parameters_check_boxes['genre'].setText("Show genre")
-        # language
-        # rating
-        # bpm
+        self.parameters_check_boxes['language'].setText("Show language")
+        self.parameters_check_boxes['rating'].setText("Show rating")
+        self.parameters_check_boxes['bpm'].setText("Show BPM")
         self.parameters_check_boxes['performer'].setText("Show performer")
         self.parameters_check_boxes['composer'].setText("Show composer")
         self.parameters_check_boxes['publisher'].setText("Show publisher")
         self.parameters_check_boxes['modified_by'].setText("Show modified by")
-        # release_date
-        # copyright
-        # comments
-        # picture_filepath
+        self.parameters_check_boxes['release_date'].setText("Show release date")
         self.parameters_check_boxes['picture_artist'].setText("Show picture artist")
-        # text
         self.parameters_check_boxes['text_author'].setText("Show text author")
         self.parameters_check_boxes['original_title'].setText("Show original title")
         self.parameters_check_boxes['original_album_title'].setText("Show original album title")
         self.parameters_check_boxes['original_performer'].setText("Show original performer")
         self.parameters_check_boxes['original_composer'].setText("Show original composer")
         self.parameters_check_boxes['original_publisher'].setText("Show original publisher")
-        # original_release_date
+        self.parameters_check_boxes['original_release_date'].setText("Show original release date")
         self.parameters_check_boxes['original_text_author'].setText("Show original text author")
         self.parameters_check_boxes['isrc'].setText("Show ISRC")
-        # website_check_box
-        # copyright_website_check_box
 
         self.advanced_button.setText("Advanced")
         self.advanced_button.clicked.connect(self.openAdvanced)
@@ -203,12 +186,12 @@ class SearchInfoPanelWidget(QWidget):
         self.advanced_parameters: List[QWidget] = []
 
         # get from config
-        for parameter, _ in self.parameters_check_boxes.items():
-            match config['Search Panel Parameters'][parameter]:
+        for key, val in config.items('Search Panel Parameters'):
+            match val:
                 case 'Standard':
-                    self.standard_parameters.append(getattr(self, parameter))
+                    self.standard_parameters.append(getattr(self, key))
                 case 'Advanced':
-                    self.advanced_parameters.append(getattr(self, parameter))
+                    self.advanced_parameters.append(getattr(self, key))
 
         self.shown_parameters: List[CheckBoxWidget] = []
 
