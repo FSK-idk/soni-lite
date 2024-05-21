@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QWidget, QSizePolicy, QPushButton
 from PySide6.QtGui import QFont
+from PySide6.QtGui import QPixmap
 
 class PushButtonWidget(QPushButton):
     def __init__(self, parent: QWidget | None = None) -> None:
@@ -9,3 +10,4 @@ class PushButtonWidget(QPushButton):
         self.setFixedHeight(20)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         self.setFont(QFont(":/fonts/NotoSans.ttf", 10))
+         

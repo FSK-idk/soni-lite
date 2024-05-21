@@ -39,6 +39,7 @@ from PySide6.QtSql import (
 from modules.data_base import data_base
 from modules.config import config
 from modules.query import Queries
+from modules.audio_info import AudioInfo
 
 from ui.dialogs.new_audio_dialog import NewAudioDialog
 from ui.dialogs.modify_audio_dialog import ModifyAudioDialog
@@ -79,10 +80,11 @@ class AudioTableWidget(QWidget):
         super().__init__(parent)
 
         # attributes
+        self.sort_data = (True, 0)
+        self.info = AudioInfo()
     
         self.model = QSqlQueryModel(self)
-        query = QSqlQuery(Queries.select_audio(), data_base.data_base)
-        self.model.setQuery(query)
+        self.onTableUpdate()
 
         # widgets
         
@@ -102,7 +104,6 @@ class AudioTableWidget(QWidget):
         self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         self.table.horizontalHeader().sortIndicatorChanged.connect(self.onSortIndicatorChanged)
 
-        self.sort_data = (True, 0)
 
         # layout
 
@@ -111,17 +112,44 @@ class AudioTableWidget(QWidget):
 
         self.setLayout(self.main_layout)
 
+    def onSearch(self, info: AudioInfo):
+        self.info = info
+        self.onTableUpdate()
+
     def onSortIndicatorChanged(self, logicalIndex: int, order: Qt.SortOrder):
         self.sort_data = (order != Qt.SortOrder.AscendingOrder, logicalIndex)
         self.onTableUpdate()
 
     def onTableUpdate(self):
-        query = QSqlQuery(Queries.select_audio(self.sort_data[0], self.sort_data[1]), data_base.data_base)
+        query = QSqlQuery(data_base.data_base)
+        query.prepare(Queries.select_audio(self.info, self.sort_data[0], self.sort_data[1]))
+        query.bindValue(":title", self.info.title)
+        query.bindValue(":album_title", self.info.album_title)
+        query.bindValue(":duration", "")
+        query.bindValue(":genre", self.info.genre)
+        query.bindValue(":language", "")
+        query.bindValue(":rating", "")
+        query.bindValue(":bpm", "")
+        query.bindValue(":performer", self.info.performer)
+        query.bindValue(":composer", self.info.composer)
+        query.bindValue(":publisher", self.info.publisher)
+        query.bindValue(":modified_by", self.info.modified_by)
+        query.bindValue(":release_date", "")
+        query.bindValue(":picture_artist", self.info.picture_artist)
+        query.bindValue(":text_author", self.info.text_author)
+        query.bindValue(":original_title", self.info.original_title)
+        query.bindValue(":original_album_title", self.info.original_album_title)
+        query.bindValue(":original_performer", self.info.original_performer)
+        query.bindValue(":original_composer", self.info.original_composer)
+        query.bindValue(":original_publisher", self.info.original_publisher)
+        query.bindValue(":original_release_date", "")
+        query.bindValue(":original_text_author", self.info.original_text_author)
+        query.bindValue(":isrc", self.info.isrc)
+        query.exec()
         self.model.setQuery(query)
 
     def onShownParametersChanged(self):
-        query = QSqlQuery(Queries.select_audio(), data_base.data_base)
-        self.model.setQuery(query)
+        self.onTableUpdate()
         self.model.setHeaderData(0, Qt.Orientation.Horizontal, "ID")
         self.model.setHeaderData(1, Qt.Orientation.Horizontal, "Title")
         col = 2

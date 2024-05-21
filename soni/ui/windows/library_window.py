@@ -58,6 +58,7 @@ class LibraryWindow(QMainWindow):
 
         self.search_button.setText("Search")
         self.search_panel.shownParametersChanged.connect(self.table.onShownParametersChanged)
+        self.search_button.clicked.connect(self.search)
         self.clear_button.setText("Clear")
         self.clear_button.clicked.connect(self.search_panel.clearInput)
 
@@ -114,6 +115,9 @@ class LibraryWindow(QMainWindow):
         geometry = self.geometry()
         geometry.moveCenter(center)
         self.move(geometry.topLeft())
+
+    def search(self) -> None:
+        self.table.onSearch(self.search_panel.getAudioInfo())
 
     def showAudio(self) -> None:
         pass

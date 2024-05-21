@@ -1,32 +1,31 @@
 from typing import List, Dict
 
-from modules.query_objects import CreateTableObject
+from modules.audio_info import AudioInfo
 from modules.config import config
 
-# attribute select join
 selection_attributes = {
-    'title':                   ('Audio.title',                  ''),
-    'album_title':             ('Album.name',                   'LEFT JOIN Album ON (Audio.album_id = Album.id)'),
-    'duration':                ('Audio.duration',               ''),
-    'genre':                   ('Genre.name',                   'LEFT JOIN Genre ON Audio.genre_id = Genre.id'),
-    'language':                ('Language.name',                'LEFT JOIN Language ON Audio.language_id = Language.id'),
-    'rating':                  ('Audio.rating',                 ''),
-    'bpm':                     ('Audio.bpm',                    ''),
-    'performer':               ('Performer.name',               'LEFT JOIN Performer ON Audio.performer_id = Performer.id'),
-    'composer':                ('Composer.name',                'LEFT JOIN Composer ON Audio.composer_id = Composer.id'),
-    'publisher':               ('Publisher.name',               'LEFT JOIN Publisher ON Audio.publisher_id = Publisher.id'),
-    'modified_by':             ('ModifiedBy.name',              'LEFT JOIN ModifiedBy ON Audio.modified_by_id = ModifiedBy.id'),
-    'release_date':            ('Audio.release_date',           ''),
-    'picture_artist':          ('PictureArtist.name',           'LEFT JOIN PictureArtist ON Audio.picture_artist_id = PictureArtist.id'),
-    'text_author':             ('TextAuthor.name',              'LEFT JOIN TextAuthor ON Audio.text_author_id = TextAuthor.id'),
-    'original_title':          ('Audio.original_title',         ''),
-    'original_album_title':    ('OriginalAlbum.name',           'LEFT JOIN Album AS OriginalAlbum ON (Audio.original_album_id = OriginalAlbum.id)'),
-    'original_performer':      ('OriginalPerformer.name',       'LEFT JOIN Performer AS OriginalPerformer ON (Audio.original_performer_id = OriginalPerformer.id)'),
-    'original_composer':       ('OriginalComposer.name',        'LEFT JOIN Composer AS OriginalComposer ON (Audio.original_composer_id = OriginalComposer.id)'),
-    'original_publisher':      ('OriginalPublisher.name',       'LEFT JOIN Publisher AS OriginalPublisher ON (Audio.original_publisher_id = OriginalPublisher.id)'),
-    'original_release_date':   ('Audio.original_release_date',  ''),
-    'original_text_author':    ('OriginalTextAuthor.name',      'LEFT JOIN TextAuthor AS OriginalTextAuthor ON (Audio.original_text_author_id = OriginalTextAuthor.id)'),
-    'isrc':                    ('Audio.isrc',                   ''),
+    'title':                    'Audio.title',
+    'album_title':              'Album.name',
+    'duration':                 'Audio.duration',
+    'genre':                    'Genre.name',
+    'language':                 'Language.name',
+    'rating':                   'Audio.rating',
+    'bpm':                      'Audio.bpm',
+    'performer':                'Performer.name',
+    'composer':                 'Composer.name',
+    'publisher':                'Publisher.name',
+    'modified_by':              'ModifiedBy.name',
+    'release_date':             'Audio.release_date',
+    'picture_artist':           'PictureArtist.name',
+    'text_author':              'TextAuthor.name',
+    'original_title':           'Audio.original_title',
+    'original_album_title':     'OriginalAlbum.name',
+    'original_performer':       'OriginalPerformer.name',
+    'original_composer':        'OriginalComposer.name',
+    'original_publisher':       'OriginalPublisher.name',
+    'original_release_date':    'Audio.original_release_date',
+    'original_text_author':     'OriginalTextAuthor.name',
+    'isrc':                     'Audio.isrc',
 }
 
 class Queries:
@@ -44,7 +43,7 @@ class Queries:
             INSERT OR IGNORE INTO {table_name} ({', '.join(attributes)})
             VALUES ({', '.join(parameters)})
         """
-    
+
     @staticmethod
     def select_all(table_name: str, attributes: List[str], ascending: bool = True, order_column: int = 0) -> str:
         order = 'ASC' if ascending else 'DESC'
@@ -53,18 +52,51 @@ class Queries:
         """
 
     @staticmethod
-    def select_audio(ascending: bool = True, order_column: int = 0) -> str:
+    def select_audio(info: AudioInfo, ascending: bool = True, order_column: int = 0) -> str:
         attributes = ['Audio.id', 'Audio.title']
-        joins = []
         for key, val in config.items("Library Shown Parameters"):
             if val == 'True':
-                attributes.append(selection_attributes[key][0])
-                joins.append(selection_attributes[key][1])
+                attributes.append(selection_attributes[key])
         order = 'ASC' if ascending else 'DESC'
         return f"""
             SELECT {', '.join(attributes)}
             FROM Audio
-            {'\n'.join(joins)}
+            LEFT JOIN Album ON (Audio.album_id = Album.id)
+            LEFT JOIN Genre ON Audio.genre_id = Genre.id
+            LEFT JOIN Language ON Audio.language_id = Language.id
+            LEFT JOIN Performer ON Audio.performer_id = Performer.id
+            LEFT JOIN Composer ON Audio.composer_id = Composer.id
+            LEFT JOIN Publisher ON Audio.publisher_id = Publisher.id
+            LEFT JOIN ModifiedBy ON Audio.modified_by_id = ModifiedBy.id
+            LEFT JOIN PictureArtist ON Audio.picture_artist_id = PictureArtist.id
+            LEFT JOIN TextAuthor ON Audio.text_author_id = TextAuthor.id
+            LEFT JOIN Album AS OriginalAlbum ON (Audio.original_album_id = OriginalAlbum.id)
+            LEFT JOIN Performer AS OriginalPerformer ON (Audio.original_performer_id = OriginalPerformer.id)
+            LEFT JOIN Composer AS OriginalComposer ON (Audio.original_composer_id = OriginalComposer.id)
+            LEFT JOIN Publisher AS OriginalPublisher ON (Audio.original_publisher_id = OriginalPublisher.id)
+            LEFT JOIN TextAuthor AS OriginalTextAuthor ON (Audio.original_text_author_id = OriginalTextAuthor.id)
+            WHERE (:title == '' OR Audio.title LIKE :title || '%')
+            AND (:album_title == '' OR Album.name LIKE :album_title || '%')
+            AND (:duration == '') /* Audio.duration */
+            AND (:genre == '' OR Genre.name == :genre) 
+            AND (:language == '') /* Language.name */
+            AND (:rating == '') /* Audio.rating*/
+            AND (:bpm == '') /* Audio.bpm */
+            AND (:performer == '' OR Performer.name LIKE :performer || '%')
+            AND (:composer == '' OR Composer.name LIKE :composer || '%')
+            AND (:publisher == '' OR Publisher.name LIKE :publisher || '%')
+            AND (:modified_by == '' OR ModifiedBy.name LIKE :modified_by || '%')
+            AND (:release_date == '') /* Audio.release_date */
+            AND (:picture_artist == '' OR PictureArtist.name LIKE :picture_artist || '%')
+            AND (:text_author == '' OR TextAuthor.name LIKE :text_author || '%')
+            AND (:original_title == '' OR Audio.original_title LIKE :original_title || '%')
+            AND (:original_album_title == '' OR OriginalAlbum.name LIKE :original_album_title || '%')
+            AND (:original_performer == '' OR OriginalPerformer.name LIKE :original_performer || '%')
+            AND (:original_composer == '' OR OriginalComposer.name LIKE :original_composer || '%')
+            AND (:original_publisher == '' OR OriginalPublisher.name LIKE :original_publisher || '%')
+            AND (:original_release_date == '') /* Audio.original_release_date */
+            AND (:original_text_author == '' OR OriginalTextAuthor.name LIKE :original_text_author || '%')
+            AND (:isrc == '' OR Audio.isrc LIKE :isrc || '%')
             ORDER BY {attributes[order_column]} {order} NULLS LAST
         """
 
@@ -112,7 +144,7 @@ class Queries:
         table_name = "Album"
         columns = [
             ["id",      "integer",  "PRIMARY KEY"],
-            ["name",    "text",     "CHECK(name <> \"\") UNIQUE"],
+            ["name",    "text",     "CHECK(name != '') UNIQUE"],
         ]
         columns = list(map(list, zip(*columns)))
         return Queries.create_table(table_name, columns[0], columns[1], columns[2])
@@ -122,7 +154,7 @@ class Queries:
         table_name = "Genre"
         columns = [
             ["id",      "integer",  "PRIMARY KEY"],
-            ["name",    "text",     "CHECK(name <> \"\") UNIQUE"],
+            ["name",    "text",     "CHECK(name != '') UNIQUE"],
         ]
         columns = list(map(list, zip(*columns)))
         return Queries.create_table(table_name, columns[0], columns[1], columns[2])
@@ -132,8 +164,8 @@ class Queries:
         table_name = "Language"
         columns = [
             ["id",      "integer",  "PRIMARY KEY"],
-            ["name",    "text",     "CHECK(name <> \"\") UNIQUE"],
-            ["code",    "text",     "CHECK(name <> \"\") UNIQUE"],
+            ["name",    "text",     "CHECK(name != '') UNIQUE"],
+            ["code",    "text",     "CHECK(code != '') UNIQUE"],
         ]
         columns = list(map(list, zip(*columns)))
         return Queries.create_table(table_name, columns[0], columns[1], columns[2])
@@ -143,7 +175,7 @@ class Queries:
         table_name = "Performer"
         columns = [
             ["id",      "integer",  "PRIMARY KEY"],
-            ["name",    "text",     "CHECK(name <> \"\") UNIQUE"],
+            ["name",    "text",     "CHECK(name != '') UNIQUE"],
             ["website", "text",     ""],
         ]
         columns = list(map(list, zip(*columns)))
@@ -154,7 +186,7 @@ class Queries:
         table_name = "Composer"
         columns = [
             ["id",      "integer",  "PRIMARY KEY"],
-            ["name",    "text",     "CHECK(name <> \"\") UNIQUE"],
+            ["name",    "text",     "CHECK(name != '') UNIQUE"],
             ["website", "text",     ""],
         ]
         columns = list(map(list, zip(*columns)))
@@ -165,7 +197,7 @@ class Queries:
         table_name = "Publisher"
         columns = [
             ["id",      "integer",  "PRIMARY KEY"],
-            ["name",    "text",     "CHECK(name <> \"\") UNIQUE"],
+            ["name",    "text",     "CHECK(name != '') UNIQUE"],
             ["website", "text",     ""],
         ]
         columns = list(map(list, zip(*columns)))
@@ -176,7 +208,7 @@ class Queries:
         table_name = "ModifiedBy"
         columns = [
             ["id",      "integer",  "PRIMARY KEY"],
-            ["name",    "text",     "CHECK(name <> \"\") UNIQUE"],
+            ["name",    "text",     "CHECK(name != '') UNIQUE"],
             ["website", "text",     ""],
         ]
         columns = list(map(list, zip(*columns)))
@@ -187,7 +219,7 @@ class Queries:
         table_name = "PictureMimeType"
         columns = [
             ["id",      "integer",  "PRIMARY KEY"],
-            ["type",    "text",     "CHECK(name <> \"\") UNIQUE"],
+            ["type",    "text",     "CHECK(name != '') UNIQUE"],
         ]
         columns = list(map(list, zip(*columns)))
         return Queries.create_table(table_name, columns[0], columns[1], columns[2])
@@ -197,7 +229,7 @@ class Queries:
         table_name = "PictureArtist"
         columns = [
             ["id",      "integer",  "PRIMARY KEY"],
-            ["name",    "text",     "CHECK(name <> \"\") UNIQUE"],
+            ["name",    "text",     "CHECK(name != '') UNIQUE"],
             ["website", "text",     ""],
         ]
         columns = list(map(list, zip(*columns)))
@@ -208,38 +240,80 @@ class Queries:
         table_name = "TextAuthor"
         columns = [
             ["id",      "integer",  "PRIMARY KEY"],
-            ["name",    "text",     "CHECK(name <> \"\") UNIQUE"],
+            ["name",    "text",     "CHECK(name != '') UNIQUE"],
             ["website", "text",     ""],
         ]
         columns = list(map(list, zip(*columns)))
         return Queries.create_table(table_name, columns[0], columns[1], columns[2])
 
-    create_table_playlist = """
-        CREATE TABLE IF NOT EXISTS Playlist (
-            id      integer PRIMARY KEY,
-            name    text    CHECK(name <> "") UNIQUE
-        )
-    """
+    @staticmethod
+    def create_table_playlist() -> str:
+        table_name = "Playlist"
+        columns = [
+            ["id",      "integer",  "PRIMARY KEY"],
+            ["name",    "text",     "CHECK(name != '') UNIQUE"],
+        ]
+        columns = list(map(list, zip(*columns)))
+        return Queries.create_table(table_name, columns[0], columns[1], columns[2])
 
-    insert_album = """
-        INSERT OR IGNORE INTO Album (name)
-        VALUES (
-            :name
-        )
-    """
+    @staticmethod
+    def create_table_playlist_audio() -> str:
+        table_name = "PlaylistAudio"
+        columns = [
+            ["audio_id",        "integer",  "UNIQUE"],
+            ["playlist_id",     "integer",     "UNIQUE"],
+        ]
+        columns = list(map(list, zip(*columns)))
+        return Queries.create_table(table_name, columns[0], columns[1], columns[2])
+
+    @staticmethod
+    def insert_album() -> str:
+        return Queries.insert("Album", ["name"], [":name"])
+
+    @staticmethod
+    def insert_genre() -> str:
+        return Queries.insert("Genre", ["name"], [":name"])
+
+    @staticmethod
+    def insert_language() -> str:
+        return Queries.insert("Language", ["name", "code"], [":name", ":code"])
+
+    @staticmethod
+    def insert_performer() -> str:
+        return Queries.insert("Performer", ["name"], [":name"])
+
+    @staticmethod
+    def insert_composer() -> str:
+        return Queries.insert("Composer", ["name"], [":name"])
+
+    @staticmethod
+    def insert_publisher() -> str:
+        return Queries.insert("Publisher", ["name"], [":name"])
+
+    @staticmethod
+    def insert_modified_by() -> str:
+        return Queries.insert("ModifiedBy", ["name"], [":name"])
+
+    @staticmethod
+    def insert_picture_mime_type() -> str:
+        return Queries.insert("PictureMimeType", ["type"], [":type"])
+
+    @staticmethod
+    def insert_picture_artist() -> str:
+        return Queries.insert("PictureArtist", ["name"], [":name"])
+
+    @staticmethod
+    def insert_text_author() -> str:
+        return Queries.insert("TextAuthor", ["name"], [":name"])
+
+
+
 
     select_album_id = """
         SELECT Album.id
         FROM Album
         WHERE Album.name = :name
         LIMIT 1
-    """
-
-    insert_genre = """
-        INSERT OR IGNORE INTO Genre (name)
-        VALUES (
-            :name
-        )
     """
 
     select_genre_id = """
@@ -249,33 +323,11 @@ class Queries:
         LIMIT 1
     """
 
-    insert_language = """
-        INSERT OR IGNORE INTO Language (name, code)
-        VALUES (
-            :name,
-            :code
-        )
-    """
-
-    insert_performer = """
-        INSERT OR IGNORE INTO Performer (name)
-        VALUES (
-            :name
-        )
-    """
-
     select_performer_id = """
         SELECT Performer.id
         FROM Performer
         WHERE Performer.name = :name
         LIMIT 1
-    """
-
-    insert_composer = """
-        INSERT OR IGNORE INTO Composer (name)
-        VALUES (
-            :name
-        )
     """
 
     select_composer_id = """
@@ -284,26 +336,11 @@ class Queries:
         WHERE Composer.name = :name
         LIMIT 1
     """
-    
-    insert_publisher = """
-        INSERT OR IGNORE INTO Publisher (name)
-        VALUES (
-            :name
-        )
-    """
-
     select_publisher_id = """
         SELECT Publisher.id
         FROM Publisher
         WHERE Publisher.name = :name
         LIMIT 1
-    """
-
-    insert_modified_by = """
-        INSERT OR IGNORE INTO ModifiedBy (name)
-        VALUES (
-            :name
-        )
     """
 
     select_modified_by_id = """
@@ -313,13 +350,6 @@ class Queries:
         LIMIT 1
     """
 
-    insert_picture_mime_type = """
-        INSERT OR IGNORE INTO PictureMimeType (type)
-        VALUES (
-            :type
-        )
-    """
-
     select_picture_mime_type_id = """
         SELECT PictureMimeType.id
         FROM PictureMimeType
@@ -327,25 +357,12 @@ class Queries:
         LIMIT 1
     """
 
-    insert_picture_artist = """
-        INSERT OR IGNORE INTO PictureArtist (name)
-        VALUES (
-            :name
-        )
-    """
 
     select_picture_artist_id = """
         SELECT PictureArtist.id
         FROM PictureArtist
         WHERE PictureArtist.name = :name
         LIMIT 1
-    """
-
-    insert_text_author = """
-        INSERT OR IGNORE INTO TextAuthor (name)
-        VALUES (
-            :name
-        )
     """
 
     select_text_author_id = """
