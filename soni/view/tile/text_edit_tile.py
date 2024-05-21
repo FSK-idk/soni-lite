@@ -27,6 +27,10 @@ class TextEditTile(QWidget):
 
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
+    def clearTile(self) -> None:
+        self.text_edit.setText("")
+        self.text_edit.clearFocus()
+
     def setTitle(self, text: str) -> None:
         self.title.setText(text)
 

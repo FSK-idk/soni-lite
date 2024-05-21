@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-from model.audio_info import AudioInfo
+from model.audio_data import AudioData
 from model.config import config
 
 selection_attributes = {
@@ -52,7 +52,7 @@ class Queries:
         """
 
     @staticmethod
-    def select_audio(info: AudioInfo, ascending: bool = True, order_column: int = 0) -> str:
+    def select_audio(ascending: bool = True, order_column: int = 0) -> str:
         attributes = ['Audio.id', 'Audio.title']
         for key, val in config.items("Library Shown Parameters"):
             if val == 'True':

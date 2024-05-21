@@ -7,7 +7,7 @@ from PySide6.QtSql import (
     QSqlQuery
 )
 
-from model.audio_info import AudioInfo
+from model.audio_data import AudioData
 from model.data_base.data_base_default import DataBaseDefault
 from model.data_base.query import Queries
 
@@ -44,7 +44,6 @@ class DataBase():
         for name in DataBaseDefault.genres:
             query.bindValue(':name', name)
             query.exec()
-
 
         query = QSqlQuery(self.data_base)
         query.prepare(Queries.insert_language())
@@ -223,7 +222,7 @@ class DataBase():
             query.exec()
             return query.lastInsertId()
         
-    def insert_audio(self, info: AudioInfo) -> None:
+    def insert_audio(self, info: AudioData) -> None:
         query = QSqlQuery(self.data_base)
         query.prepare(Queries.insert_audio)
 
@@ -259,9 +258,6 @@ class DataBase():
         query.bindValue(':copyright_website', None)
 
         query.exec()
-
-    def search(self, info: AudioInfo) -> None:
-        pass
 
     def query_select_all(self, table_name: str, attributes: List[str]) -> QSqlQuery:
         query = QSqlQuery(self.data_base)

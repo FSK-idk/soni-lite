@@ -33,6 +33,10 @@ class LineEditTile(QWidget):
         self.setFixedHeight(self.main_layout.minimumSize().height())
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
+    def clearTile(self) -> None:
+        self.line_edit.setText("")
+        self.line_edit.clearFocus()
+
     def setTitle(self, text: str) -> None:
         self.title.setText(text)
 

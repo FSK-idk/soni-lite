@@ -8,13 +8,13 @@ from PySide6.QtCore import (
     Qt,
 )
 
-from model.audio_info import AudioInfo
+from model.audio_data import AudioData
+
+from view.default.v_box_layout_widget import VBoxLayoutWidget
 
 from view.tile.combo_box_tile import ComboBoxTile
 from view.tile.line_edit_tile import LineEditTile
 from view.tile.file_line_edit_tile import FileLineEditTile
-
-from view.default.v_box_layout_widget import VBoxLayoutWidget
 
 
 class AudioInfoPanelWidget(QScrollArea):
@@ -150,38 +150,38 @@ class AudioInfoPanelWidget(QScrollArea):
         self.setWidgetResizable(True)
 
     def clearInput(self) -> None:
-        self.filepath.setText("")
-        self.title.setText("")
-        self.album_title.setText("")
+        self.filepath.clearTile()
+        self.title.clearTile()
+        self.album_title.clearTile()
         # self.duration
-        self.genre.clearInput()
+        self.genre.clearTile()
         # self.language
         # self.rating
         # self.bpm
-        self.performer.clearInput()
-        self.composer.clearInput()
-        self.publisher.clearInput()
-        self.modified_by.clearInput()
+        self.performer.clearTile()
+        self.composer.clearTile()
+        self.publisher.clearTile()
+        self.modified_by.clearTile()
         # self.release_date
         # self.copyright
         # self.comments
-        self.picture_filepath.setText("")
-        self.picture_artist.clearInput()
+        self.picture_filepath.clearTile()
+        self.picture_artist.clearTile()
         # self.text
-        self.text_author.clearInput()
-        self.original_title.setText("")
-        self.original_album_title.setText("")
-        self.original_performer.clearInput()
-        self.original_composer.clearInput()
-        self.original_publisher.clearInput()
+        self.text_author.clearTile()
+        self.original_title.clearTile()
+        self.original_album_title.clearTile()
+        self.original_performer.clearTile()
+        self.original_composer.clearTile()
+        self.original_publisher.clearTile()
         # self.original_release_date
-        self.original_text_author.clearInput()
-        self.isrc.setText("")
+        self.original_text_author.clearTile()
+        self.isrc.clearTile()
         # self.website
         # self.copyright_website
 
-    def getAudioInfo(self) -> AudioInfo:
-        info = AudioInfo()
+    def getAudioData(self) -> AudioData:
+        info = AudioData()
 
         info.filepath = self.filepath.text()
         info.title = self.title.text()

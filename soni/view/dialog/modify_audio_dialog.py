@@ -8,7 +8,7 @@ from PySide6.QtGui import (
     QScreen,
 )
 
-from model.audio_info import AudioInfo
+from model.audio_data import AudioData
 
 from view.default.push_button_widget import PushButtonWidget
 from view.default.v_box_layout_widget import VBoxLayoutWidget
@@ -26,7 +26,7 @@ class ModifyAudioDialog(QDialog):
 
         # attributes
 
-        self.info = AudioInfo()
+        self.info = AudioData()
 
         # widgets
 

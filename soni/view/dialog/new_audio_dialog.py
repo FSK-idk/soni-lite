@@ -8,7 +8,7 @@ from PySide6.QtGui import (
     QScreen,
 )
 
-from model.audio_info import AudioInfo
+from model.audio_data import AudioData
 
 from view.default.push_button_widget import PushButtonWidget
 from view.default.v_box_layout_widget import VBoxLayoutWidget
@@ -26,7 +26,7 @@ class NewAudioDialog(QDialog):
 
         # attributes
 
-        self.info = AudioInfo()
+        self.info = AudioData()
 
         # widgets
 
@@ -40,7 +40,7 @@ class NewAudioDialog(QDialog):
         self.save_button.setText("Save")
         self.save_button.clicked.connect(self.save)
         self.cancel_button.setText("Cancel")
-        self.cancel_button.clicked.connect(self.cancel)
+        self.cancel_button.clicked.connect(self.reject)
 
         # layout
 
@@ -76,17 +76,14 @@ class NewAudioDialog(QDialog):
         self.move(geometry.topLeft())
     
     def save(self):
-        self.info = self.search_panel.getAudioInfo()
+        self.info = self.search_panel.getAudioData()
         if self.info.title == "":
             dlg = QMessageBox(self)
             dlg.setWindowTitle("Attention")
             dlg.setText("You have not entered title")
             dlg.setStandardButtons(QMessageBox.StandardButton.Ok)
             dlg.setIcon(QMessageBox.Icon.Warning)
-            button = dlg.exec()            
+            dlg.exec()            
             return
         self.info.text = self.text.text()
         self.accept()
-
-    def cancel(self):
-        self.reject()

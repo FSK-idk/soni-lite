@@ -47,6 +47,10 @@ class FileLineEditTile(QWidget):
         self.setFixedHeight(self.main_layout.minimumSize().height())
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
+    def clearTile(self) -> None:
+        self.line_edit.setText("")
+        self.line_edit.clearFocus()
+
     def setFilter(self, filter: str):
         self.filter = filter
 

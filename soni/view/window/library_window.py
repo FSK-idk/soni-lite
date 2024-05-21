@@ -37,7 +37,7 @@ from view.default.push_button_widget import PushButtonWidget
 from view.default.v_box_layout_widget import VBoxLayoutWidget
 from view.default.h_box_layout_widget import HBoxLayoutWidget
 
-from view.widget.search_info_panel_widget import SearchInfoPanelWidget
+from view.widget.search_panel_widget import SearchPanelWidget
 from view.widget.audio_table_widget import AudioTableWidget
 
 class LibraryWindow(QMainWindow):
@@ -52,17 +52,17 @@ class LibraryWindow(QMainWindow):
         # widgets
 
         self.table = AudioTableWidget()
-        self.search_panel = SearchInfoPanelWidget(self)
+        self.search_panel = SearchPanelWidget(self)
         self.search_button = PushButtonWidget(self)
         self.clear_button = PushButtonWidget(self)
 
         self.search_button.setText("Search")
-        self.search_panel.shownParametersChanged.connect(self.table.onShownParametersChanged)
+        self.search_panel.headersChanged.connect(self.table.updateHeaders)
         self.search_button.clicked.connect(self.search)
         self.clear_button.setText("Clear")
-        self.clear_button.clicked.connect(self.search_panel.clearInput)
+        self.clear_button.clicked.connect(self.search_panel.clearPanel)
 
-        self.table.onShownParametersChanged()
+        self.table.updateHeaders()
 
         # layout
 
@@ -117,7 +117,7 @@ class LibraryWindow(QMainWindow):
         self.move(geometry.topLeft())
 
     def search(self) -> None:
-        self.table.onSearch(self.search_panel.getAudioInfo())
+        self.table.search(self.search_panel.getSearchData())
 
     def showAudio(self) -> None:
         pass
@@ -130,8 +130,8 @@ class LibraryWindow(QMainWindow):
         if dialog.exec():
             data_base.insert_audio(dialog.info)
             self.audioAdded.emit()
-            self.table.onTableUpdate()
-            self.search_panel.onTableUpdate()
+            self.table.updateTable()
+            self.search_panel.updatePanel()
 
     def modifyAudio(self) -> None:
         pass

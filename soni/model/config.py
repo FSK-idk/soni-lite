@@ -26,7 +26,6 @@ class Config:
         }
 
         self.config['Search Panel Parameters'] = {
-            'filepath': 'None',
             'playlist': 'Standard',
             'title': 'Standard',
             'album_title': 'Standard',
@@ -40,9 +39,6 @@ class Config:
             'publisher': 'Advanced',
             'modified_by': 'Advanced',
             # 'release_date'
-            # 'copyright'
-            # 'comments'
-            # 'picture_filepath'
             'picture_artist': 'Advanced',
             # 'text'
             'text_author': 'Standard',
@@ -54,8 +50,6 @@ class Config:
             # 'original_release_date'
             'original_text_author': 'Advanced',
             'isrc': 'Advanced',
-            # 'website'
-            # 'copyright_website'
         }
 
         self.config['Library Shown Parameters'] = {
@@ -89,7 +83,6 @@ class Config:
         return self.config[index]
     
     def items(self, section: str) -> List[Tuple[str, str]]:
-        self.config.read(self.filepath)
         return self.config.items(section)
     
     def write(self):

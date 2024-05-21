@@ -1,4 +1,4 @@
-class AudioInfo:
+class AudioData:
     def __init__(self) -> None:
         self.filepath = ""
         self.playlist = ""
