@@ -7,9 +7,9 @@ from PySide6.QtSql import (
     QSqlQuery
 )
 
-from modules.audio_info import AudioInfo
-from modules.data_base_default import DataBaseDefault
-from modules.query import Queries
+from model.audio_info import AudioInfo
+from model.data_base.data_base_default import DataBaseDefault
+from model.data_base.query import Queries
 
 
 class DataBase():

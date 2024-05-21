@@ -1,7 +1,7 @@
 from PySide6.QtGui import QMouseEvent
 from PySide6.QtCore import Signal
 
-from ui.widgets.pyside.label_widget import LabelWidget
+from view.default.label_widget import LabelWidget
 
 class ClickableLabelWidget(LabelWidget):
     clicked = Signal()

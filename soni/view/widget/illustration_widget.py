@@ -10,9 +10,9 @@ from PySide6.QtCore import (
     Qt,
 )
 
-from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
+from view.default.v_box_layout_widget import VBoxLayoutWidget
 
-import res.resources_rc
+import resources.resources_rc
 
 
 class IllustrationWidget(QWidget):

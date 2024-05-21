@@ -1,54 +1,27 @@
 from PySide6.QtWidgets import (
-    QApplication,
-    QMainWindow,
-    QHBoxLayout,
-    QVBoxLayout,
-    QStackedLayout,
-    QSlider,
     QWidget,
-    QLabel,
-    QPushButton,
-    QSizePolicy,
-    QMenuBar,
     QTableView,
-    QScrollArea,
-    QDialog,
     QAbstractItemView,
     QHeaderView,
-    QLineEdit,
-    QStyledItemDelegate,
 )
 from PySide6.QtGui import (
-    QScreen,
-    QAction,
     QFont,
 )
 from PySide6.QtCore import (
     Qt,
     QSortFilterProxyModel,
-    Signal
 )
 from PySide6.QtSql import (
-    QSqlTableModel,
-    QSqlRelationalTableModel,
-    QSqlRelation,
     QSqlQuery,
     QSqlQueryModel,
 )
 
-from modules.data_base import data_base
-from modules.config import config
-from modules.query import Queries
-from modules.audio_info import AudioInfo
+from model.data_base.data_base import data_base
+from model.config import config
+from model.data_base.query import Queries
+from model.audio_info import AudioInfo
 
-from ui.dialogs.new_audio_dialog import NewAudioDialog
-from ui.dialogs.modify_audio_dialog import ModifyAudioDialog
-
-from ui.widgets.pyside.push_button_widget import PushButtonWidget
-from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
-from ui.widgets.pyside.h_box_layout_widget import HBoxLayoutWidget
-
-from ui.widgets.search_info_panel_widget import SearchInfoPanelWidget
+from view.default.v_box_layout_widget import VBoxLayoutWidget
 
 header_titles = {
     'title':                   'Title',

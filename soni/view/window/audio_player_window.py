@@ -16,21 +16,19 @@ from PySide6.QtCore import (
     Qt
 )
 
-from modules.audio_info import AudioInfo
-from modules.data_base import data_base
-from modules.query import Queries
+from model.data_base.data_base import data_base
 
-from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
-from ui.widgets.pyside.h_box_layout_widget import HBoxLayoutWidget
+from view.default.v_box_layout_widget import VBoxLayoutWidget
+from view.default.h_box_layout_widget import HBoxLayoutWidget
 
-from ui.widgets.header_widget import TrackHeaderWidget
-from ui.widgets.audio_player_widget import AudioPlayerWidget
-from ui.widgets.illustration_widget import IllustrationWidget
-from ui.widgets.timeline_widget import TimelineWidget
-from ui.widgets.playlist_widget import PlaylistWidget
+from view.widget.header_widget import TrackHeaderWidget
+from view.widget.audio_player_widget import AudioPlayerWidget
+from view.widget.illustration_widget import IllustrationWidget
+from view.widget.timeline_widget import TimelineWidget
+from view.widget.playlist_widget import PlaylistWidget
 
-from ui.windows.library_window import LibraryWindow
-from ui.windows.settings_window import SettingsWindow
+from view.window.library_window import LibraryWindow
+from view.window.settings_window import SettingsWindow
 
 
 class AudioPlayerWindow(QMainWindow):
@@ -102,6 +100,11 @@ class AudioPlayerWindow(QMainWindow):
         self.open_settings_action.triggered.connect(self.settings.show)
         self.menuBar().addAction(self.open_settings_action)
 
+        self.test_action = QAction("select", self)
+        self.test_action.setCheckable(True)
+        self.test_action.triggered.connect(self.audio_player.selectAudio)
+        self.menuBar().addAction(self.test_action)
+
         self.test_action = QAction("test", self)
         self.test_action.setCheckable(True)
         self.test_action.triggered.connect(self.test)
@@ -127,10 +130,4 @@ class AudioPlayerWindow(QMainWindow):
     def test(self, checked: bool) -> None:
         print("test")
 
-        # data_base.query_select_all("Genre", ["id", "name"])
-        # print(', '.join(["qwe", 'None',"qw1"]))
-        # print(Queries.qcreate_table_audio())
         return
-
-        from modules.time import TimeFormat
-        self.timeline.setTimeFormat(TimeFormat.HHmmss if checked else TimeFormat.mmss)

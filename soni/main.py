@@ -4,7 +4,7 @@ from PySide6.QtWidgets import (
     QApplication,
 )
 
-from ui.windows.audio_player_window import AudioPlayerWindow
+from view.window.audio_player_window import AudioPlayerWindow
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

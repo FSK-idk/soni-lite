@@ -20,7 +20,7 @@ from PySide6.QtMultimedia import (
     QAudioOutput,
 )
 
-import res.resources_rc
+import resources.resources_rc
 
 # TODO: add functionality
 class AudioPlayerWidget(QWidget):
@@ -43,6 +43,8 @@ class AudioPlayerWidget(QWidget):
 
         self.audio_output.setVolume(50)
 
+        self.filepath = ""
+
         # TODO: debug
         palette = QPalette()
         palette.setColor(QPalette.ColorRole.Window, Qt.GlobalColor.black)
@@ -52,33 +54,38 @@ class AudioPlayerWidget(QWidget):
 
         self.pause_triger = False
 
-        # self.play_img1 = 
-        # Creating Buttons
-        self.hlayout_mid = QHBoxLayout()
-        self.hlayout_bottomn = QHBoxLayout()
-        self.vlayout = QVBoxLayout(self)
+        # widgets
 
-        self.button_play = QPushButton()
+        self.button_play = QPushButton(self)
+        # self.button_pause = QPushButton(self)
+        self.button_random_order = QPushButton(self)
+        self.button_loop = QPushButton(self)
+        self.button_next = QPushButton(self)
+        self.button_past = QPushButton(self)
+
         self.button_play.setIcon(QPixmap(":/icons/play-black.svg"))
         self.button_play.clicked.connect(self.play)
 
-        self.button_pause = QPushButton('Pause')
-        self.button_pause.clicked.connect(self.pause)
+        # self.button_pause.setText('Pause')
+        # self.button_pause.clicked.connect(self.pause)
 
-        self.button_track_selection = QPushButton('Select')
-        self.button_track_selection.clicked.connect(self.selectAudio)
-
-        self.button_random_order = QPushButton('Random')
+        self.button_random_order.setText('Random')
         self.button_random_order.clicked.connect(self.random_order)
 
-        self.button_loop = QPushButton('Loop')
+        self.button_loop.setText('Loop')
         self.button_loop.clicked.connect(self.loop)
 
-        self.button_next = QPushButton('Next')
+        self.button_next.setText('Next')
         self.button_next.clicked.connect(self.next)
 
-        self.button_past = QPushButton('Prev')
+        self.button_past.setText('Prev')
         self.button_past.clicked.connect(self.past)
+
+        # layout
+
+        self.hlayout_mid = QHBoxLayout()
+        self.hlayout_bottomn = QHBoxLayout()
+        self.vlayout = QVBoxLayout(self)
 
         self.hlayout_mid.addStretch(1)
         self.hlayout_mid.addWidget(self.button_past)
@@ -95,12 +102,7 @@ class AudioPlayerWidget(QWidget):
         self.setLayout(self.vlayout)
 
     def play(self):
-        self.audio_player = QMediaPlayer()
-        
-        self.audioOutput = QAudioOutput()
-        self.audio_player.setAudioOutput(self.audioOutput)
-        self.audio_player.setSource(QUrl.fromLocalFile(self.dialogue[0]))
-        self.audioOutput.setVolume(50)
+        self.audio_player.play()
  
     def pause(self):
         if self.pause_triger == False:
@@ -111,8 +113,8 @@ class AudioPlayerWidget(QWidget):
             self.pause_triger = False
 
     def selectAudio(self) -> None:
-        self.dialogue = QFileDialog.getOpenFileName(self,"Выбрать файл", '', '*mp3')
-        print(self.dialogue[0])
+        self.filepath, _ = QFileDialog.getOpenFileName(self,"Выбрать файл", '', '*mp3')
+        self.audio_player.setSource(QUrl.fromLocalFile(self.filepath))
 
     def loop(self):
         pass

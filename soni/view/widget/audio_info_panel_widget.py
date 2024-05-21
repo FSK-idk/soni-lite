@@ -8,14 +8,13 @@ from PySide6.QtCore import (
     Qt,
 )
 
-from modules.data_base_default import DataBaseDefault
-from modules.audio_info import AudioInfo
+from model.audio_info import AudioInfo
 
-from ui.tiles.combo_box_tile import ComboBoxTile
-from ui.tiles.line_edit_tile import LineEditTile
-from ui.tiles.file_line_edit_tile import FileLineEditTile
+from view.tile.combo_box_tile import ComboBoxTile
+from view.tile.line_edit_tile import LineEditTile
+from view.tile.file_line_edit_tile import FileLineEditTile
 
-from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
+from view.default.v_box_layout_widget import VBoxLayoutWidget
 
 
 class AudioInfoPanelWidget(QScrollArea):

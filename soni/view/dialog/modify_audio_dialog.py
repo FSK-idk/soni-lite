@@ -8,16 +8,17 @@ from PySide6.QtGui import (
     QScreen,
 )
 
-from modules.audio_info import AudioInfo
+from model.audio_info import AudioInfo
 
-from ui.widgets.pyside.push_button_widget import PushButtonWidget
-from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
-from ui.widgets.pyside.h_box_layout_widget import HBoxLayoutWidget
+from view.default.push_button_widget import PushButtonWidget
+from view.default.v_box_layout_widget import VBoxLayoutWidget
+from view.default.h_box_layout_widget import HBoxLayoutWidget
 
-from ui.widgets.illustration_widget import IllustrationWidget
-from ui.widgets.audio_info_panel_widget import AudioInfoPanelWidget
+from view.tile.text_edit_tile import TextEditTile
 
-from ui.tiles.text_edit_tile import TextEditTile
+from view.widget.illustration_widget import IllustrationWidget
+from view.widget.audio_info_panel_widget import AudioInfoPanelWidget
+
 
 class ModifyAudioDialog(QDialog):
     def __init__(self, parent: QWidget | None = None):

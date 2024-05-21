@@ -1,16 +1,14 @@
-from typing import List
-
 from PySide6.QtWidgets import QWidget, QSizePolicy
-from PySide6.QtCore import Signal, QAbstractItemModel
+from PySide6.QtCore import Signal
 from PySide6.QtCore import Qt
 from PySide6.QtSql import QSqlQuery, QSqlQueryModel
 
-from modules.data_base import data_base
-from modules.query import Queries
+from model.data_base.data_base import data_base
+from model.data_base.query import Queries
 
-from ui.widgets.pyside.label_widget import LabelWidget
-from ui.widgets.pyside.combo_box_widget import ComboBoxWidget
-from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
+from view.default.label_widget import LabelWidget
+from view.default.combo_box_widget import ComboBoxWidget
+from view.default.v_box_layout_widget import VBoxLayoutWidget
 
 class ComboBoxTile(QWidget):
     # signals

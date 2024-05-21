@@ -5,12 +5,12 @@ from PySide6.QtCore import (
     Qt,
 )
 
-from modules.time import TimeFormat, TimeSpan
+from model.time import TimeFormat, TimeSpan
 
-from ui.widgets.pyside.clickable_label import ClickableLabelWidget
-from ui.widgets.pyside.slider_widget import SliderWidget
-from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
-from ui.widgets.pyside.h_box_layout_widget import HBoxLayoutWidget
+from view.default.clickable_label import ClickableLabelWidget
+from view.default.slider_widget import SliderWidget
+from view.default.v_box_layout_widget import VBoxLayoutWidget
+from view.default.h_box_layout_widget import HBoxLayoutWidget
 
 
 class TimelineWidget(QWidget):

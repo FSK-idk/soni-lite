@@ -20,15 +20,15 @@ from PySide6.QtCore import (
     Qt
 )
 
-from ui.tiles.file_line_edit_tile import FileLineEditTile
+from view.tile.file_line_edit_tile import FileLineEditTile
 
-from ui.widgets.pyside.push_button_widget import PushButtonWidget
-from ui.widgets.pyside.label_widget import LabelWidget
-from ui.widgets.pyside.line_edit_widget import LineEditWidget
-from ui.widgets.pyside.check_box_widget import CheckBoxWidget
-from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
-from ui.widgets.pyside.combo_box_widget import ComboBoxWidget
-from ui.widgets.pyside.text_edit_widget import TextEditWidget
+from view.default.push_button_widget import PushButtonWidget
+from view.default.label_widget import LabelWidget
+from view.default.line_edit_widget import LineEditWidget
+from view.default.check_box_widget import CheckBoxWidget
+from view.default.v_box_layout_widget import VBoxLayoutWidget
+from view.default.combo_box_widget import ComboBoxWidget
+from view.default.text_edit_widget import TextEditWidget
 
 class SettingsWindow(QMainWindow):
     def __init__(self) -> None:

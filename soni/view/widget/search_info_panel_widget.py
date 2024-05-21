@@ -9,23 +9,17 @@ from PySide6.QtCore import (
     Qt,
     Signal
 )
-from PySide6.QtSql import (
-    QSqlTableModel,
-)
 
-from modules.data_base_default import DataBaseDefault
-from modules.audio_info import AudioInfo
-from modules.config import config
-from modules.data_base import data_base
+from model.audio_info import AudioInfo
+from model.config import config
 
-from ui.tiles.combo_box_tile import ComboBoxTile
-from ui.tiles.line_edit_tile import LineEditTile
+from view.default.label_widget import LabelWidget
+from view.default.push_button_widget import PushButtonWidget
+from view.default.check_box_widget import CheckBoxWidget
+from view.default.v_box_layout_widget import VBoxLayoutWidget
 
-from ui.widgets.pyside.label_widget import LabelWidget
-from ui.widgets.pyside.push_button_widget import PushButtonWidget
-from ui.widgets.pyside.check_box_widget import CheckBoxWidget
-from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
-
+from view.tile.combo_box_tile import ComboBoxTile
+from view.tile.line_edit_tile import LineEditTile
 
 class SearchInfoPanelWidget(QWidget):
     # signals

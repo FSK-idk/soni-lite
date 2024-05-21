@@ -1,7 +1,7 @@
 from typing import List, Dict
 
-from modules.audio_info import AudioInfo
-from modules.config import config
+from model.audio_info import AudioInfo
+from model.config import config
 
 selection_attributes = {
     'title':                    'Audio.title',

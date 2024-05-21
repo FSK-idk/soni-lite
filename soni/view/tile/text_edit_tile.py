@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import QWidget, QSizePolicy
 
-from ui.widgets.pyside.label_widget import LabelWidget
-from ui.widgets.pyside.text_edit_widget import TextEditWidget
-from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
+from view.default.label_widget import LabelWidget
+from view.default.text_edit_widget import TextEditWidget
+from view.default.v_box_layout_widget import VBoxLayoutWidget
 
 class TextEditTile(QWidget):
     # signals

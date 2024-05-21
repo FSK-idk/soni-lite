@@ -1,14 +1,14 @@
 from PySide6.QtWidgets import QWidget, QSizePolicy
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Signal
 
-from ui.widgets.pyside.label_widget import LabelWidget
-from ui.widgets.pyside.slider_widget import SliderWidget
-from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
+from view.default.label_widget import LabelWidget
+from view.default.line_edit_widget import LineEditWidget
+from view.default.v_box_layout_widget import VBoxLayoutWidget
 
-class SliderTile(QWidget):
+class LineEditTile(QWidget):
     # signals
 
-    valueChanged = Signal(str)
+    textChanged = Signal(str)
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -16,15 +16,15 @@ class SliderTile(QWidget):
         # widgets
 
         self.title = LabelWidget(self)
+        self.line_edit = LineEditWidget(self)
 
-        self.slider = SliderWidget(self)
-        self.slider.setOrientation(Qt.Orientation.Horizontal)
+        self.line_edit.textChanged.connect(self.textChanged.emit)
 
         # layout
 
         self.main_layout = VBoxLayoutWidget()
         self.main_layout.addWidget(self.title)
-        self.main_layout.addWidget(self.slider)
+        self.main_layout.addWidget(self.line_edit)
 
         self.setLayout(self.main_layout)
 
@@ -36,5 +36,8 @@ class SliderTile(QWidget):
     def setTitle(self, text: str) -> None:
         self.title.setText(text)
 
-    def value(self) -> int:
-        return self.slider.value()
+    def setText(self, text: str) -> None:
+        self.line_edit.setText(text)
+
+    def text(self) -> str:
+        return self.line_edit.text()

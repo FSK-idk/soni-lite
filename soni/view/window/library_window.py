@@ -28,17 +28,17 @@ from PySide6.QtSql import (
     QSqlTableModel,
 )
 
-from modules.data_base import data_base
+from model.data_base.data_base import data_base
 
-from ui.dialogs.new_audio_dialog import NewAudioDialog
-from ui.dialogs.modify_audio_dialog import ModifyAudioDialog
+from view.dialog.new_audio_dialog import NewAudioDialog
+from view.dialog.modify_audio_dialog import ModifyAudioDialog
 
-from ui.widgets.pyside.push_button_widget import PushButtonWidget
-from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
-from ui.widgets.pyside.h_box_layout_widget import HBoxLayoutWidget
+from view.default.push_button_widget import PushButtonWidget
+from view.default.v_box_layout_widget import VBoxLayoutWidget
+from view.default.h_box_layout_widget import HBoxLayoutWidget
 
-from ui.widgets.search_info_panel_widget import SearchInfoPanelWidget
-from ui.widgets.audio_table_widget import AudioTableWidget
+from view.widget.search_info_panel_widget import SearchInfoPanelWidget
+from view.widget.audio_table_widget import AudioTableWidget
 
 class LibraryWindow(QMainWindow):
     # signals

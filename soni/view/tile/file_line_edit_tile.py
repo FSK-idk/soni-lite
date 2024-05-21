@@ -1,11 +1,11 @@
 from PySide6.QtWidgets import QWidget, QSizePolicy, QFileDialog
 from PySide6.QtCore import Signal
 
-from ui.widgets.pyside.label_widget import LabelWidget
-from ui.widgets.pyside.push_button_widget import PushButtonWidget
-from ui.widgets.pyside.line_edit_widget import LineEditWidget
-from ui.widgets.pyside.v_box_layout_widget import VBoxLayoutWidget
-from ui.widgets.pyside.h_box_layout_widget import HBoxLayoutWidget
+from view.default.label_widget import LabelWidget
+from view.default.push_button_widget import PushButtonWidget
+from view.default.line_edit_widget import LineEditWidget
+from view.default.v_box_layout_widget import VBoxLayoutWidget
+from view.default.h_box_layout_widget import HBoxLayoutWidget
 
 class FileLineEditTile(QWidget):
     # signals

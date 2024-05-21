@@ -7,8 +7,8 @@ from PySide6.QtCore import (
     Signal,
 )
 
-from ui.widgets.pyside.clickable_label import ClickableLabelWidget
-from ui.widgets.pyside.h_box_layout_widget import HBoxLayoutWidget
+from view.default.clickable_label import ClickableLabelWidget
+from view.default.h_box_layout_widget import HBoxLayoutWidget
 
 
 class TrackHeaderWidget(QWidget):

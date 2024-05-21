@@ -1,7 +1,7 @@
 .venv
 .vscode
 test
-soni/ui/style
+soni/view/style
 __pycache__
-soni/res/resources_rc.py
+soni/resources/resources_rc.py
 soni/data/
