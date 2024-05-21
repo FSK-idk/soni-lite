@@ -8,27 +8,27 @@ class TimeFormat(enum.Enum):
 
 class Time():
     """
-    Stores time in seconds
+    Stores time in milliseconds
     """
 
-    def __init__(self, seconds : int = 0, time_format : TimeFormat = TimeFormat.mmss) -> None:
-        self.seconds = seconds
+    def __init__(self, milliseconds : int = 0, time_format : TimeFormat = TimeFormat.mmss) -> None:
+        self.milliseconds = milliseconds
         self.time_format = time_format
 
     def __sub__(self, other):
         if isinstance(other, self.__class__):
-            return Time(self.seconds - other.seconds, self.time_format)
+            return Time(self.milliseconds - other.milliseconds, self.time_format)
         raise TypeError
 
     def __str__(self):
         match self.time_format:
             case TimeFormat.mmss:
-                return f"{(self.seconds // 60):02d}:{(self.seconds % 60):02d}"
+                return f"{(self.milliseconds // 60000):02d}:{((self.milliseconds // 1000) % 60):02d}"
             case TimeFormat.HHmmss:
-                return f"{(self.seconds // 3600):02d}:{((self.seconds // 60) % 60):02d}:{(self.seconds % 60):02d}"
+                return f"{(self.milliseconds // 3600000):02d}:{((self.milliseconds // 60000) % 60):02d}:{((self.milliseconds // 1000) % 60):02d}"
 
-    def set_time(self, seconds : int) -> None:
-        self.seconds = seconds
+    def set_time(self, milliseconds : int) -> None:
+        self.milliseconds = milliseconds
 
     def set_time_format(self, time_format : TimeFormat) -> None:
         self.time_format = time_format
@@ -55,11 +55,11 @@ class TimeSpan():
     def set_reversed(self, reversed : bool) -> None:
         self.reversed = reversed
 
-    def set_current_time(self, seconds : int) -> None:
-        self.current.set_time(seconds)
+    def set_current_time(self, milliseconds : int) -> None:
+        self.current.set_time(milliseconds)
 
-    def set_end_time(self, seconds : int) -> None:
-        self.end.set_time(seconds)
+    def set_end_time(self, milliseconds : int) -> None:
+        self.end.set_time(milliseconds)
 
     def set_time_format(self, time_format : TimeFormat) -> None:
         self.end.set_time_format(time_format)

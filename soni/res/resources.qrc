@@ -4,29 +4,32 @@
         <file alias="icon.png">./images/icon.png</file>
     </qresource>
     <qresource prefix="icons">
-        <file alias="chevron-down-black.svg">./lucide-icons/chevron-down-black.svg</file>
-        <file alias="chevron-down-white.svg">./lucide-icons/chevron-down-white.svg</file>
-        <file alias="library-black.svg">./lucide-icons/library-black.svg</file>
-        <file alias="library-white.svg">./lucide-icons/library-white.svg</file>
-        <file alias="list-music-black.svg">./lucide-icons/list-music-black.svg</file>
-        <file alias="list-music-white.svg">./lucide-icons/list-music-white.svg</file>
-        <file alias="play-black.svg">./lucide-icons/play-black.svg</file>
-        <file alias="play-white.svg">./lucide-icons/play-white.svg</file>
-        <file alias="repeat-1-black.svg">./lucide-icons/repeat-1-black.svg</file>
-        <file alias="repeat-1-white.svg">./lucide-icons/repeat-1-white.svg</file>
-        <file alias="repeat-black.svg">./lucide-icons/repeat-black.svg</file>
-        <file alias="repeat-white.svg">./lucide-icons/repeat-white.svg</file>
-        <file alias="settings-2-black.svg">./lucide-icons/settings-2-black.svg</file>
-        <file alias="settings-2-white.svg">./lucide-icons/settings-2-white.svg</file>
-        <file alias="shuffle-black.svg">./lucide-icons/shuffle-black.svg</file>
-        <file alias="shuffle-white.svg">./lucide-icons/shuffle-white.svg</file>
-        <file alias="skip-back-black.svg">./lucide-icons/skip-back-black.svg</file>
-        <file alias="skip-back-white.svg">./lucide-icons/skip-back-white.svg</file>
-        <file alias="skip-forward-black.svg">./lucide-icons/skip-forward-black.svg</file>
-        <file alias="skip-forward-white.svg">./lucide-icons/skip-forward-white.svg</file>
-        <file alias="square-black.svg">./lucide-icons/square-black.svg</file>
-        <file alias="square-white.svg">./lucide-icons/square-white.svg</file>
-        <file alias="square-check-big-black.svg">./lucide-icons/square-check-big-black.svg</file>
-        <file alias="square-check-big-white.svg">./lucide-icons/square-check-big-white.svg</file>
+        <file alias="chevron-down-black.svg">./lucide_icons/chevron-down-black.svg</file>
+        <file alias="chevron-down-white.svg">./lucide_icons/chevron-down-white.svg</file>
+        <file alias="library-black.svg">./lucide_icons/library-black.svg</file>
+        <file alias="library-white.svg">./lucide_icons/library-white.svg</file>
+        <file alias="list-music-black.svg">./lucide_icons/list-music-black.svg</file>
+        <file alias="list-music-white.svg">./lucide_icons/list-music-white.svg</file>
+        <file alias="play-black.svg">./lucide_icons/play-black.svg</file>
+        <file alias="play-white.svg">./lucide_icons/play-white.svg</file>
+        <file alias="repeat-1-black.svg">./lucide_icons/repeat-1-black.svg</file>
+        <file alias="repeat-1-white.svg">./lucide_icons/repeat-1-white.svg</file>
+        <file alias="repeat-black.svg">./lucide_icons/repeat-black.svg</file>
+        <file alias="repeat-white.svg">./lucide_icons/repeat-white.svg</file>
+        <file alias="settings-2-black.svg">./lucide_icons/settings-2-black.svg</file>
+        <file alias="settings-2-white.svg">./lucide_icons/settings-2-white.svg</file>
+        <file alias="shuffle-black.svg">./lucide_icons/shuffle-black.svg</file>
+        <file alias="shuffle-white.svg">./lucide_icons/shuffle-white.svg</file>
+        <file alias="skip-back-black.svg">./lucide_icons/skip-back-black.svg</file>
+        <file alias="skip-back-white.svg">./lucide_icons/skip-back-white.svg</file>
+        <file alias="skip-forward-black.svg">./lucide_icons/skip-forward-black.svg</file>
+        <file alias="skip-forward-white.svg">./lucide_icons/skip-forward-white.svg</file>
+        <file alias="square-black.svg">./lucide_icons/square-black.svg</file>
+        <file alias="square-white.svg">./lucide_icons/square-white.svg</file>
+        <file alias="square-check-big-black.svg">./lucide_icons/square-check-big-black.svg</file>
+        <file alias="square-check-big-white.svg">./lucide_icons/square-check-big-white.svg</file>
+    </qresource>
+    <qresource prefix="fonts">
+        <file alias="NotoSans.ttf">./fonts/NotoSansJP-VariableFont_wght.ttf</file>
     </qresource>
 </RCC>
