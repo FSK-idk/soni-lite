@@ -1,9 +1,10 @@
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 from model.audio_data import AudioData
 from model.config import config
 
-selection_attributes = {
+header_attributes = {
+    # 'id':                       'Audio.id',
     # 'title':                    'Audio.title',
     'album_title':              'Album.name',
     'duration':                 'Audio.duration',
@@ -28,7 +29,7 @@ selection_attributes = {
     'isrc':                     'Audio.isrc',
 }
 
-audio_info_attributes = {
+info_attributes = {
         'filepath' :                    'Audio.filepath',
         'title' :                       'Audio.title',
         'album_title' :                 'Album.name',
@@ -66,21 +67,31 @@ class Queries:
     @staticmethod
     def create_table(table_name: str, attributes: List[str], data_types: List[str], constraints: List[str]):
         return f"""
-            CREATE TABLE IF NOT EXISTS {table_name} ({', '.join([' '.join(col) for col in zip(attributes, data_types, constraints)])})
+            CREATE TABLE IF NOT EXISTS {table_name} ({", ".join([" ".join(col) for col in zip(attributes, data_types, constraints)])})
         """
 
     @staticmethod
-    def insert(table_name: str, attributes: List[str], parameters: List[str]) -> str:
+    def insert(table_name: str, insert_data: List[Tuple[str, str]]) -> str:
+        attributes, parameters = map(list, zip(*insert_data))
         return f"""
-            INSERT OR IGNORE INTO {table_name} ({', '.join(attributes)})
-            VALUES ({', '.join(parameters)})
+            INSERT OR IGNORE INTO {table_name} ({", ".join(attributes)})
+            VALUES ({", ".join(parameters)})
         """
 
     @staticmethod
     def select_all(table_name: str, attributes: List[str], ascending: bool = True, order_column: int = 0) -> str:
-        order = 'ASC' if ascending else 'DESC'
+        order = "ASC" if ascending else "DESC"
         return f"""
-            SELECT {', '.join(attributes)} FROM {table_name} ORDER BY {attributes[order_column]} {order} NULLS LAST
+            SELECT {", ".join(attributes)} FROM {table_name} ORDER BY {attributes[order_column]} {order} NULLS LAST
+        """
+    
+    @staticmethod
+    def select_id_one(table_name: str, attributes: List[str], condition: str) -> str:
+        return f"""
+            SELECT {", ".join(attributes)}
+            FROM {table_name}
+            WHERE {condition}
+            LIMIT 1
         """
 
     @staticmethod
@@ -88,7 +99,7 @@ class Queries:
         attributes = ['Audio.id', 'Audio.title']
         for key, val in config.items("Library Shown Parameters"):
             if val == 'True':
-                attributes.append(selection_attributes[key])
+                attributes.append(header_attributes[key])
         order = 'ASC' if ascending else 'DESC'
         return f"""
             SELECT {', '.join(attributes)}
@@ -135,7 +146,7 @@ class Queries:
     @staticmethod
     def select_one_audio() -> str:
         attributes = []
-        for _, attribute in audio_info_attributes.items():
+        for _, attribute in info_attributes.items():
             attributes.append(attribute)
         return f"""
             SELECT {', '.join(attributes)}
@@ -155,6 +166,43 @@ class Queries:
             LEFT JOIN Publisher AS OriginalPublisher ON (Audio.original_publisher_id = OriginalPublisher.id)
             LEFT JOIN TextAuthor AS OriginalTextAuthor ON (Audio.original_text_author_id = OriginalTextAuthor.id)
             WHERE Audio.id = :id
+        """
+
+    @staticmethod
+    def update_audio() -> str:
+        return """
+            UPDATE Audio
+            SET filepath = :filepath,
+                title = :title,
+                album_id = :album_id,
+                duration = :duration,
+                genre_id = :genre_id,
+                language_id = :language_id,
+                rating = :rating,
+                bpm = :bpm,
+                performer_id = :performer_id,
+                composer_id = :composer_id,
+                publisher_id = :publisher_id,
+                modified_by_id = :modified_by_id,
+                release_date = :release_date,
+                copyright = :copyright,
+                comments = :comments,
+                picture = :picture,
+                picture_mime_type_id = :picture_mime_type_id,
+                picture_artist_id = :picture_artist_id,
+                text = :text,
+                text_author_id = :text_author_id,
+                original_title = :original_title,
+                original_album_id = :original_album_id,
+                original_performer_id = :original_performer_id,
+                original_composer_id = :original_composer_id,
+                original_publisher_id = :original_publisher_id,
+                original_release_date = :original_release_date,
+                original_text_author_id = :original_text_author_id,
+                isrc = :isrc,
+                website = :website,
+                copyright_website = :copyright_website
+            WHERE id = :id
         """
 
     @staticmethod
@@ -325,175 +373,112 @@ class Queries:
 
     @staticmethod
     def insert_album() -> str:
-        return Queries.insert("Album", ["name"], [":name"])
+        return Queries.insert("Album", [("name", ":name")])
 
     @staticmethod
     def insert_genre() -> str:
-        return Queries.insert("Genre", ["name"], [":name"])
+        return Queries.insert("Genre", [("name", ":name")])
 
     @staticmethod
     def insert_language() -> str:
-        return Queries.insert("Language", ["name", "code"], [":name", ":code"])
+        return Queries.insert("Language", [("name", ":name"), ("code", ":code")])
 
     @staticmethod
     def insert_performer() -> str:
-        return Queries.insert("Performer", ["name"], [":name"])
+        return Queries.insert("Performer", [("name", ":name")])
 
     @staticmethod
     def insert_composer() -> str:
-        return Queries.insert("Composer", ["name"], [":name"])
+        return Queries.insert("Composer", [("name", ":name")])
 
     @staticmethod
     def insert_publisher() -> str:
-        return Queries.insert("Publisher", ["name"], [":name"])
+        return Queries.insert("Publisher", [("name", ":name")])
 
     @staticmethod
     def insert_modified_by() -> str:
-        return Queries.insert("ModifiedBy", ["name"], [":name"])
+        return Queries.insert("ModifiedBy", [("name", ":name")])
 
     @staticmethod
     def insert_picture_mime_type() -> str:
-        return Queries.insert("PictureMimeType", ["type"], [":type"])
+        return Queries.insert("PictureMimeType", [("name", ":name")])
 
     @staticmethod
     def insert_picture_artist() -> str:
-        return Queries.insert("PictureArtist", ["name"], [":name"])
+        return Queries.insert("PictureArtist", [("name", ":name")])
 
     @staticmethod
     def insert_text_author() -> str:
-        return Queries.insert("TextAuthor", ["name"], [":name"])
+        return Queries.insert("TextAuthor", [("name", ":name")])
 
+    @staticmethod
+    def insert_audio() -> str:
+        insert_data = [
+            ("filepath",                    ":filepath"),
+            ("title",                       ":title"),
+            ("album_id",                    ":album_id"),
+            ("duration",                    ":duration"),
+            ("genre_id",                    ":genre_id"),
+            ("language_id",                 ":language_id"),
+            ("rating",                      ":rating"),
+            ("bpm",                         ":bpm"),
+            ("performer_id",                ":performer_id"),
+            ("composer_id",                 ":composer_id"),
+            ("publisher_id",                ":publisher_id"),
+            ("modified_by_id",              ":modified_by_id"),
+            ("release_date",                ":release_date"),
+            ("copyright",                   ":copyright"),
+            ("comments",                    ":comments"),
+            ("picture",                     ":picture"),
+            ("picture_mime_type_id",        ":picture_mime_type_id"),
+            ("picture_artist_id",           ":picture_artist_id"),
+            ("text",                        ":text"),
+            ("text_author_id",              ":text_author_id"),
+            ("original_title",              ":original_title"),
+            ("original_album_id",           ":original_album_id"),
+            ("original_performer_id",       ":original_performer_id"),
+            ("original_composer_id",        ":original_composer_id"),
+            ("original_publisher_id",       ":original_publisher_id"),
+            ("original_release_date",       ":original_release_date"),
+            ("original_text_author_id",     ":original_text_author_id"),
+            ("isrc",                        ":isrc"),
+            ("website",                     ":website"),
+            ("copyright_website",           ":copyright_website"),
+        ]
+        return Queries.insert("Audio", insert_data)
 
+    @staticmethod
+    def select_album_id_one() -> str:
+        return Queries.select_id_one("Album", ["Album.id"], "Album.name = :name")
 
+    @staticmethod
+    def select_genre_id_one() -> str:
+        return Queries.select_id_one("Genre", ["Genre.id"], "Genre.name = :name")
 
-    select_album_id = """
-        SELECT Album.id
-        FROM Album
-        WHERE Album.name = :name
-        LIMIT 1
-    """
+    @staticmethod
+    def select_performer_id_one() -> str:
+        return Queries.select_id_one("Performer", ["Performer.id"], "Performer.name = :name")
 
-    select_genre_id = """
-        SELECT Genre.id
-        FROM Genre
-        WHERE Genre.name = :name
-        LIMIT 1
-    """
+    @staticmethod
+    def select_composer_id_one() -> str:
+        return Queries.select_id_one("Composer", ["Composer.id"], "Composer.name = :name")
 
-    select_performer_id = """
-        SELECT Performer.id
-        FROM Performer
-        WHERE Performer.name = :name
-        LIMIT 1
-    """
+    @staticmethod
+    def select_publisher_id_one() -> str:
+        return Queries.select_id_one("Publisher", ["Publisher.id"], "Publisher.name = :name")
 
-    select_composer_id = """
-        SELECT Composer.id
-        FROM Composer
-        WHERE Composer.name = :name
-        LIMIT 1
-    """
-    select_publisher_id = """
-        SELECT Publisher.id
-        FROM Publisher
-        WHERE Publisher.name = :name
-        LIMIT 1
-    """
+    @staticmethod
+    def select_modified_by_id_one() -> str:
+        return Queries.select_id_one("ModifiedBy", ["ModifiedBy.id"], "ModifiedBy.name = :name")
 
-    select_modified_by_id = """
-        SELECT ModifiedBy.id
-        FROM ModifiedBy
-        WHERE ModifiedBy.name = :name
-        LIMIT 1
-    """
+    @staticmethod
+    def select_picture_mime_type_id_one() -> str:
+        return Queries.select_id_one("PictureMimeType", ["PictureMimeType.id"], "PictureMimeType.type = :type")
 
-    select_picture_mime_type_id = """
-        SELECT PictureMimeType.id
-        FROM PictureMimeType
-        WHERE PictureMimeType.type = :type
-        LIMIT 1
-    """
+    @staticmethod
+    def select_picture_artist_id_one() -> str:
+        return Queries.select_id_one("PictureArtist", ["PictureArtist.id"], "PictureArtist.name = :name")
 
-
-    select_picture_artist_id = """
-        SELECT PictureArtist.id
-        FROM PictureArtist
-        WHERE PictureArtist.name = :name
-        LIMIT 1
-    """
-
-    select_text_author_id = """
-        SELECT TextAuthor.id
-        FROM TextAuthor
-        WHERE TextAuthor.name = :name
-        LIMIT 1
-    """
-    insert_audio = """
-        INSERT INTO Audio (
-            filepath,
-            title,
-            album_id,
-            duration,
-            genre_id,
-            language_id,
-            rating,
-            bpm,
-            performer_id,
-            composer_id,
-            publisher_id,
-            modified_by_id,
-            release_date,
-            copyright,
-            comments,
-            picture,
-            picture_mime_type_id,
-            picture_artist_id,
-            text,
-            text_author_id,
-            original_title,
-            original_album_id,
-            original_performer_id,
-            original_composer_id,
-            original_publisher_id,
-            original_release_date,
-            original_text_author_id,
-            isrc,
-            website,
-            copyright_website
-        )
-        VALUES (
-            :filepath,
-            :title,
-            :album_id,
-            :duration,
-            :genre_id,
-            :language_id,
-            :rating,
-            :bpm,
-            :performer_id,
-            :composer_id,
-            :publisher_id,
-            :modified_by_id,
-            :release_date,
-            :copyright,
-            :comments,
-            :picture,
-            :picture_mime_type_id,
-            :picture_artist_id,
-            :text,
-            :text_author_id,
-            :original_title,
-            :original_album_id,
-            :original_performer_id,
-            :original_composer_id,
-            :original_publisher_id,
-            :original_release_date,
-            :original_text_author_id,
-            :isrc,
-            :website,
-            :copyright_website
-        )
-    """
-
-
-
+    @staticmethod
+    def select_text_author_id_one() -> str:
+        return Queries.select_id_one("TextAuthor", ["TextAuthor.id"], "TextAuthor.name = :name")
