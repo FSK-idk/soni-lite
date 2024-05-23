@@ -17,7 +17,7 @@ from view.default.h_box_layout_widget import HBoxLayoutWidget
 from view.tile.text_edit_tile import TextEditTile
 
 from view.widget.illustration_widget import IllustrationWidget
-from view.widget.audio_info_panel_widget import AudioInfoPanelWidget
+from view.widget.info_panel_widget import InfoPanelWidget
 
 
 class NewAudioDialog(QDialog):
@@ -30,9 +30,9 @@ class NewAudioDialog(QDialog):
 
         # widgets
 
-        self.illustration = IllustrationWidget()
-        self.text = TextEditTile()
-        self.search_panel = AudioInfoPanelWidget()
+        self.illustration = IllustrationWidget(self)
+        self.text = TextEditTile(self)
+        self.info_panel = InfoPanelWidget(self)
         self.save_button = PushButtonWidget(self)
         self.cancel_button = PushButtonWidget(self)
 
@@ -53,7 +53,7 @@ class NewAudioDialog(QDialog):
         self.buttons_layout.addWidget(self.save_button, 1)
 
         self.right_layout = VBoxLayoutWidget()
-        self.right_layout.addWidget(self.search_panel)
+        self.right_layout.addWidget(self.info_panel)
         self.right_layout.addLayout(self.buttons_layout)
 
         self.main_layout = HBoxLayoutWidget()
@@ -76,7 +76,7 @@ class NewAudioDialog(QDialog):
         self.move(geometry.topLeft())
     
     def save(self):
-        self.info = self.search_panel.getAudioData()
+        self.info = self.info_panel.getAudioData()
         if self.info.title == "":
             dlg = QMessageBox(self)
             dlg.setWindowTitle("Attention")

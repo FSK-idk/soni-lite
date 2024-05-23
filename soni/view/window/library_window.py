@@ -134,10 +134,12 @@ class LibraryWindow(QMainWindow):
             self.search_panel.updatePanel()
 
     def modifyAudio(self) -> None:
-        pass
-        # dialog = ModifyAudioDialog(self)
-        # if dialog.exec():
-        #     print("OK")
+        if self.table.selectionModel().selectedRows():
+            dialog = ModifyAudioDialog(self.table.selectionModel().selectedRows()[0].data(), self)
+            if dialog.exec():
+                print("OK")
+        else:
+            print ("None chosen")
         
     def deleteAudio(self) -> None:
         pass

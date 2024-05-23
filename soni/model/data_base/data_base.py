@@ -9,7 +9,7 @@ from PySide6.QtSql import (
 
 from model.audio_data import AudioData
 from model.data_base.data_base_default import DataBaseDefault
-from model.data_base.query import Queries
+from model.data_base.query import Queries, audio_info_attributes
 
 
 class DataBase():
@@ -264,5 +264,24 @@ class DataBase():
         query.prepare(f"SELECT {', '.join(attributes)} FROM {table_name}")
         query.exec()
         return query
+
+    def get_audio(self, id : int) -> AudioData:
+        query = QSqlQuery(self.data_base)
+        query.prepare(Queries.select_one_audio())
+        query.bindValue(':id', id)
+        query.exec()
+
+        audio_data = AudioData()
+
+        rec = query.record()
+
+        if query.next():
+            row = [query.value(index) for index in range(rec.count())]
+            audio_data.setData(row)
+        
+        return audio_data
+
+    def update_audio(self, audio_data : AudioData) -> None:
+        print('updating')
 
 data_base = DataBase()

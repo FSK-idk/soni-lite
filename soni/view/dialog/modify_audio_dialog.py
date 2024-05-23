@@ -8,6 +8,7 @@ from PySide6.QtGui import (
     QScreen,
 )
 
+from model.data_base.data_base import data_base
 from model.audio_data import AudioData
 
 from view.default.push_button_widget import PushButtonWidget
@@ -17,26 +18,27 @@ from view.default.h_box_layout_widget import HBoxLayoutWidget
 from view.tile.text_edit_tile import TextEditTile
 
 from view.widget.illustration_widget import IllustrationWidget
-from view.widget.audio_info_panel_widget import AudioInfoPanelWidget
+from view.widget.info_panel_widget import InfoPanelWidget
 
 
 class ModifyAudioDialog(QDialog):
-    def __init__(self, parent: QWidget | None = None):
+    def __init__(self, id : int, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
         # attributes
 
-        self.info = AudioData()
+        self.info = data_base.get_audio(id)
 
         # widgets
 
-        self.illustration = IllustrationWidget()
-        self.text = TextEditTile()
-        self.search_panel = AudioInfoPanelWidget()
+        self.illustration = IllustrationWidget(self)
+        self.text = TextEditTile(self)
+        self.info_panel = InfoPanelWidget(self)
         self.save_button = PushButtonWidget(self)
         self.cancel_button = PushButtonWidget(self)
 
         self.text.setTitle("Text")
+        self.info_panel.setAudioData(self.info)
         self.save_button.setText("Save")
         self.save_button.clicked.connect(self.save)
         self.cancel_button.setText("Cancel")
@@ -53,7 +55,7 @@ class ModifyAudioDialog(QDialog):
         self.buttons_layout.addWidget(self.save_button, 1)
 
         self.right_layout = VBoxLayoutWidget()
-        self.right_layout.addWidget(self.search_panel)
+        self.right_layout.addWidget(self.info_panel)
         self.right_layout.addLayout(self.buttons_layout)
 
         self.main_layout = HBoxLayoutWidget()
@@ -76,16 +78,17 @@ class ModifyAudioDialog(QDialog):
         self.move(geometry.topLeft())
     
     def save(self):
-        self.info = self.search_panel.getAudioInfo()
+        self.info = self.info_panel.getAudioData()
         if self.info.title == "":
             dlg = QMessageBox(self)
             dlg.setWindowTitle("Attention")
             dlg.setText("You have not entered title")
             dlg.setStandardButtons(QMessageBox.StandardButton.Ok)
             dlg.setIcon(QMessageBox.Icon.Warning)
-            button = dlg.exec()            
+            button = dlg.exec()
             return
-        self.info.text = self.text.text()
+        
+        data_base.update_audio(self.info)
         self.accept()
 
     def cancel(self):

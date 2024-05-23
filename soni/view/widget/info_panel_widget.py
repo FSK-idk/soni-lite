@@ -17,7 +17,7 @@ from view.tile.line_edit_tile import LineEditTile
 from view.tile.file_line_edit_tile import FileLineEditTile
 
 
-class AudioInfoPanelWidget(QScrollArea):
+class InfoPanelWidget(QScrollArea):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         
@@ -180,36 +180,66 @@ class AudioInfoPanelWidget(QScrollArea):
         # self.website
         # self.copyright_website
 
+    def setAudioData(self, audio_data : AudioData) -> None:
+        self.filepath.setText(audio_data.filepath) 
+        self.title.setText(audio_data.title)
+        self.album_title.setText(audio_data.album_title)
+        # audio_data.duration
+        self.genre.combo_box.setEditText(audio_data.genre)
+        # audio_data.language
+        # audio_data.rating
+        # audio_data.bpm
+        self.performer.combo_box.setEditText(audio_data.performer)
+        self.composer.combo_box.setEditText(audio_data.composer)
+        self.publisher.combo_box.setEditText(audio_data.publisher)
+        self.modified_by.combo_box.setEditText(audio_data.modified_by)
+        # audio_data.release_date
+        # audio_data.copyright
+        # audio_data.comments
+        self.picture_filepath.setText(audio_data.picture_filepath)
+        self.picture_artist.combo_box.setEditText(audio_data.picture_artist)
+        self.text_author.combo_box.setEditText(audio_data.text_author)
+        self.original_title.setText(audio_data.original_title)
+        self.original_album_title.setText(audio_data.original_album_title)
+        self.original_performer.combo_box.setEditText(audio_data.original_performer)
+        self.original_composer.combo_box.setEditText(audio_data.original_composer)
+        self.original_publisher.combo_box.setEditText(audio_data.original_publisher)
+        # audio_data.original_release_date
+        self.original_text_author.combo_box.setEditText(audio_data.original_text_author)
+        self.isrc.setText(audio_data.isrc)
+        # audio_data.website
+        # audio_data.copyright_website
+
     def getAudioData(self) -> AudioData:
-        info = AudioData()
+        audio_data = AudioData()
 
-        info.filepath = self.filepath.text()
-        info.title = self.title.text()
-        info.album_title = self.album_title.text()
-        # info.duration
-        info.genre = self.genre.text()
-        # info.language
-        # info.rating
-        # info.bpm
-        info.performer = self.performer.text()
-        info.composer = self.composer.text()
-        info.publisher = self.publisher.text()
-        info.modified_by = self.modified_by.text()
-        # info.release_date
-        # info.copyright
-        # info.comments
-        info.picture_filepath = self.picture_filepath.text()
-        info.picture_artist = self.picture_artist.text()
-        info.text_author = self.text_author.text()
-        info.original_title = self.original_title.text()
-        info.original_album_title = self.original_album_title.text()
-        info.original_performer = self.original_performer.text()
-        info.original_composer = self.original_composer.text()
-        info.original_publisher = self.original_publisher.text()
-        # info.original_release_date
-        info.original_text_author = self.original_text_author.text()
-        info.isrc = self.isrc.text()
-        # info.website
-        # info.copyright_website
+        audio_data.filepath = self.filepath.text()
+        audio_data.title = self.title.text()
+        audio_data.album_title = self.album_title.text()
+        # audio_data.duration
+        audio_data.genre = self.genre.text()
+        # audio_data.language
+        # audio_data.rating
+        # audio_data.bpm
+        audio_data.performer = self.performer.text()
+        audio_data.composer = self.composer.text()
+        audio_data.publisher = self.publisher.text()
+        audio_data.modified_by = self.modified_by.text()
+        # audio_data.release_date
+        # audio_data.copyright
+        # audio_data.comments
+        audio_data.picture_filepath = self.picture_filepath.text()
+        audio_data.picture_artist = self.picture_artist.text()
+        audio_data.text_author = self.text_author.text()
+        audio_data.original_title = self.original_title.text()
+        audio_data.original_album_title = self.original_album_title.text()
+        audio_data.original_performer = self.original_performer.text()
+        audio_data.original_composer = self.original_composer.text()
+        audio_data.original_publisher = self.original_publisher.text()
+        # audio_data.original_release_date
+        audio_data.original_text_author = self.original_text_author.text()
+        audio_data.isrc = self.isrc.text()
+        # audio_data.website
+        # audio_data.copyright_website
 
-        return info
+        return audio_data

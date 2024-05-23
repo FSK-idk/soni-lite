@@ -4,7 +4,7 @@ from model.audio_data import AudioData
 from model.config import config
 
 selection_attributes = {
-    'title':                    'Audio.title',
+    # 'title':                    'Audio.title',
     'album_title':              'Album.name',
     'duration':                 'Audio.duration',
     'genre':                    'Genre.name',
@@ -26,6 +26,38 @@ selection_attributes = {
     'original_release_date':    'Audio.original_release_date',
     'original_text_author':     'OriginalTextAuthor.name',
     'isrc':                     'Audio.isrc',
+}
+
+audio_info_attributes = {
+        'filepath' :                    'Audio.filepath',
+        'title' :                       'Audio.title',
+        'album_title' :                 'Album.name',
+        # 'duration'                    'Audio.duration',
+        'genre' :                       'Genre.name',
+        # 'language' :                  'Language.name',
+        # 'rating' :                    'Audio.rating',
+        # 'bpm' :                       'Audio.bpm',
+        'performer' :                   'Performer.name',
+        'composer' :                    'Composer.name',
+        'publisher' :                   'Publisher.name',
+        'modified_by' :                 'ModifiedBy.name',
+        # 'release_date' :              'Audio.release_date',
+        # 'copyright' :                 
+        # 'comments' :                  
+        # 'picture_filepath' :          ?
+        'picture_artist' :              'PictureArtist.name',
+        'text' :                        'Audio.text',
+        'text_author' :                 'TextAuthor.name',
+        'original_title' :              'Audio.original_title',
+        'original_album_title' :        'OriginalAlbum.name',
+        'original_performer' :          'OriginalPerformer.name',
+        'original_composer' :           'OriginalComposer.name',
+        'original_publisher' :          'OriginalPublisher.name',
+        # 'original_release_date' :     'Audio.original_release_date',
+        'original_text_author' :        'OriginalTextAuthor.name',
+        'isrc' :                        'Audio.isrc',
+        # 'website' :                   'Audio.website'
+        # 'copyright_website' :         'Audio.copyright_website'
 }
 
 class Queries:
@@ -98,6 +130,31 @@ class Queries:
             AND (:original_text_author == '' OR OriginalTextAuthor.name LIKE :original_text_author || '%')
             AND (:isrc == '' OR Audio.isrc LIKE :isrc || '%')
             ORDER BY {attributes[order_column]} {order} NULLS LAST
+        """
+    
+    @staticmethod
+    def select_one_audio() -> str:
+        attributes = []
+        for _, attribute in audio_info_attributes.items():
+            attributes.append(attribute)
+        return f"""
+            SELECT {', '.join(attributes)}
+            FROM Audio
+            LEFT JOIN Album ON (Audio.album_id = Album.id)
+            LEFT JOIN Genre ON Audio.genre_id = Genre.id
+            LEFT JOIN Language ON Audio.language_id = Language.id
+            LEFT JOIN Performer ON Audio.performer_id = Performer.id
+            LEFT JOIN Composer ON Audio.composer_id = Composer.id
+            LEFT JOIN Publisher ON Audio.publisher_id = Publisher.id
+            LEFT JOIN ModifiedBy ON Audio.modified_by_id = ModifiedBy.id
+            LEFT JOIN PictureArtist ON Audio.picture_artist_id = PictureArtist.id
+            LEFT JOIN TextAuthor ON Audio.text_author_id = TextAuthor.id
+            LEFT JOIN Album AS OriginalAlbum ON (Audio.original_album_id = OriginalAlbum.id)
+            LEFT JOIN Performer AS OriginalPerformer ON (Audio.original_performer_id = OriginalPerformer.id)
+            LEFT JOIN Composer AS OriginalComposer ON (Audio.original_composer_id = OriginalComposer.id)
+            LEFT JOIN Publisher AS OriginalPublisher ON (Audio.original_publisher_id = OriginalPublisher.id)
+            LEFT JOIN TextAuthor AS OriginalTextAuthor ON (Audio.original_text_author_id = OriginalTextAuthor.id)
+            WHERE Audio.id = :id
         """
 
     @staticmethod
