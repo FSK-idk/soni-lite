@@ -612,6 +612,13 @@ class Queries:
             WHERE TextAuthor.id IN ({', '.join('?' * count)})
         """
 
+    @staticmethod
+    def delete_audio() -> str:
+        return """
+            DELETE
+            FROM Audio
+            WHERE Audio.id = :id
+        """
 
 
 shrink_table_query = {

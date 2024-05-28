@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
     QScrollArea,
     QDialog,
     QAbstractItemView,
+    QMessageBox
 )
 from PySide6.QtGui import (
     QScreen,
@@ -144,7 +145,17 @@ class LibraryWindow(QMainWindow):
                 self.search_panel.updatePanel()
         
     def deleteAudio(self) -> None:
-        pass
+        if self.table.selectionModel().selectedRows():
+            dlg = QMessageBox(self)
+            dlg.setWindowTitle("Delete audio")
+            dlg.setText("Are you sure?")
+            dlg.setStandardButtons(QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.No)
+            dlg.setIcon(QMessageBox.Icon.Warning)
+            btn = dlg.exec()
+            if btn == QMessageBox.StandardButton.Ok:
+                data_base.delete_audio(self.table.selectionModel().selectedRows()[0].data())
+                self.table.updateTable()
+                self.search_panel.updatePanel()
 
     def test(self) -> None:
         print("test")

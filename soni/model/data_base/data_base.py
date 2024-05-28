@@ -477,5 +477,11 @@ class DataBase():
                 query.addBindValue(i)
             query.exec()
 
+    def delete_audio(self, id: int) -> None:
+        query = QSqlQuery(self.data_base)
+        query.prepare(Queries.delete_audio())
+        query.bindValue(":id", id)
+        query.exec()
+        self.shrink_data_base()
 
 data_base = DataBase()
