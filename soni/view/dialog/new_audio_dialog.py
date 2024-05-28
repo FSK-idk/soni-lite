@@ -83,7 +83,7 @@ class NewAudioDialog(QDialog):
             dlg.setText("You have not entered title")
             dlg.setStandardButtons(QMessageBox.StandardButton.Ok)
             dlg.setIcon(QMessageBox.Icon.Warning)
-            dlg.exec()            
+            dlg.exec()
             return
         self.info.text = self.text.text()
         self.accept()

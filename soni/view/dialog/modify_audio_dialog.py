@@ -26,7 +26,7 @@ class ModifyAudioDialog(QDialog):
         super().__init__(parent)
 
         # attributes
-
+        self.audio_id = id
         self.info = data_base.get_audio(id)
 
         # widgets
@@ -78,17 +78,15 @@ class ModifyAudioDialog(QDialog):
         self.move(geometry.topLeft())
     
     def save(self):
-        self.info = self.info_panel.getAudioData()
+        self.new_info = self.info_panel.getAudioData()
         if self.info.title == "":
             dlg = QMessageBox(self)
             dlg.setWindowTitle("Attention")
             dlg.setText("You have not entered title")
             dlg.setStandardButtons(QMessageBox.StandardButton.Ok)
             dlg.setIcon(QMessageBox.Icon.Warning)
-            button = dlg.exec()
+            dlg.exec()
             return
-        
-        data_base.update_audio(self.info)
         self.accept()
 
     def cancel(self):

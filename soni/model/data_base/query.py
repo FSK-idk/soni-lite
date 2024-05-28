@@ -482,3 +482,144 @@ class Queries:
     @staticmethod
     def select_text_author_id_one() -> str:
         return Queries.select_id_one("TextAuthor", ["TextAuthor.id"], "TextAuthor.name = :name")
+
+    @staticmethod
+    def select_unused_album_id() -> str:
+        return """
+            SELECT Album.id
+            FROM Album
+            LEFT JOIN Audio AS A1 ON A1.album_id = Album.id
+            LEFT JOIN Audio AS A2 ON A2.original_album_id = Album.id
+            WHERE (A1.album_id IS NULL)
+            AND (A2.original_album_id IS NULL)
+        """
+
+    @staticmethod
+    def select_unused_performer_id() -> str:
+        return """
+            SELECT Performer.id
+            FROM Performer
+            LEFT JOIN Audio AS A1 ON A1.performer_id = Performer.id
+            LEFT JOIN Audio AS A2 ON A2.original_performer_id = Performer.id
+            WHERE (A1.performer_id IS NULL)
+            AND (A2.original_performer_id IS NULL)
+        """
+    
+    @staticmethod
+    def select_unused_composer_id() -> str:
+        return """
+            SELECT Composer.id
+            FROM Composer
+            LEFT JOIN Audio AS A1 ON A1.composer_id = Composer.id
+            LEFT JOIN Audio AS A2 ON A2.original_composer_id = Composer.id
+            WHERE (A1.composer_id IS NULL)
+            AND (A2.original_composer_id IS NULL)
+        """
+    
+    @staticmethod
+    def select_unused_publisher_id() -> str:
+        return """
+            SELECT Publisher.id
+            FROM Publisher
+            LEFT JOIN Audio AS A1 ON A1.publisher_id = Publisher.id
+            LEFT JOIN Audio AS A2 ON A2.original_publisher_id = Publisher.id
+            WHERE (A1.publisher_id IS NULL)
+            AND (A2.original_publisher_id IS NULL)
+        """
+
+    @staticmethod
+    def select_unused_modified_by_id() -> str:
+        return """
+            SELECT ModifiedBy.id
+            FROM ModifiedBy
+            LEFT JOIN Audio AS A1 ON A1.modified_by_id = ModifiedBy.id
+            WHERE (A1.modified_by_id IS NULL)
+        """
+
+    @staticmethod
+    def select_unused_picture_artist_id() -> str:
+        return """
+            SELECT PictureArtist.id
+            FROM PictureArtist
+            LEFT JOIN Audio AS A1 ON A1.picture_artist_id = PictureArtist.id
+            WHERE (A1.picture_artist_id IS NULL)
+        """
+    
+    @staticmethod
+    def select_unused_text_author_id() -> str:
+        return """
+            SELECT TextAuthor.id
+            FROM TextAuthor
+            LEFT JOIN Audio AS A1 ON A1.text_author_id = TextAuthor.id
+            LEFT JOIN Audio AS A2 ON A2.original_text_author_id = TextAuthor.id
+            WHERE (A1.text_author_id IS NULL)
+            AND (A2.original_text_author_id IS NULL)
+        """
+
+    @staticmethod
+    def delete_album(count: int) -> str:
+        return f"""
+            DELETE
+            FROM Album
+            WHERE Album.id IN ({', '.join('?' * count)})
+        """
+
+    @staticmethod
+    def delete_performer(count: int) -> str:
+        return f"""
+            DELETE
+            FROM Performer
+            WHERE Performer.id IN ({', '.join('?' * count)})
+        """
+    
+    @staticmethod
+    def delete_composer(count: int) -> str:
+        return f"""
+            DELETE
+            FROM Composer
+            WHERE Composer.id IN ({', '.join('?' * count)})
+        """    
+    
+    @staticmethod
+    def delete_publisher(count: int) -> str:
+        return f"""
+            DELETE
+            FROM Publisher
+            WHERE Publisher.id IN ({', '.join('?' * count)})
+        """
+        
+    @staticmethod
+    def delete_modified_by(count: int) -> str:
+        return f"""
+            DELETE
+            FROM ModifiedBy
+            WHERE ModifiedBy.id IN ({', '.join('?' * count)})
+        """
+     
+    @staticmethod
+    def delete_picture_artist(count: int) -> str:
+        return f"""
+            DELETE
+            FROM PictureArtist
+            WHERE PictureArtist.id IN ({', '.join('?' * count)})
+        """
+     
+    @staticmethod
+    def delete_text_author(count: int) -> str:
+        return f"""
+            DELETE
+            FROM TextAuthor
+            WHERE TextAuthor.id IN ({', '.join('?' * count)})
+        """
+
+
+
+shrink_table_query = {
+    "Album": [Queries.select_unused_album_id, Queries.delete_album],
+    "Performer": [Queries.select_unused_performer_id, Queries.delete_performer],
+    "Composer": [Queries.select_unused_composer_id, Queries.delete_composer],
+    "Publisher": [Queries.select_unused_publisher_id, Queries.delete_publisher],
+    "ModifiedBy": [Queries.select_unused_modified_by_id, Queries.delete_modified_by],
+    "PictureArtist": [Queries.select_unused_picture_artist_id, Queries.delete_picture_artist],
+    "TextAuthor": [Queries.select_unused_text_author_id, Queries.delete_text_author],
+}

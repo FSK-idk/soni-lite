@@ -43,7 +43,6 @@ from view.widget.audio_table_widget import AudioTableWidget
 class LibraryWindow(QMainWindow):
     # signals
 
-    audioAdded = Signal()
     audioModified = Signal()
 
     def __init__(self) -> None:
@@ -105,6 +104,10 @@ class LibraryWindow(QMainWindow):
         self.delete_audio_action.triggered.connect(self.deleteAudio)
         self.menuBar().addAction(self.delete_audio_action)
 
+        self.test_action = QAction("test", self)
+        self.test_action.triggered.connect(self.test)
+        self.menuBar().addAction(self.test_action)
+
         # self
 
         self.setWindowTitle("soni.library")
@@ -129,7 +132,6 @@ class LibraryWindow(QMainWindow):
         dialog = NewAudioDialog(self)
         if dialog.exec():
             data_base.insert_audio(dialog.info)
-            self.audioAdded.emit()
             self.table.updateTable()
             self.search_panel.updatePanel()
 
@@ -137,9 +139,13 @@ class LibraryWindow(QMainWindow):
         if self.table.selectionModel().selectedRows():
             dialog = ModifyAudioDialog(self.table.selectionModel().selectedRows()[0].data(), self)
             if dialog.exec():
-                print("OK")
-        else:
-            print ("None chosen")
+                data_base.update_audio(dialog.new_info, dialog.audio_id)
+                self.table.updateTable()
+                self.search_panel.updatePanel()
         
     def deleteAudio(self) -> None:
+        pass
+
+    def test(self) -> None:
+        print("test")
         pass
