@@ -47,6 +47,7 @@ class AudioTableModel:
         self.query_model = QSqlQueryModel()
 
         self.updateTable()
+        self.updateHeaders()
 
     def setSearchData(self, search_data: AudioData):
         self.search_data = search_data

@@ -11,15 +11,14 @@ from PySide6.QtCore import (
     Qt,
 )
 
-from model.audio_data import AudioData
-from model.audio_table_model import AudioTableModel
+from model.playlist_table_model import PlaylistTableModel
 
 
-class AudioTableWidget(QTableView):
+class PlaylistTableWidget(QTableView):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
-        self.audio_table_model = AudioTableModel()
+        self.audio_table_model = PlaylistTableModel()
 
         self.setSortingEnabled(True)
         self.setModel(self.audio_table_model.query_model)
@@ -31,7 +30,7 @@ class AudioTableWidget(QTableView):
         self.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         self.horizontalHeader().sortIndicatorChanged.connect(self.sort)
 
-    def search(self, search_data: AudioData):
+    def search(self, search_data: str):
         self.audio_table_model.setSearchData(search_data)
         self.audio_table_model.updateTable()
 

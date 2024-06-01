@@ -484,4 +484,31 @@ class DataBase():
         query.exec()
         self.shrink_data_base()
 
+    def select_playlist_id(self, name: str) -> int | None:
+        query = QSqlQuery(self.data_base)
+        query.prepare(Queries.select_playlist_id_one())
+        query.bindValue(":name", name)
+        query.exec()
+        return query.value(0) if query.next() else None
+
+    def insert_playlist(self, name: str) -> None:
+        playlist_name = None
+        if name != "":
+            playlist_name = name
+        query = QSqlQuery(self.data_base)
+        query.prepare(Queries.insert_playlist())
+        query.bindValue(":name", playlist_name)
+        query.exec()
+
+    def delete_playlist(self, id: int) -> None:
+        query = QSqlQuery(self.data_base)
+        query.prepare(Queries.delete_playlist())
+        query.bindValue(":id", id)
+        query.exec()
+
+        query = QSqlQuery(self.data_base)
+        query.prepare(Queries.delete_playlist_audio())
+        query.bindValue(":id", id)
+        query.exec()
+
 data_base = DataBase()

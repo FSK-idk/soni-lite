@@ -619,7 +619,41 @@ class Queries:
             FROM Audio
             WHERE Audio.id = :id
         """
+    
+    @staticmethod
+    def insert_playlist() -> str:
+        return Queries.insert("Playlist", [("name",    ":name")])
 
+    @staticmethod
+    def select_playlist(ascending: bool = True, order_column: int = 0) -> str:
+        attributes = ['Playlist.id', 'Playlist.name']
+        order = 'ASC' if ascending else 'DESC'
+        return f"""
+            SELECT {', '.join(attributes)}
+            FROM Playlist
+            WHERE (:name == '' OR Playlist.name LIKE :name || '%')
+            ORDER BY {attributes[order_column]} {order} NULLS LAST
+        """
+
+    @staticmethod
+    def select_playlist_id_one() -> str:
+        return Queries.select_id_one("Playlist", ["Playlist.id"], "Playlist.name = :name")
+
+    @staticmethod
+    def delete_playlist() -> str:
+        return """
+            DELETE
+            FROM Playlist
+            WHERE Playlist.id = :id
+        """
+
+    @staticmethod
+    def delete_playlist_audio() -> str:
+        return """
+            DELETE
+            FROM PlaylistAudio
+            WHERE PlaylistAudio.playlist_id = :id
+        """
 
 shrink_table_query = {
     "Album": [Queries.select_unused_album_id, Queries.delete_album],

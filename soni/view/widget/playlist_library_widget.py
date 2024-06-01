@@ -32,7 +32,7 @@ from PySide6.QtSql import (
 
 from model.data_base.data_base import data_base
 
-from view.dialog.new_audio_dialog import NewAudioDialog
+from view.dialog.new_playlist_dialog import NewPlaylistDialog
 from view.dialog.modify_audio_dialog import ModifyAudioDialog
 
 from view.default.push_button_widget import PushButtonWidget
@@ -42,9 +42,28 @@ from view.default.h_box_layout_widget import HBoxLayoutWidget
 from view.widget.search_panel_widget import SearchPanelWidget
 from view.widget.audio_table_widget import AudioTableWidget
 
+from view.widget.playlist_panel_widget import PlaylistPanelWidget
+from view.widget.playlist_audio_table_widget import PlaylistAudioTableWidget
+
+
 class PlaylistLibraryWidget(QWidget):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
+
+        # widget
+
+        self.playlist_panel = PlaylistPanelWidget(self)
+        self.audio_table = PlaylistAudioTableWidget(self)
+
+        # layout
+
+        self.main_layout = HBoxLayoutWidget()
+        self.main_layout.setContentsMargins(10, 10, 10, 10)
+        self.main_layout.addWidget(self.playlist_panel, 1)
+        self.main_layout.addWidget(self.audio_table, 3)
+
+        self.setLayout(self.main_layout)
+
 
         palette = QPalette()
         palette.setColor(QPalette.ColorRole.Window, Qt.GlobalColor.darkCyan)
@@ -57,12 +76,23 @@ class PlaylistLibraryWidget(QWidget):
         pass
 
     def newPlaylist(self) -> None:
-        print("new")
-        pass
+        dialog = NewPlaylistDialog(self)
+        if dialog.exec():
+            data_base.insert_playlist(dialog.name)
+            self.playlist_panel.updatePanel()
 
     def deletePlaylist(self) -> None:
-        print("delete")
-        pass
+        if self.playlist_panel.table.selectionModel().selectedRows():
+            dlg = QMessageBox(self)
+            dlg.setWindowTitle("Delete playlist")
+            dlg.setText("Are you sure?")
+            dlg.setStandardButtons(QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.No)
+            dlg.setIcon(QMessageBox.Icon.Warning)
+            btn = dlg.exec()
+            if btn == QMessageBox.StandardButton.Ok:
+                data_base.delete_playlist(self.playlist_panel.table.selectionModel().selectedRows()[0].data())
+                self.playlist_panel.updatePanel()
+                self.audio_table.updateTable()
 
     def addAudio(self) -> None:
         print("add")

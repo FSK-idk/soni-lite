@@ -60,8 +60,6 @@ class AudioLibraryWidget(QWidget):
         self.clear_button.setText("Clear")
         self.clear_button.clicked.connect(self.search_panel.clearPanel)
 
-        self.table.updateHeaders()
-
         # layout
 
         self.buttons_layout = HBoxLayoutWidget()
