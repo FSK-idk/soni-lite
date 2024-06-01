@@ -1,83 +1,30 @@
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
-    QHBoxLayout,
-    QVBoxLayout,
     QStackedLayout,
-    QSlider,
     QWidget,
-    QLabel,
-    QPushButton,
-    QSizePolicy,
-    QMenuBar,
-    QTableView,
-    QScrollArea,
-    QDialog,
-    QAbstractItemView,
-    QMessageBox
 )
 from PySide6.QtGui import (
     QScreen,
     QAction,
-    QFont
-)
-from PySide6.QtCore import (
-    Qt,
-    Signal
-)
-from PySide6.QtSql import (
-    QSqlTableModel,
 )
 
-from model.data_base.data_base import data_base
-
-from view.dialog.new_audio_dialog import NewAudioDialog
-from view.dialog.modify_audio_dialog import ModifyAudioDialog
-
-from view.default.push_button_widget import PushButtonWidget
-from view.default.v_box_layout_widget import VBoxLayoutWidget
-from view.default.h_box_layout_widget import HBoxLayoutWidget
-
-from view.widget.search_panel_widget import SearchPanelWidget
-from view.widget.audio_table_widget import AudioTableWidget
+from view.widget.audio_library_widget import AudioLibraryWidget
+from view.widget.playlist_library_widget import PlaylistLibraryWidget
 
 class LibraryWindow(QMainWindow):
-    # signals
-
-    audioModified = Signal()
-
     def __init__(self) -> None:
         super().__init__()
 
         # widgets
 
-        self.table = AudioTableWidget()
-        self.search_panel = SearchPanelWidget(self)
-        self.search_button = PushButtonWidget(self)
-        self.clear_button = PushButtonWidget(self)
-
-        self.search_button.setText("Search")
-        self.search_panel.headersChanged.connect(self.table.updateHeaders)
-        self.search_button.clicked.connect(self.search)
-        self.clear_button.setText("Clear")
-        self.clear_button.clicked.connect(self.search_panel.clearPanel)
-
-        self.table.updateHeaders()
+        self.audio_library = AudioLibraryWidget(self)
+        self.playlist_library = PlaylistLibraryWidget(self)
 
         # layout
-
-        self.buttons_layout = HBoxLayoutWidget()
-        self.buttons_layout.addWidget(self.search_button, 3)
-        self.buttons_layout.addWidget(self.clear_button, 1)
-
-        self.search_layout = VBoxLayoutWidget()
-        self.search_layout.addWidget(self.search_panel)
-        self.search_layout.addLayout(self.buttons_layout)
-
-        self.main_layout = HBoxLayoutWidget()
-        self.main_layout.setContentsMargins(10, 10, 10, 10)
-        self.main_layout.addLayout(self.search_layout, 1)
-        self.main_layout.addWidget(self.table, 3)
+        self.main_layout = QStackedLayout()
+        self.main_layout.addWidget(self.audio_library)
+        self.main_layout.addWidget(self.playlist_library)
 
         self.widget = QWidget(self)
         self.widget.setLayout(self.main_layout)
@@ -87,27 +34,39 @@ class LibraryWindow(QMainWindow):
 
         self.show_audio_action = QAction("audio", self)
         self.show_audio_action.triggered.connect(self.showAudio)
-        self.menuBar().addAction(self.show_audio_action)
 
         self.show_playlist_action = QAction("playlist", self)
         self.show_playlist_action.triggered.connect(self.showPlaylist)
-        self.menuBar().addAction(self.show_playlist_action)
 
-        self.new_audio_action = QAction("new", self)
-        self.new_audio_action.triggered.connect(self.newAudio)
-        self.menuBar().addAction(self.new_audio_action)
+        # audio
+        self.audio_new_audio_action = QAction("new", self)
+        self.audio_new_audio_action.triggered.connect(self.audio_library.newAudio)
 
-        self.modify_audio_action = QAction("modify", self)
-        self.modify_audio_action.triggered.connect(self.modifyAudio)
-        self.menuBar().addAction(self.modify_audio_action)
+        self.audio_modify_audio_action = QAction("modify", self)
+        self.audio_modify_audio_action.triggered.connect(self.audio_library.modifyAudio)
 
-        self.delete_audio_action = QAction("delete", self)
-        self.delete_audio_action.triggered.connect(self.deleteAudio)
-        self.menuBar().addAction(self.delete_audio_action)
+        self.audio_delete_audio_action = QAction("delete", self)
+        self.audio_delete_audio_action.triggered.connect(self.audio_library.deleteAudio)
+        
+        # playlist
+        self.playlist_new_playlist_action = QAction("new", self)
+        self.playlist_new_playlist_action.triggered.connect(self.playlist_library.newPlaylist)
 
+        self.playlist_delete_playlist_action = QAction("delete", self)
+        self.playlist_delete_playlist_action.triggered.connect(self.playlist_library.deletePlaylist)
+
+        self.playlist_add_audio_action = QAction("add", self)
+        self.playlist_add_audio_action.triggered.connect(self.playlist_library.addAudio)
+
+        self.playlist_modify_audio_action = QAction("modify", self)
+        self.playlist_modify_audio_action.triggered.connect(self.playlist_library.modifyAudio)
+
+        self.playlist_remove_audio_action = QAction("remove", self)
+        self.playlist_remove_audio_action.triggered.connect(self.playlist_library.removeAudio)
+
+        # test
         self.test_action = QAction("test", self)
         self.test_action.triggered.connect(self.test)
-        self.menuBar().addAction(self.test_action)
 
         # self
 
@@ -120,42 +79,27 @@ class LibraryWindow(QMainWindow):
         geometry.moveCenter(center)
         self.move(geometry.topLeft())
 
-    def search(self) -> None:
-        self.table.search(self.search_panel.getSearchData())
+        self.showAudio()
 
     def showAudio(self) -> None:
-        pass
+        self.main_layout.setCurrentIndex(0)
+        self.menuBar().clear()
+        self.menuBar().addAction(self.show_playlist_action)
+        self.menuBar().addAction(self.audio_new_audio_action)
+        self.menuBar().addAction(self.audio_modify_audio_action)
+        self.menuBar().addAction(self.audio_delete_audio_action)
+        self.menuBar().addAction(self.test_action)
 
     def showPlaylist(self) -> None:
-        pass
-
-    def newAudio(self) -> None:
-        dialog = NewAudioDialog(self)
-        if dialog.exec():
-            data_base.insert_audio(dialog.info)
-            self.table.updateTable()
-            self.search_panel.updatePanel()
-
-    def modifyAudio(self) -> None:
-        if self.table.selectionModel().selectedRows():
-            dialog = ModifyAudioDialog(self.table.selectionModel().selectedRows()[0].data(), self)
-            if dialog.exec():
-                data_base.update_audio(dialog.new_info, dialog.audio_id)
-                self.table.updateTable()
-                self.search_panel.updatePanel()
-        
-    def deleteAudio(self) -> None:
-        if self.table.selectionModel().selectedRows():
-            dlg = QMessageBox(self)
-            dlg.setWindowTitle("Delete audio")
-            dlg.setText("Are you sure?")
-            dlg.setStandardButtons(QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.No)
-            dlg.setIcon(QMessageBox.Icon.Warning)
-            btn = dlg.exec()
-            if btn == QMessageBox.StandardButton.Ok:
-                data_base.delete_audio(self.table.selectionModel().selectedRows()[0].data())
-                self.table.updateTable()
-                self.search_panel.updatePanel()
+        self.main_layout.setCurrentIndex(1)
+        self.menuBar().clear()
+        self.menuBar().addAction(self.show_audio_action)
+        self.menuBar().addAction(self.playlist_new_playlist_action)
+        self.menuBar().addAction(self.playlist_delete_playlist_action)
+        self.menuBar().addAction(self.playlist_add_audio_action)
+        self.menuBar().addAction(self.playlist_modify_audio_action)
+        self.menuBar().addAction(self.playlist_remove_audio_action)
+        self.menuBar().addAction(self.test_action)
 
     def test(self) -> None:
         print("test")
