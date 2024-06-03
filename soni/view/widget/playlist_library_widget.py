@@ -33,14 +33,12 @@ from PySide6.QtSql import (
 from model.data_base.data_base import data_base
 
 from view.dialog.new_playlist_dialog import NewPlaylistDialog
+from view.dialog.add_audio_dialog import AddAudioDialog
 from view.dialog.modify_audio_dialog import ModifyAudioDialog
 
 from view.default.push_button_widget import PushButtonWidget
 from view.default.v_box_layout_widget import VBoxLayoutWidget
 from view.default.h_box_layout_widget import HBoxLayoutWidget
-
-from view.widget.search_panel_widget import SearchPanelWidget
-from view.widget.audio_table_widget import AudioTableWidget
 
 from view.widget.playlist_panel_widget import PlaylistPanelWidget
 from view.widget.playlist_audio_table_widget import PlaylistAudioTableWidget
@@ -73,10 +71,6 @@ class PlaylistLibraryWidget(QWidget):
         self.setAutoFillBackground(True) 
         self.setPalette(palette)
 
-    def search(self) -> None:
-        print("search")
-        pass
-
     def newPlaylist(self) -> None:
         dialog = NewPlaylistDialog(self)
         if dialog.exec():
@@ -98,7 +92,13 @@ class PlaylistLibraryWidget(QWidget):
 
     def addAudio(self) -> None:
         print("add")
-        pass
+        if self.playlist_panel.table.selectionModel().selectedRows():
+            dialog = AddAudioDialog(self)
+            if dialog.exec():
+                # data_base.insert_playlist_audio(self.playlist_panel.table.selectionModel().selectedRows()[0].data())
+                # self.playlist_panel.updatePanel()
+                # self.audio_table.updateTable()
+                pass
 
     def modifyAudio(self) -> None:
         print("modify")
