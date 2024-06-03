@@ -55,6 +55,8 @@ class PlaylistLibraryWidget(QWidget):
         self.playlist_panel = PlaylistPanelWidget(self)
         self.audio_table = PlaylistAudioTableWidget(self)
 
+        self.playlist_panel.changedPlaylist.connect(self.audio_table.setPlaylist)
+
         # layout
 
         self.main_layout = HBoxLayoutWidget()

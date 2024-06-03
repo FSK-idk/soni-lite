@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import QWidget
+from PySide6.QtCore import Signal, QModelIndex
 
 
 from view.default.v_box_layout_widget import VBoxLayoutWidget
@@ -8,6 +9,8 @@ from view.tile.search_line_edit_tile import SearchLineEditTile
 from view.widget.playlist_table_widget import PlaylistTableWidget
 
 class PlaylistPanelWidget(QWidget):
+    changedPlaylist = Signal(int)
+
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
@@ -18,6 +21,7 @@ class PlaylistPanelWidget(QWidget):
 
         self.line.setTitle("Name")
         self.line.clicked.connect(self.table.search)
+        self.table.selectionModel().currentRowChanged.connect(self.onChangedRow)
 
         # layout
 
@@ -26,6 +30,10 @@ class PlaylistPanelWidget(QWidget):
         self.main_layout.addWidget(self.table)
 
         self.setLayout(self.main_layout)
+
+    def onChangedRow(self, cur: QModelIndex, prev: QModelIndex) -> None:
+        idx = self.table.model().index(cur.row(), 0)
+        self.changedPlaylist.emit(self.table.model().data(idx))
 
     def updatePanel(self) -> None:
         self.table.updateTable()

@@ -655,6 +655,26 @@ class Queries:
             WHERE PlaylistAudio.playlist_id = :id
         """
 
+    @staticmethod
+    def select_playlist_audio(ascending: bool = True, order_column: int = 0) -> str:
+        attributes = ['Audio.id', 'Audio.title']
+        order = 'ASC' if ascending else 'DESC'
+        return f"""
+            SELECT {', '.join(attributes)}
+            FROM Audio
+            LEFT JOIN PlaylistAudio ON PlaylistAudio.audio_id = Audio.id
+            WHERE PlaylistAudio.playlist_id = :id
+            ORDER BY {attributes[order_column]} {order} NULLS LAST
+        """
+
+    # @staticmethod
+    # def select_all(table_name: str, attributes: List[str], ascending: bool = True, order_column: int = 0) -> str:
+    #     order = "ASC" if ascending else "DESC"
+    #     return f"""
+    #         SELECT {", ".join(attributes)} FROM {table_name} ORDER BY {attributes[order_column]} {order} NULLS LAST
+    #     """
+    
+
 shrink_table_query = {
     "Album": [Queries.select_unused_album_id, Queries.delete_album],
     "Performer": [Queries.select_unused_performer_id, Queries.delete_performer],
