@@ -62,7 +62,7 @@ class ModifyAudioDialog(QDialog):
 
         self.setLayout(self.main_layout)
 
-        self.setWindowTitle("Modify audio")
+        self.setWindowTitle("modify.audio")
         self.setGeometry(0, 0, 600, 400)
         self.setMinimumSize(400, 400)
 

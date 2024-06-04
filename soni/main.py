@@ -1,8 +1,6 @@
 import sys
 
-from PySide6.QtWidgets import (
-    QApplication,
-)
+from PySide6.QtWidgets import QApplication
 
 from view.window.audio_player_window import AudioPlayerWindow
 

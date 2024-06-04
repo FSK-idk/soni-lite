@@ -50,7 +50,7 @@ class PlaylistLibraryWindow(QMainWindow):
         self.remove_audio_action.triggered.connect(self.removeAudio)
         self.menuBar().addAction(self.remove_audio_action)
 
-        self.setWindowTitle("soni.playlist.library")
+        self.setWindowTitle("playlist.library")
         self.setGeometry(0, 0, 800, 400)
 
         center = QScreen.availableGeometry(QApplication.primaryScreen()).center()

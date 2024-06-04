@@ -52,7 +52,7 @@ class AddAudioDialog(QDialog):
 
         self.setLayout(self.main_layout)
         
-        self.setWindowTitle("Add audio")
+        self.setWindowTitle("add.audio")
         self.setGeometry(0, 0, 800, 400)
 
         center = QScreen.availableGeometry(QApplication.primaryScreen()).center()

@@ -49,7 +49,7 @@ class AudioLibraryWindow(QMainWindow):
         self.delete_audio_action.triggered.connect(self.deleteAudio)
         self.menuBar().addAction(self.delete_audio_action)
 
-        self.setWindowTitle("soni.audio.library")
+        self.setWindowTitle("audio.library")
         self.setGeometry(0, 0, 800, 400)
 
         center = QScreen.availableGeometry(QApplication.primaryScreen()).center()

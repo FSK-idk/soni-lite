@@ -44,7 +44,7 @@ class RemoveAudioDialog(QDialog):
 
         self.setLayout(self.main_layout)
         
-        self.setWindowTitle("Remove audio")
+        self.setWindowTitle("remove.audio")
         self.setFixedWidth(300)
         self.setMinimumWidth(200)
         self.setMaximumHeight(self.minimumHeight())

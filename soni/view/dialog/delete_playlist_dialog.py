@@ -42,7 +42,7 @@ class DeletePlaylistDialog(QDialog):
 
         self.setLayout(self.main_layout)
         
-        self.setWindowTitle("Delete playlist")
+        self.setWindowTitle("delete.playlist")
         self.setFixedWidth(300)
         self.setMinimumWidth(200)
         self.setMaximumHeight(self.minimumHeight())

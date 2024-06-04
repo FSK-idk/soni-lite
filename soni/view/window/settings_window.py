@@ -79,7 +79,7 @@ class SettingsWindow(QMainWindow):
 
         # self
 
-        self.setWindowTitle("soni.settings")
+        self.setWindowTitle("settings")
         self.setGeometry(0, 0, 800, 400)
 
         # center window

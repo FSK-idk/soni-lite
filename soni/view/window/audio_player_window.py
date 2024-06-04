@@ -8,15 +8,9 @@ from PySide6.QtWidgets import (
     QSizePolicy,
     QMenuBar,
 )
-from PySide6.QtGui import (
-    QScreen,
-    QAction
-)
-from PySide6.QtCore import (
-    Qt
-)
+from PySide6.QtGui import QScreen, QAction
 
-from model.data_base.data_base import data_base
+from etc.data_base import data_base
 
 from view.basic.v_box_layout_widget import VBoxLayoutWidget
 from view.basic.h_box_layout_widget import HBoxLayoutWidget
@@ -77,14 +71,13 @@ class AudioPlayerWindow(QMainWindow):
         self.widget.setLayout(self.main_layout)
         self.setCentralWidget(self.widget)
 
-        self.open_playlist_action = QAction("playlist", self)
-        self.open_playlist_action.setCheckable(True)
-        self.open_playlist_action.triggered.connect(self.playlist_library.show)
-        self.menuBar().addAction(self.open_playlist_action)
+        self.open_playlist_library_action = QAction("playlist", self)
+        self.open_playlist_library_action.triggered.connect(self.playlist_library.show)
+        self.menuBar().addAction(self.open_playlist_library_action)
 
-        self.open_library_action = QAction("library", self)
-        self.open_library_action.triggered.connect(self.audio_library.show)
-        self.menuBar().addAction(self.open_library_action)
+        self.open_audio_library_action = QAction("library", self)
+        self.open_audio_library_action.triggered.connect(self.audio_library.show)
+        self.menuBar().addAction(self.open_audio_library_action)
 
         self.open_settings_action = QAction("settings", self)
         self.open_settings_action.triggered.connect(self.settings.show)
@@ -100,13 +93,10 @@ class AudioPlayerWindow(QMainWindow):
         self.test_action.triggered.connect(self.test)
         self.menuBar().addAction(self.test_action)
 
-        # self
-
-        self.setWindowTitle("soni")
+        self.setWindowTitle("soni.lite")
         self.setGeometry(0, 0, 800, 400)
         self.setMinimumSize(400, 300)
 
-        # center window
         center = QScreen.availableGeometry(QApplication.primaryScreen()).center()
         geometry = self.geometry()
         geometry.moveCenter(center)
@@ -116,8 +106,12 @@ class AudioPlayerWindow(QMainWindow):
         self.playlist_open = not self.playlist_open
         self.right_stack_layout.setCurrentIndex(1 if self.playlist_open else 0)
 
-    def test(self, checked: bool) -> None:
+    def closeEvent(self, event):
+        self.audio_library.close()
+        self.playlist_library.close()
+        self.settings.close()
+
+    def test(self) -> None:
         print("test")
-        data_base.shrink()
 
         return

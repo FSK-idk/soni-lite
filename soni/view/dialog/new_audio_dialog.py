@@ -61,7 +61,7 @@ class NewAudioDialog(QDialog):
 
         self.setLayout(self.main_layout)
         
-        self.setWindowTitle("New audio")
+        self.setWindowTitle("new.audio")
         self.setGeometry(0, 0, 600, 400)
         self.setMinimumSize(400, 400)
 

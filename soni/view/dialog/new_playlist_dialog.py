@@ -42,7 +42,7 @@ class NewPlaylistDialog(QDialog):
 
         self.setLayout(self.main_layout)
         
-        self.setWindowTitle("New playlist")
+        self.setWindowTitle("new.playlist")
         self.setFixedWidth(300)
         self.setMinimumWidth(200)
         self.setMaximumHeight(self.minimumHeight())
