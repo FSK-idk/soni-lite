@@ -1,3 +1,5 @@
+import os
+
 from PySide6.QtWidgets import (
     QApplication,
     QWidget,
@@ -5,9 +7,9 @@ from PySide6.QtWidgets import (
     QMessageBox
 )
 from PySide6.QtGui import (
-    QScreen,
+    QScreen, QPixmap
 )
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QByteArray
 
 from etc.data_base import data_base
 
@@ -34,8 +36,14 @@ class ModifyAudioDialog(QDialog):
         self.save_button = PushButtonWidget(self)
         self.cancel_button = PushButtonWidget(self)
 
+        picture_png = self.audio_data.picture_png
+        if picture_png:
+            pixmap = QPixmap()
+            pixmap.loadFromData(picture_png)
+            self.illustration.setPixmap(pixmap)
         self.text.setTitle("Text")
         self.audio_panel.setAudioData(self.audio_data)
+        self.audio_panel.pictureChanged.connect(self.onPictureChanged)
         self.save_button.setText("Save")
         self.save_button.clicked.connect(self.save)
         self.cancel_button.setText("Cancel")
@@ -71,7 +79,14 @@ class ModifyAudioDialog(QDialog):
         geometry.moveCenter(center)
         self.move(geometry.topLeft())
     
-    def save(self):
+    def onPictureChanged(self, path: str) -> None:
+        if os.path.isfile(path):
+            pixmap = QPixmap(path)
+            self.illustration.setPixmap(pixmap)
+        else:
+            self.illustration.clearPixmap()
+
+    def save(self) -> None:
         self.audio_data = self.audio_panel.audioData()
         self.audio_data.id = self.id
         self.audio_data.text = self.text.text()

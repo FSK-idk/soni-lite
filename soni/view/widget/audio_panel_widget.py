@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (
     QScrollArea,
     QFileDialog
 )
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 
 from etc.audio_data import AudioData
 
@@ -15,6 +15,8 @@ from view.tile.push_line_edit_tile import PushLineEditTile
 
 
 class AudioPanelWidget(QScrollArea):
+    pictureChanged = Signal(str)
+
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         
@@ -26,12 +28,14 @@ class AudioPanelWidget(QScrollArea):
         self.composer_name = ComboBoxTile(self)
         self.publisher_name = ComboBoxTile(self)
         self.modified_by_name = ComboBoxTile(self)
+        self.picture_png = ""
         self.picture_filepath = PushLineEditTile(self)
         self.picture_artist_name = ComboBoxTile(self)
         self.text_author_name = ComboBoxTile(self)
 
         self.name.setTitle("Title")
         self.filepath.setTitle("Filepath")
+        self.filepath.setReadOnly(True)
         self.filepath.setButtonText("...")
         self.filepath.clicked.connect(self.chooseAudioFile)
         self.album_name.setTitle("Album title")
@@ -47,6 +51,7 @@ class AudioPanelWidget(QScrollArea):
         self.modified_by_name.setTitle("Modified by")
         self.modified_by_name.setTable("ModifiedBy")
         self.picture_filepath.setTitle("Picture filepath")
+        self.picture_filepath.setReadOnly(True)
         self.picture_filepath.setButtonText("...")
         self.picture_filepath.clicked.connect(self.chooseImageFile)
         self.picture_artist_name.setTitle("Picture artist")
@@ -83,7 +88,8 @@ class AudioPanelWidget(QScrollArea):
             "",
             "Audio files (*.mp3 *.aac *.ogg *wav);;All files (*.*)"
         )
-        self.picture_filepath.setText(path)
+        if path != "":
+            self.filepath.setText(path)
 
     def chooseImageFile(self) -> None:
         path, _ = QFileDialog.getOpenFileName(
@@ -92,7 +98,9 @@ class AudioPanelWidget(QScrollArea):
             "",
             "Image files (*.png);;All files (*.*)"
         )
-        self.filepath.setText(path)
+        if path != "":
+            self.picture_filepath.setText(path)
+            self.pictureChanged.emit(path)
 
     def clearInput(self) -> None:
         self.name.clearInput()
@@ -116,6 +124,7 @@ class AudioPanelWidget(QScrollArea):
         self.composer_name.setText(audio_data.composer_name)
         self.publisher_name.setText(audio_data.publisher_name)
         self.modified_by_name.setText(audio_data.modified_by_name)
+        self.picture_png = audio_data.picture_png
         self.picture_filepath.setText(audio_data.picture_filepath)
         self.picture_artist_name.setText(audio_data.picture_artist_name)
         self.text_author_name.setText(audio_data.text_author_name)

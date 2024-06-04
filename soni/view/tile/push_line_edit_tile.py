@@ -38,6 +38,9 @@ class PushLineEditTile(QWidget):
     def onClicked(self) -> None:
         self.clicked.emit(self.line_edit.text())
 
+    def setReadOnly(self, read_only: bool):
+        self.line_edit.setReadOnly(read_only)
+
     def setButtonText(self, text: str) -> None:
         self.button.setText(text)
 

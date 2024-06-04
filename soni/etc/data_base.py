@@ -1,5 +1,7 @@
 import os
 
+from PySide6.QtGui import QPixmap
+from PySide6.QtCore import QByteArray, QBuffer, Qt, QIODevice
 from PySide6.QtSql import (
     QSqlDatabase,
     QSqlQuery
@@ -122,10 +124,13 @@ class DataBase():
                 query.exec()
                 modified_by_id = query.lastInsertId()
 
-        picture_png = None
+        picture_png = QByteArray()
         if os.path.isfile(audio_data.picture_filepath):
-            with open(audio_data.picture_filepath, 'rb') as file:
-                picture_png = file.read()
+            pixmap = QPixmap(audio_data.picture_filepath)
+            picture_png = QByteArray()
+            buffer = QBuffer(picture_png)
+            buffer.open( QIODevice.OpenModeFlag.WriteOnly)
+            pixmap.save( buffer, "PNG" )
 
         picture_artist_id = None
         if audio_data.picture_artist_name != "":
@@ -274,10 +279,12 @@ class DataBase():
                 query.exec()
                 modified_by_id = query.lastInsertId()
 
-        picture_png = None
+        picture_png = QByteArray()
         if os.path.isfile(audio_data.picture_filepath):
-            with open(audio_data.picture_filepath, 'rb') as file:
-                picture_png = file.read()
+            pixmap = QPixmap(audio_data.picture_filepath)
+            buffer = QBuffer(picture_png)
+            buffer.open(QIODevice.OpenModeFlag.WriteOnly)
+            pixmap.save(buffer, "PNG")
 
         picture_artist_id = None
         if audio_data.picture_artist_name != "":
@@ -326,12 +333,7 @@ class DataBase():
         query.bindValue(":text", text)
         query.bindValue(":text_author_id", text_author_id)
         query.bindValue(":id", audio_data.id)
-        if query.exec():
-            print("OK")
-        else:
-            print("BAD")
-
-        print(query.lastError().text())
+        query.exec()
 
         self.shrink()
 
@@ -447,7 +449,6 @@ class DataBase():
         while query.next():
             id.append(query.value(0))
         if id:
-            print(id)
             query = QSqlQuery(self.data_base)
             query.prepare(Query.deletePlaylistAudios(len(id)))
             for i in id:

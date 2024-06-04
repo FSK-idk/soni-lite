@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QWidget, QLabel
 from PySide6.QtGui import QResizeEvent, QPixmap
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QSize
 
 from view.basic.v_box_layout_widget import VBoxLayoutWidget
 
@@ -13,11 +13,11 @@ class IllustrationWidget(QWidget):
 
         self.fullness = 0.8
         self.pixmap = QPixmap(":/images/icon.png")
+        self.pixmap_ratio = self.pixmap.width() / self.pixmap.height()
 
         self.illustration = QLabel(self)
         self.illustration.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        size = int(min(self.width(), self.height()) * self.fullness)
-        self.illustration.setPixmap(self.pixmap.scaled(size, size))
+        self.updateIllustration()
 
         self.main_layout = VBoxLayoutWidget()
         self.main_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -28,13 +28,27 @@ class IllustrationWidget(QWidget):
         self.setMinimumSize(40, 40)
 
     def resizeEvent(self, event: QResizeEvent) -> None:
-        size = int(min(self.width(), self.height()) * self.fullness)
-        self.illustration.setPixmap(self.pixmap.scaled(size, size))
+        self.updateIllustration()
 
     def setFullness(self, fullness: int) -> None:
         self.fullness = fullness
     
-    def setIllustration(self, pixmap: QPixmap) -> None:
+    def setPixmap(self, pixmap: QPixmap) -> None:
         self.pixmap = pixmap
-        size = int(min(self.width(), self.height()) * self.fullness)
-        self.illustration.setPixmap(self.pixmap.scaled(size, size))
+        self.pixmap_ratio = self.pixmap.width() / self.pixmap.height()
+        self.updateIllustration()
+
+    def clearPixmap(self) -> None:
+        self.pixmap = QPixmap(":/images/icon.png")
+        self.pixmap_ratio = self.pixmap.width() / self.pixmap.height()
+        self.updateIllustration()
+
+    def updateIllustration(self):
+        size_x = int(self.width() * self.fullness)
+        size_y = int(self.height() * self.fullness)
+        screen_ratio = size_x / size_y
+        if self.pixmap_ratio >= screen_ratio:
+            size_y = int(size_x / self.pixmap_ratio)
+        elif self.pixmap_ratio < screen_ratio:
+            size_x = int(size_y * self.pixmap_ratio)
+        self.illustration.setPixmap(self.pixmap.scaled(size_x, size_y))

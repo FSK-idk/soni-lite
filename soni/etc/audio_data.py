@@ -1,3 +1,6 @@
+from PySide6.QtCore import QByteArray
+
+
 class AudioData:
     def __init__(self) -> None:
         self.id = ""
@@ -10,13 +13,13 @@ class AudioData:
         self.composer_name = ""
         self.publisher_name = ""
         self.modified_by_name = ""
-        self.picture_png = ""
+        self.picture_png = QByteArray()
         self.picture_filepath = ""
         self.picture_artist_name = ""
         self.text = ""
         self.text_author_name = ""
     
-    def setData(self, data : list[str]) -> None:
+    def setData(self, data : list) -> None:
         self.id =                   data[0]
         self.name =                 data[1]
         self.filepath =             data[2]
@@ -26,7 +29,7 @@ class AudioData:
         self.composer_name =        data[6]
         self.publisher_name =       data[7]
         self.modified_by_name =     data[8]
-        self.picture_png =              data[9]
+        self.picture_png =          data[9]
         self.picture_artist_name =  data[10]
         self.text =                 data[11]
         self.text_author =          data[12]
