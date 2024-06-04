@@ -4,63 +4,70 @@ from PySide6.QtWidgets import (
     QDialog,
     QMessageBox
 )
-from PySide6.QtGui import (
-    QScreen,
-)
+from PySide6.QtGui import QScreen
+from PySide6.QtCore import Qt
 
-from model.data_base.data_base import data_base
+from etc.data_base import data_base
 
-from view.default.push_button_widget import PushButtonWidget
-from view.default.v_box_layout_widget import VBoxLayoutWidget
-from view.default.h_box_layout_widget import HBoxLayoutWidget
+from view.basic.push_button_widget import PushButtonWidget
+from view.basic.v_box_layout_widget import VBoxLayoutWidget
+from view.basic.h_box_layout_widget import HBoxLayoutWidget
 
-from view.tile.text_edit_tile import TextEditTile
-from view.tile.line_edit_tile import LineEditTile
-
-from view.widget.illustration_widget import IllustrationWidget
-from view.widget.info_panel_widget import InfoPanelWidget
+from view.widget.search_panel_widget import SearchPanelWidget
+from view.widget.audio_table_widget import AudioTableWidget
 
 
 class AddAudioDialog(QDialog):
-    def __init__(self, parent: QWidget | None = None):
+    def __init__(self, playlist_id: str, parent: QWidget | None = None):
         super().__init__(parent)
 
-        # attribute
+        self.playlist_id = playlist_id
 
-        self.id = ""
-
-        # widget
-
-        self.save_button = PushButtonWidget(self)
+        self.audio_table = AudioTableWidget()
+        self.search_panel = SearchPanelWidget(self)
+        self.add_button = PushButtonWidget(self)
         self.cancel_button = PushButtonWidget(self)
 
-        self.save_button.setText("Save")
-        self.save_button.clicked.connect(self.save)
+        self.search_panel.headerChanged.connect(self.audio_table.updateTable)
+        self.search_panel.searchClicked.connect(self.audio_table.search)
+
+        self.add_button.setText("Add")
+        self.add_button.clicked.connect(self.add)
         self.cancel_button.setText("Cancel")
         self.cancel_button.clicked.connect(self.reject)
 
-        # layout
-
         self.buttons_layout = HBoxLayoutWidget()
-        self.buttons_layout.addWidget(self.cancel_button, 1)
-        self.buttons_layout.addWidget(self.save_button, 1)
+        self.buttons_layout.addWidget(self.add_button)
+        self.buttons_layout.addWidget(self.cancel_button)
 
-        self.main_layout = VBoxLayoutWidget()
+        self.right_layout = VBoxLayoutWidget()
+        self.right_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.right_layout.addWidget(self.audio_table)
+        self.right_layout.addLayout(self.buttons_layout)
+
+        self.main_layout = HBoxLayoutWidget()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
-        self.main_layout.addLayout(self.buttons_layout)
+        self.main_layout.addWidget(self.search_panel, 1)
+        self.main_layout.addLayout(self.right_layout, 3)
 
         self.setLayout(self.main_layout)
         
-        # self
-
         self.setWindowTitle("Add audio")
-        self.setFixedWidth(300)
+        self.setGeometry(0, 0, 800, 400)
 
-        # center window
         center = QScreen.availableGeometry(QApplication.primaryScreen()).center()
         geometry = self.geometry()
         geometry.moveCenter(center)
         self.move(geometry.topLeft())
     
-    def save(self):
+    def add(self):
+        if not self.audio_table.selectionModel().selectedRows():
+            dlg = QMessageBox(self)
+            dlg.setWindowTitle("Attention")
+            dlg.setText("You have not chosen audio")
+            dlg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            dlg.setIcon(QMessageBox.Icon.Warning)
+            dlg.exec()
+            return
+        data_base.insertPlaylistAudio(self.playlist_id, self.audio_table.selectionModel().selectedRows()[0].data())
         self.accept()

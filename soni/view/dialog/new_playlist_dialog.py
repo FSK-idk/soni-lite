@@ -4,32 +4,22 @@ from PySide6.QtWidgets import (
     QDialog,
     QMessageBox
 )
-from PySide6.QtGui import (
-    QScreen,
-)
+from PySide6.QtGui import QScreen
 
-from model.data_base.data_base import data_base
+from etc.data_base import data_base
 
-from view.default.push_button_widget import PushButtonWidget
-from view.default.v_box_layout_widget import VBoxLayoutWidget
-from view.default.h_box_layout_widget import HBoxLayoutWidget
+from view.basic.push_button_widget import PushButtonWidget
+from view.basic.v_box_layout_widget import VBoxLayoutWidget
+from view.basic.h_box_layout_widget import HBoxLayoutWidget
 
-from view.tile.text_edit_tile import TextEditTile
 from view.tile.line_edit_tile import LineEditTile
-
-from view.widget.illustration_widget import IllustrationWidget
-from view.widget.info_panel_widget import InfoPanelWidget
 
 
 class NewPlaylistDialog(QDialog):
     def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
 
-        # attribute
-
         self.name = ""
-
-        # widget
 
         self.line_edit = LineEditTile(self)
         self.save_button = PushButtonWidget(self)
@@ -41,11 +31,9 @@ class NewPlaylistDialog(QDialog):
         self.cancel_button.setText("Cancel")
         self.cancel_button.clicked.connect(self.reject)
 
-        # layout
-
         self.buttons_layout = HBoxLayoutWidget()
-        self.buttons_layout.addWidget(self.cancel_button, 1)
         self.buttons_layout.addWidget(self.save_button, 1)
+        self.buttons_layout.addWidget(self.cancel_button, 1)
 
         self.main_layout = VBoxLayoutWidget()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
@@ -54,14 +42,11 @@ class NewPlaylistDialog(QDialog):
 
         self.setLayout(self.main_layout)
         
-        # self
-
         self.setWindowTitle("New playlist")
         self.setFixedWidth(300)
         self.setMinimumWidth(200)
         self.setMaximumHeight(self.minimumHeight())
 
-        # center window
         center = QScreen.availableGeometry(QApplication.primaryScreen()).center()
         geometry = self.geometry()
         geometry.moveCenter(center)
@@ -77,7 +62,7 @@ class NewPlaylistDialog(QDialog):
             dlg.setIcon(QMessageBox.Icon.Warning)
             dlg.exec()
             return
-        id = data_base.select_playlist_id(self.name)
+        id = data_base.selectPlaylistId(self.name)
         if id:
             dlg = QMessageBox(self)
             dlg.setWindowTitle("Attention")
@@ -86,4 +71,5 @@ class NewPlaylistDialog(QDialog):
             dlg.setIcon(QMessageBox.Icon.Warning)
             dlg.exec()
             return
+        data_base.insertPlaylist(self.name)
         self.accept()

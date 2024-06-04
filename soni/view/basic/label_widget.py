@@ -1,7 +1,8 @@
-from PySide6.QtWidgets import QWidget, QSizePolicy, QLineEdit
+from PySide6.QtWidgets import QWidget, QSizePolicy, QLabel
 from PySide6.QtGui import QFont
 
-class LineEditWidget(QLineEdit):
+
+class LabelWidget(QLabel):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 

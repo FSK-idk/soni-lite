@@ -7,10 +7,6 @@ class TimeFormat(enum.Enum):
 
 
 class Time():
-    """
-    Stores time in milliseconds
-    """
-
     def __init__(self, milliseconds : int = 0, time_format : TimeFormat = TimeFormat.mmss) -> None:
         self.milliseconds = milliseconds
         self.time_format = time_format

@@ -1,41 +1,35 @@
-from PySide6.QtCore import (
-    Qt,
-)
-from PySide6.QtSql import (
-    QSqlQuery,
-    QSqlQueryModel,
-)
+from PySide6.QtWidgets import QWidget
+from PySide6.QtCore import Qt
+from PySide6.QtSql import QSqlQuery, QSqlQueryModel
 
-from model.data_base.data_base import data_base
-from model.config import config
-from model.data_base.query import Queries
+from etc.data_base import data_base
+from etc.query import Query
 
+class PlaylistTableModel(QSqlQueryModel):
+    def __init__(self, parent: QWidget | None = None):
+        super().__init__(parent)
 
-class PlaylistTableModel:
-    def __init__(self):
-
-        self.ascending_order = True
-        self.sort_column_index = 0
+        self.descending = False
+        self.sort_column = 0
         self.search_data = ""
-        self.query_model = QSqlQueryModel()
 
         self.updateTable()
-        self.updateHeaders()
+        self.updateHeader()
 
     def setSearchData(self, search_data: str):
         self.search_data = search_data
 
-    def setSortData(self, order: Qt.SortOrder, sort_column_index: int):
-        self.ascending_order = (order != Qt.SortOrder.AscendingOrder)
-        self.sort_column_index = sort_column_index
+    def setSortData(self, order: Qt.SortOrder, sort_column: int):
+        self.descending = (order != Qt.SortOrder.DescendingOrder)
+        self.sort_column = sort_column
 
     def updateTable(self):
         query = QSqlQuery(data_base.data_base)
-        query.prepare(Queries.select_playlist(self.ascending_order, self.sort_column_index))
+        query.prepare(Query.selectPlaylistTable(self.descending, self.sort_column))
         query.bindValue(":name", self.search_data)
         query.exec()
-        self.query_model.setQuery(query)
+        self.setQuery(query)
 
-    def updateHeaders(self):
-        self.query_model.setHeaderData(0, Qt.Orientation.Horizontal, "ID")
-        self.query_model.setHeaderData(1, Qt.Orientation.Horizontal, "Name")
+    def updateHeader(self):
+        self.setHeaderData(0, Qt.Orientation.Horizontal, "ID")
+        self.setHeaderData(1, Qt.Orientation.Horizontal, "Name")

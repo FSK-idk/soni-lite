@@ -4,12 +4,8 @@ from PySide6.QtWidgets import (
     QAbstractItemView,
     QHeaderView,
 )
-from PySide6.QtGui import (
-    QFont,
-)
-from PySide6.QtCore import (
-    Qt,
-)
+from PySide6.QtGui import QFont
+from PySide6.QtCore import Qt
 
 from model.playlist_table_model import PlaylistTableModel
 
@@ -18,10 +14,10 @@ class PlaylistTableWidget(QTableView):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
-        self.audio_table_model = PlaylistTableModel()
+        self.playlist_table_model = PlaylistTableModel()
 
         self.setSortingEnabled(True)
-        self.setModel(self.audio_table_model.query_model)
+        self.setModel(self.playlist_table_model)
         self.horizontalHeader().setFont(QFont(":/fonts/NotoSans.ttf",10))
         self.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
@@ -30,17 +26,14 @@ class PlaylistTableWidget(QTableView):
         self.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         self.horizontalHeader().sortIndicatorChanged.connect(self.sort)
 
-    def search(self, search_data: str):
-        self.audio_table_model.setSearchData(search_data)
-        self.audio_table_model.updateTable()
+    def sort(self, index: int, order: Qt.SortOrder) -> None:
+        self.playlist_table_model.setSortData(order, index)
+        self.playlist_table_model.updateTable()
 
-    def sort(self, index: int, order: Qt.SortOrder):
-        self.audio_table_model.setSortData(order, index)
-        self.audio_table_model.updateTable()
+    def search(self, search_data: str) -> None:
+        self.playlist_table_model.setSearchData(search_data)
+        self.playlist_table_model.updateTable()
 
-    def updateTable(self):
-        self.audio_table_model.updateTable()
-    
-    def updateHeaders(self):
-        self.audio_table_model.updateHeaders()
-        self.audio_table_model.updateTable()
+    def updateTable(self) -> None:
+        self.playlist_table_model.updateTable()
+        self.playlist_table_model.updateHeader()

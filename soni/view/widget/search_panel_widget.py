@@ -1,227 +1,168 @@
 from typing import List
 
-from PySide6.QtWidgets import (
-    QWidget,
-    QStackedLayout
-)
-from PySide6.QtCore import (
-    Signal
-)
+from PySide6.QtWidgets import QWidget
+from PySide6.QtCore import Qt, Signal
 
-from model.audio_data import AudioData
-from model.config import config
+from etc.audio_data import AudioData
+from etc.config import config
 
-from view.default.push_button_widget import PushButtonWidget
-from view.default.v_box_layout_widget import VBoxLayoutWidget
-from view.default.scroll_area_widget import ScrollAreaWidget
+from view.basic.push_button_widget import PushButtonWidget
+from view.basic.v_box_layout_widget import VBoxLayoutWidget
+from view.basic.h_box_layout_widget import HBoxLayoutWidget
+from view.basic.stacked_layout_widget import StackedLayoutWidget
+from view.basic.scroll_area_widget import ScrollAreaWidget
 
 from view.tile.combo_box_tile import ComboBoxTile
 from view.tile.line_edit_tile import LineEditTile
 
-from view.widget.header_settings_widget import HeaderSettingsWidget
+from view.widget.audio_table_header_settings_widget import AudioTableHeaderSettingsWidget
+
 
 class SearchPanelWidget(QWidget):
-    headersChanged = Signal()
+    searchClicked = Signal(AudioData)
+    headerChanged = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         
-        # attributes
+        self.name =  LineEditTile(self)
+        self.playlist_name = ComboBoxTile(self)
+        self.album_name = LineEditTile(self)
+        self.genre_name = ComboBoxTile(self)
+        self.performer_name = ComboBoxTile(self)
+        self.composer_name = ComboBoxTile(self)
+        self.publisher_name = ComboBoxTile(self)
+        self.modified_by_name = ComboBoxTile(self)
+        self.picture_artist_name = ComboBoxTile(self)
+        self.text_author_name = ComboBoxTile(self)
 
-        self.advanced_open = False
-
-        # widgets
-
-        self.playlist = ComboBoxTile(self)
-        self.title =  LineEditTile(self)
-        self.album_title = LineEditTile(self)
-        # self.duration
-        self.genre = ComboBoxTile(self)
-        # self.language
-        # self.rating
-        # self.bpm
-        self.performer = ComboBoxTile(self)
-        self.composer = ComboBoxTile(self)
-        self.publisher = ComboBoxTile(self)
-        self.modified_by = ComboBoxTile(self)
-        # self.release_date
-        self.picture_artist = ComboBoxTile(self)
-        self.text_author = ComboBoxTile(self)
-        self.original_title = LineEditTile(self)
-        self.original_album_title = LineEditTile(self)
-        self.original_performer = ComboBoxTile(self)
-        self.original_composer = ComboBoxTile(self)
-        self.original_publisher = ComboBoxTile(self)
-        # self.original_release_date
-        self.original_text_author = ComboBoxTile(self)
-        self.isrc = LineEditTile(self)
-
-        self.header_settings = HeaderSettingsWidget(self)
+        self.header_settings = AudioTableHeaderSettingsWidget(self)
 
         self.advanced_button = PushButtonWidget(self)
         self.standard_button = PushButtonWidget(self)
-        self.apply_button = PushButtonWidget(self)
 
-        # setup widgets
+        self.search_button = PushButtonWidget(self)
+        self.clear_button = PushButtonWidget(self)
 
-        self.playlist.setTitle("Playlist")
-        self.title.setTitle("Title")
-        self.album_title.setTitle("Album title")
-        # self.duration
-        self.genre.setTitle("Genre")
-        self.genre.setTable("Genre")
-        # self.language
-        # self.rating
-        # self.bpm
-        self.performer.setTitle("Performer")
-        self.performer.setTable("Performer")
-        self.composer.setTitle("Composer")
-        self.composer.setTable("Composer")
-        self.publisher.setTitle("Publisher")
-        self.publisher.setTable("Publisher")
-        self.modified_by.setTitle("Modified by")
-        self.modified_by.setTable("ModifiedBy")
-        # self.release_date
-        self.picture_artist.setTitle("Picture artist")
-        self.picture_artist.setTable("PictureArtist")
-        self.text_author.setTitle("Text author")
-        self.text_author.setTable("TextAuthor")
-        self.original_title.setTitle("Original title")
-        self.original_album_title.setTitle("Original album title")
-        self.original_performer.setTitle("Original performer")
-        self.original_performer.setTable("Performer")
-        self.original_composer.setTitle("Original composer")
-        self.original_composer.setTable("Composer")
-        self.original_publisher.setTitle("Original publisher")
-        self.original_publisher.setTable("Publisher")
-        # self.original_release_date
-        self.original_text_author.setTitle("Original text author")
-        self.original_text_author.setTable("TextAuthor")
-        self.isrc.setTitle("ISRC")
+        self.name.setTitle("Title")
+        self.playlist_name.setTitle("Playlist")
+        self.playlist_name.setTable("Playlist")
+        self.album_name.setTitle("Album")
+        self.genre_name.setTitle("Genre")
+        self.genre_name.setTable("Genre")
+        self.performer_name.setTitle("Performer")
+        self.performer_name.setTable("Performer")
+        self.composer_name.setTitle("Composer")
+        self.composer_name.setTable("Composer")
+        self.publisher_name.setTitle("Publisher")
+        self.publisher_name.setTable("Publisher")
+        self.modified_by_name.setTitle("Modified by")
+        self.modified_by_name.setTable("ModifiedBy")
+        self.picture_artist_name.setTitle("Picture artist")
+        self.picture_artist_name.setTable("PictureArtist")
+        self.text_author_name.setTitle("Text author")
+        self.text_author_name.setTable("TextAuthor")
 
-        self.clearPanel()
+        self.clearInput()
 
-        self.header_settings.headersChanged.connect(self.headersChanged.emit)
+        self.header_settings.headerChanged.connect(self.headerChanged.emit)
 
         self.advanced_button.setText("Advanced")
-        self.advanced_button.clicked.connect(self.openAdvanced)
+        self.advanced_button.clicked.connect(self.openAdvancedPanel)
         self.standard_button.setText("Standard")
-        self.standard_button.clicked.connect(self.openAdvanced)
-        self.apply_button.setText("Apply")
-        self.apply_button.clicked.connect(self.header_settings.apply)
+        self.standard_button.clicked.connect(self.openStandardPanel)
 
-        # grouping
+        self.search_button.setText("Search")
+        self.search_button.clicked.connect(self.onSearchClicked)
+        self.clear_button.setText("Clear")
+        self.clear_button.clicked.connect(self.clearInput)
 
         self.standard_parameters: List[QWidget] = []
         self.advanced_parameters: List[QWidget] = []
-        for key, val in config.items('Search Panel Parameters'):
+        for key, val in config.items('Search Panel Standard Parameters'):
             match val:
-                case 'Standard':
+                case "True":
                     self.standard_parameters.append(getattr(self, key))
-                case 'Advanced':
+                case "False":
                     self.advanced_parameters.append(getattr(self, key))
 
-        # layout
-
         self.standard_layout = VBoxLayoutWidget()
+        self.standard_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         for parameter in self.standard_parameters:
             self.standard_layout.addWidget(parameter)
         self.standard_layout.addWidget(self.advanced_button)
-
         self.standard_widget = QWidget(self)
         self.standard_widget.setLayout(self.standard_layout)
-
         self.standard_scroll_area = ScrollAreaWidget(self)
         self.standard_scroll_area.setWidget(self.standard_widget)
 
         self.advanced_layout = VBoxLayoutWidget()
+        self.advanced_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         for parameter in self.advanced_parameters:
             self.advanced_layout.addWidget(parameter)
         self.advanced_layout.addWidget(self.header_settings)
-        self.advanced_layout.addWidget(self.apply_button)
         self.advanced_layout.addWidget(self.standard_button)
-
         self.advanced_widget = QWidget(self)
         self.advanced_widget.setLayout(self.advanced_layout)
-
         self.advanced_scroll_area = ScrollAreaWidget(self)
         self.advanced_scroll_area.setWidget(self.advanced_widget)
 
-        self.main_layout = QStackedLayout()
-        self.main_layout.setContentsMargins(0, 0, 0, 0)
-        self.main_layout.addWidget(self.standard_scroll_area)
-        self.main_layout.addWidget(self.advanced_scroll_area)
+        self.stacked_layout = StackedLayoutWidget()
+        self.stacked_layout.addWidget(self.standard_scroll_area)
+        self.stacked_layout.addWidget(self.advanced_scroll_area)
+
+        self.buttons_layout = HBoxLayoutWidget()
+        self.buttons_layout.addWidget(self.search_button, 3)
+        self.buttons_layout.addWidget(self.clear_button, 1)
+
+        self.main_layout = VBoxLayoutWidget()
+        self.main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.main_layout.addLayout(self.stacked_layout)
+        self.main_layout.addLayout(self.buttons_layout)
 
         self.setLayout(self.main_layout)
 
-    def openAdvanced(self) -> None:
-        self.advanced_open = not self.advanced_open
-        self.main_layout.setCurrentIndex(1 if self.advanced_open else 0)
+    def openStandardPanel(self) -> None:
+        self.stacked_layout.setCurrentIndex(0)
+
+    def openAdvancedPanel(self) -> None:
+        self.stacked_layout.setCurrentIndex(1)
 
     def updatePanel(self) -> None:
-        self.playlist.onTableUpdate()
-        self.genre.onTableUpdate()
-        self.performer.onTableUpdate()
-        self.composer.onTableUpdate()
-        self.publisher.onTableUpdate()
-        self.modified_by.onTableUpdate()
-        self.picture_artist.onTableUpdate()
-        self.text_author.onTableUpdate()
-        self.original_performer.onTableUpdate()
-        self.original_composer.onTableUpdate()
-        self.original_publisher.onTableUpdate()
-        self.original_text_author.onTableUpdate()
+        self.playlist_name.updateTable()
+        self.genre_name.updateTable()
+        self.performer_name.updateTable()
+        self.composer_name.updateTable()
+        self.publisher_name.updateTable()
+        self.modified_by_name.updateTable()
+        self.picture_artist_name.updateTable()
+        self.text_author_name.updateTable()
 
-    def clearPanel(self) -> None:
-        self.playlist.clearTile()
-        self.title.clearTile()
-        self.album_title.clearTile()
-        # self.duration
-        self.genre.clearTile()
-        # self.language
-        # self.rating
-        # self.bpm
-        self.performer.clearTile()
-        self.composer.clearTile()
-        self.publisher.clearTile()
-        self.modified_by.clearTile()
-        # self.release_date
-        self.picture_artist.clearTile()
-        self.text_author.clearTile()
-        self.original_title.clearTile()
-        self.original_album_title.clearTile()
-        self.original_performer.clearTile()
-        self.original_composer.clearTile()
-        self.original_publisher.clearTile()
-        # self.original_release_date
-        self.original_text_author.clearTile()
-        self.isrc.clearTile()
+    def clearInput(self) -> None:
+        self.name.clearInput()
+        self.playlist_name.clearInput()
+        self.album_name.clearInput()
+        self.genre_name.clearInput()
+        self.performer_name.clearInput()
+        self.composer_name.clearInput()
+        self.publisher_name.clearInput()
+        self.modified_by_name.clearInput()
+        self.picture_artist_name.clearInput()
+        self.text_author_name.clearInput()
 
-    def getSearchData(self) -> AudioData:
+    def onSearchClicked(self) -> None:
+        self.searchClicked.emit(self.searchData())
+
+    def searchData(self) -> AudioData:
         search_data = AudioData()
-
-        search_data.playlist = self.playlist.text()
-        search_data.title = self.title.text()
-        search_data.album_title = self.album_title.text()
-        # info.duration
-        search_data.genre = self.genre.text()
-        # info.language
-        # info.rating
-        # info.bpm
-        search_data.performer = self.performer.text()
-        search_data.composer = self.composer.text()
-        search_data.publisher = self.publisher.text()
-        search_data.modified_by = self.modified_by.text()
-        # info.release_date
-        search_data.picture_artist = self.picture_artist.text()
-        search_data.text_author = self.text_author.text()
-        search_data.original_title = self.original_title.text()
-        search_data.original_album_title = self.original_album_title.text()
-        search_data.original_performer = self.original_performer.text()
-        search_data.original_composer = self.original_composer.text()
-        search_data.original_publisher = self.original_publisher.text()
-        # info.original_release_date
-        search_data.original_text_author = self.original_text_author.text()
-        search_data.isrc = self.isrc.text()
-        
+        search_data.name = self.name.text()
+        search_data.playlist_name = self.playlist_name.text()
+        search_data.album_name = self.album_name.text()
+        search_data.genre_name = self.genre_name.text()
+        search_data.performer_name = self.performer_name.text()
+        search_data.composer_name = self.composer_name.text()
+        search_data.publisher_name = self.publisher_name.text()
+        search_data.modified_by_name = self.modified_by_name.text()
+        search_data.picture_artist_name = self.picture_artist_name.text()
+        search_data.text_author_name = self.text_author_name.text()
         return search_data

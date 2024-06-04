@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QWidget, QSizePolicy, QCheckBox
 from PySide6.QtGui import QFont
 
+
 class CheckBoxWidget(QCheckBox):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)

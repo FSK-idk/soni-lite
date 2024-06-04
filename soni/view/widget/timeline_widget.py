@@ -1,16 +1,12 @@
-from PySide6.QtWidgets import (
-    QWidget,
-)
-from PySide6.QtCore import (
-    Qt,
-)
+from PySide6.QtWidgets import QWidget
+from PySide6.QtCore import Qt
 
-from model.time import TimeFormat, TimeSpan
+from etc.time import TimeFormat, TimeSpan
 
-from view.default.clickable_label import ClickableLabelWidget
-from view.default.slider_widget import SliderWidget
-from view.default.v_box_layout_widget import VBoxLayoutWidget
-from view.default.h_box_layout_widget import HBoxLayoutWidget
+from view.basic.push_label import PushLabelWidget
+from view.basic.slider_widget import SliderWidget
+from view.basic.v_box_layout_widget import VBoxLayoutWidget
+from view.basic.h_box_layout_widget import HBoxLayoutWidget
 
 
 class TimelineWidget(QWidget):
@@ -25,12 +21,12 @@ class TimelineWidget(QWidget):
         self.time_span.set_end_time(123456)
 
         # widgets
-        self.current_time = ClickableLabelWidget(self)
+        self.current_time = PushLabelWidget(self)
         self.current_time.setText(self.time_span.get_current_text())
         self.current_time.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self.current_time.clicked.connect(self.setCurrentReversed)
 
-        self.end_time = ClickableLabelWidget(self)
+        self.end_time = PushLabelWidget(self)
         self.end_time.setText(self.time_span.get_end_text())
         self.end_time.setAlignment(Qt.AlignmentFlag.AlignRight)
 

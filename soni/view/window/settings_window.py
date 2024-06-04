@@ -20,15 +20,16 @@ from PySide6.QtCore import (
     Qt
 )
 
-from view.tile.file_line_edit_tile import FileLineEditTile
+from view.basic.push_button_widget import PushButtonWidget
+from view.basic.label_widget import LabelWidget
+from view.basic.line_edit_widget import LineEditWidget
+from view.basic.check_box_widget import CheckBoxWidget
+from view.basic.v_box_layout_widget import VBoxLayoutWidget
+from view.basic.combo_box_widget import ComboBoxWidget
+from view.basic.text_edit_widget import TextEditWidget
 
-from view.default.push_button_widget import PushButtonWidget
-from view.default.label_widget import LabelWidget
-from view.default.line_edit_widget import LineEditWidget
-from view.default.check_box_widget import CheckBoxWidget
-from view.default.v_box_layout_widget import VBoxLayoutWidget
-from view.default.combo_box_widget import ComboBoxWidget
-from view.default.text_edit_widget import TextEditWidget
+from view.tile.push_line_edit_tile import PushLineEditTile
+
 
 class SettingsWindow(QMainWindow):
     def __init__(self) -> None:
@@ -53,9 +54,6 @@ class SettingsWindow(QMainWindow):
 
         self.combo_box = ComboBoxWidget(self)
 
-        self.file_line_edit = FileLineEditTile(self)
-        self.file_line_edit.setTitle("File line edit")
-
         self.text_edit = TextEditWidget(self)
 
         # layout
@@ -63,7 +61,6 @@ class SettingsWindow(QMainWindow):
         self.main_layout = VBoxLayoutWidget()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
         self.main_layout.addWidget(self.button)
-        self.main_layout.addWidget(self.file_line_edit)
         self.main_layout.addWidget(self.label)
         self.main_layout.addWidget(self.line_edit)
         self.main_layout.addWidget(self.check_box)

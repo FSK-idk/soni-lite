@@ -1,12 +1,12 @@
 from PySide6.QtWidgets import QWidget
 from PySide6.QtCore import Signal, QModelIndex
 
+from view.basic.v_box_layout_widget import VBoxLayoutWidget
 
-from view.default.v_box_layout_widget import VBoxLayoutWidget
-
-from view.tile.search_line_edit_tile import SearchLineEditTile
+from view.tile.push_line_edit_tile import PushLineEditTile
 
 from view.widget.playlist_table_widget import PlaylistTableWidget
+
 
 class PlaylistPanelWidget(QWidget):
     changedPlaylist = Signal(int)
@@ -14,26 +14,23 @@ class PlaylistPanelWidget(QWidget):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
-        # widgets
-
-        self.line = SearchLineEditTile(self)
-        self.table = PlaylistTableWidget(self)
+        self.line = PushLineEditTile(self)
+        self.playlist_table = PlaylistTableWidget(self)
 
         self.line.setTitle("Name")
-        self.line.clicked.connect(self.table.search)
-        self.table.selectionModel().currentRowChanged.connect(self.onChangedRow)
-
-        # layout
+        self.line.setButtonText("...")
+        self.line.clicked.connect(self.playlist_table.search)
+        self.playlist_table.selectionModel().currentRowChanged.connect(self.onChangedRow)
 
         self.main_layout = VBoxLayoutWidget()
         self.main_layout.addWidget(self.line)
-        self.main_layout.addWidget(self.table)
+        self.main_layout.addWidget(self.playlist_table)
 
         self.setLayout(self.main_layout)
 
     def onChangedRow(self, cur: QModelIndex, prev: QModelIndex) -> None:
-        idx = self.table.model().index(cur.row(), 0)
-        self.changedPlaylist.emit(self.table.model().data(idx))
+        idx = self.playlist_table.model().index(cur.row(), 0)
+        self.changedPlaylist.emit(self.playlist_table.model().data(idx))
 
     def updatePanel(self) -> None:
-        self.table.updateTable()
+        self.playlist_table.updateTable()
