@@ -49,6 +49,7 @@ class AudioPlayerWindow(QMainWindow):
         self.track_header.clicked.connect(self.openPlaylist)
         self.audio_player.durationChanged.connect(self.timeline.setEndMilliseconds)
         self.audio_player.timeChanged.connect(self.timeline.setCurrentMilliseconds)
+        self.playlist.audioChanged.connect(self.test)
 
         self.right_stack_layout = QStackedLayout()
         self.right_stack_layout.addWidget(self.audio_player)
@@ -113,6 +114,5 @@ class AudioPlayerWindow(QMainWindow):
 
     def test(self) -> None:
         print("test")
-        data_base.shrink()
 
         return

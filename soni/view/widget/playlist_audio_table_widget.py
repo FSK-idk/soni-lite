@@ -33,7 +33,13 @@ class PlaylistAudioTableWidget(QTableView):
         self.playlist_audio_table_model.updateHeader()
 
     def moveUp(self) -> None:
+        row = self.selectionModel().selectedRows()[0].row()
         self.playlist_audio_table_model.moveUp(self.selectionModel().selectedRows()[0].data())
+        self.updateTable()
+        self.selectRow(row - 1)
 
     def moveDown(self) -> None:
+        row = self.selectionModel().selectedRows()[0].row()
         self.playlist_audio_table_model.moveDown(self.selectionModel().selectedRows()[0].data())
+        self.updateTable()
+        self.selectRow(row + 1)

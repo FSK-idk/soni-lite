@@ -622,20 +622,6 @@ class Query:
             ORDER BY {attributes[sort_column]} {order} NULLS LAST
         """
 
-# DO I NEED IT? IF UP IS THE SAME
-    @staticmethod
-    def selectPlaylistAudios(descending: bool = True, sort_column: int = 0) -> str:
-        attributes = ["PlaylistAudio.id", "Audio.id", "Audio.name"]
-        order = "DESC" if descending else "ASC"
-        return f"""
-            SELECT {', '.join(attributes)}
-            FROM PlaylistAudio
-            LEFT JOIN Audio ON PlaylistAudio.audio_id = Audio.id
-            LEFT JOIN Playlist ON PlaylistAudio.playlist_id = Playlist.id
-            WHERE Playlist.name = :name
-            ORDER BY {attributes[sort_column]} {order} NULLS LAST
-        """
-
     @staticmethod
     def selectUnusedPlaylistAudioIds() -> str:
         return """

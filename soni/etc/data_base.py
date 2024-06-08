@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 from PySide6.QtGui import QPixmap
 from PySide6.QtCore import QByteArray, QBuffer, Qt, QIODevice
@@ -532,7 +533,7 @@ class DataBase():
         query.exec()
         return query.value(0) if query.next() else 0
 
-    def movePlaylistAudioUp(self, playlist_id, audio_id) -> None:
+    def movePlaylistAudioUp(self, playlist_id: str, audio_id: str) -> None:
         cur_id = self.findPlaylistAudio(playlist_id, audio_id)
         
         query = QSqlQuery(self.data_base)
@@ -565,7 +566,7 @@ class DataBase():
         query.bindValue(":serial", cur_serial - 1)
         query.exec()
 
-    def movePlaylistAudioDown(self, playlist_id, audio_id) -> None:
+    def movePlaylistAudioDown(self, playlist_id: str, audio_id: str) -> None:
         cur_id = self.findPlaylistAudio(playlist_id, audio_id)
         
         query = QSqlQuery(self.data_base)
@@ -597,6 +598,23 @@ class DataBase():
         query.bindValue(":id", cur_id)
         query.bindValue(":serial", cur_serial + 1)
         query.exec()
+
+    def selectPlaylistAudioDatas(self, playlist_id: str) -> List[AudioData]:
+        query = QSqlQuery(self.data_base)
+        query.prepare(Query.selectPlaylistAudioTable(False, 2))
+        query.bindValue(":id", playlist_id)
+        query.exec()
+
+        audio_ids = []
+        while query.next():
+            audio_ids.append(query.value(0))
+
+        audio_datas = []
+        for audio_id in audio_ids:
+            audio_datas.append(self.selectAudioData(audio_id))
+
+        return audio_datas
+
 
 
 data_base = DataBase()

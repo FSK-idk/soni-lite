@@ -12,12 +12,22 @@ from PySide6.QtMultimedia import (
     QAudioOutput,
 )
 
+from model.playlist_model import LoopFormat
+from etc.audio_data import AudioData
+
+
 class AudioPlayerModel(QWidget):
     durationChanged = Signal(int)
     timeChanged = Signal(int)
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
+
+        self.playing = False
+        self.randoming = False
+        self.looping = LoopFormat.loop_none
+
+        self.audio_data = AudioData()
 
         self.audio_player = QMediaPlayer(self)
         self.audio_output = QAudioOutput(self)
@@ -30,16 +40,12 @@ class AudioPlayerModel(QWidget):
 
 
     def play(self):
-        # self.audio_player.play()
         pass
- 
-    def pause(self):
-        # if self.pause_triger == False:
-        #     self.audio_player.pause()
-        #     self.pause_triger = True
-        # else:
-        #     self.audio_player.play()
-        #     self.pause_triger = False
+
+    def loop(self):
+        pass
+
+    def random(self):
         pass
 
     def next(self):
@@ -48,11 +54,9 @@ class AudioPlayerModel(QWidget):
     def prev(self):
         pass
 
-    def setLoop(self, loop: bool):
-        pass
 
-    def setRandom(self, random: bool):
-        pass
+
+
 
     def setAudio(self, url: QUrl):
         # self.audio_player.setSource(url)
