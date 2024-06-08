@@ -6,9 +6,7 @@ from PySide6.QtWidgets import (
     QDialog,
     QMessageBox
 )
-from PySide6.QtGui import (
-    QScreen, QPixmap
-)
+from PySide6.QtGui import QScreen, QPixmap
 from PySide6.QtCore import Qt
 
 from etc.data_base import data_base

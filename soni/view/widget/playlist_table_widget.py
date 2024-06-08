@@ -2,10 +2,10 @@ from PySide6.QtWidgets import (
     QWidget,
     QTableView,
     QAbstractItemView,
-    QHeaderView,
+    QHeaderView
 )
 from PySide6.QtGui import QFont
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QItemSelectionModel
 
 from model.playlist_table_model import PlaylistTableModel
 
@@ -35,5 +35,7 @@ class PlaylistTableWidget(QTableView):
         self.playlist_table_model.updateTable()
 
     def updateTable(self) -> None:
+        row = self.selectionModel().selectedRows()[0].row()
         self.playlist_table_model.updateTable()
         self.playlist_table_model.updateHeader()
+        self.selectRow(row)

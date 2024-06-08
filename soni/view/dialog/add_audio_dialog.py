@@ -69,5 +69,15 @@ class AddAudioDialog(QDialog):
             dlg.setIcon(QMessageBox.Icon.Warning)
             dlg.exec()
             return
+        
+        if data_base.findPlaylistAudio(self.playlist_id, self.audio_table.selectionModel().selectedRows()[0].data()):
+            dlg = QMessageBox(self)
+            dlg.setWindowTitle("Attention")
+            dlg.setText("Audio already exists")
+            dlg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            dlg.setIcon(QMessageBox.Icon.Warning)
+            dlg.exec()
+            return
+
         data_base.insertPlaylistAudio(self.playlist_id, self.audio_table.selectionModel().selectedRows()[0].data())
         self.accept()

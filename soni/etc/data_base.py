@@ -442,6 +442,7 @@ class DataBase():
                 query.addBindValue(i)
             query.exec()
 
+
         query = QSqlQuery(self.data_base)
         query.prepare(Query.selectUnusedPlaylistAudioIds())
         query.exec()
@@ -454,6 +455,28 @@ class DataBase():
             for i in id:
                 query.addBindValue(i)
             query.exec()
+
+        query = QSqlQuery(self.data_base)
+        query.prepare(Query.selectPlaylistIds())
+        query.exec()
+        playlist_ids = []
+        while query.next():
+            playlist_ids.append(query.value(0))
+        if playlist_ids:
+            for playlist_id in playlist_ids:
+                query = QSqlQuery(self.data_base)
+                query.prepare(Query.selectPlaylistAudioIdsSerals())
+                query.bindValue(":playlist_id", playlist_id)
+                query.exec()
+                playlist_audio_ids = []
+                while query.next():
+                    playlist_audio_ids.append((query.value(0), query.value(1)))
+                for idx, (playlist_audio_id, _) in enumerate(sorted(playlist_audio_ids, key=lambda x: x[1])):
+                    query = QSqlQuery(self.data_base)
+                    query.prepare(Query.updatePlaylistAudioSerial())
+                    query.bindValue(":id", playlist_audio_id)
+                    query.bindValue(":serial", idx + 1)
+                    query.exec()
 
     def selectPlaylistId(self, name: str) -> int | None:
         query = QSqlQuery(self.data_base)
@@ -476,11 +499,22 @@ class DataBase():
         self.shrink()
 
     def insertPlaylistAudio(self, playlist_id: str, audio_id: str) -> None:
+        serial = data_base.countPlaylistAudios(int(playlist_id))
+
         query = QSqlQuery(self.data_base)
         query.prepare(Query.insertPlaylistAudio())
         query.bindValue(":playlist_id", playlist_id)
         query.bindValue(":audio_id", audio_id)
+        query.bindValue(":serial", serial + 1)
         query.exec()
+
+    def findPlaylistAudio(self, playlist_id: str, audio_id: str) -> int | None:
+        query = QSqlQuery(self.data_base)
+        query.prepare(Query.selectPlaylistAudioId())
+        query.bindValue(":playlist_id", playlist_id)
+        query.bindValue(":audio_id", audio_id)
+        query.exec()
+        return query.value(0) if query.next() else None
 
     def deletePlaylistAudio(self, playlist_id: str, audio_id: str) -> None:
         query = QSqlQuery(self.data_base)
@@ -489,8 +523,80 @@ class DataBase():
         query.bindValue(":audio_id", audio_id)
         query.exec()
 
+        self.shrink()
 
+    def countPlaylistAudios(self, playlist_id: int) -> int:
+        query = QSqlQuery(self.data_base)
+        query.prepare(Query.countPlaylistAudios())
+        query.bindValue(":id", playlist_id)
+        query.exec()
+        return query.value(0) if query.next() else 0
 
+    def movePlaylistAudioUp(self, playlist_id, audio_id) -> None:
+        cur_id = self.findPlaylistAudio(playlist_id, audio_id)
+        
+        query = QSqlQuery(self.data_base)
+        query.prepare(Query.selectPlaylistAudioSerial())
+        query.bindValue(":playlist_id", playlist_id)
+        query.bindValue(":audio_id", audio_id)
+        query.exec()
+
+        query.next()
+        cur_serial = query.value(0)
+
+        query = QSqlQuery(self.data_base)
+        query.prepare(Query.selectPlaylistAudioIdBySerial())
+        query.bindValue(":playlist_id", playlist_id)
+        query.bindValue(":serial", cur_serial - 1)
+        query.exec()
+
+        query.next()
+        prev_id = query.value(0)
+
+        query = QSqlQuery(self.data_base)
+        query.prepare(Query.updatePlaylistAudioSerial())
+        query.bindValue(":id", prev_id)
+        query.bindValue(":serial", cur_serial)
+        query.exec()
+
+        query = QSqlQuery(self.data_base)
+        query.prepare(Query.updatePlaylistAudioSerial())
+        query.bindValue(":id", cur_id)
+        query.bindValue(":serial", cur_serial - 1)
+        query.exec()
+
+    def movePlaylistAudioDown(self, playlist_id, audio_id) -> None:
+        cur_id = self.findPlaylistAudio(playlist_id, audio_id)
+        
+        query = QSqlQuery(self.data_base)
+        query.prepare(Query.selectPlaylistAudioSerial())
+        query.bindValue(":playlist_id", playlist_id)
+        query.bindValue(":audio_id", audio_id)
+        query.exec()
+
+        query.next()
+        cur_serial = query.value(0)
+
+        query = QSqlQuery(self.data_base)
+        query.prepare(Query.selectPlaylistAudioIdBySerial())
+        query.bindValue(":playlist_id", playlist_id)
+        query.bindValue(":serial", cur_serial + 1)
+        query.exec()
+
+        query.next()
+        next_id = query.value(0)
+
+        query = QSqlQuery(self.data_base)
+        query.prepare(Query.updatePlaylistAudioSerial())
+        query.bindValue(":id", next_id)
+        query.bindValue(":serial", cur_serial)
+        query.exec()
+
+        query = QSqlQuery(self.data_base)
+        query.prepare(Query.updatePlaylistAudioSerial())
+        query.bindValue(":id", cur_id)
+        query.bindValue(":serial", cur_serial + 1)
+        query.exec()
 
 
 data_base = DataBase()

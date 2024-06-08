@@ -5,7 +5,7 @@ from PySide6.QtWidgets import (
     QHeaderView,
 )
 from PySide6.QtGui import QFont
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QItemSelectionModel
 
 from etc.audio_data import AudioData
 from model.audio_table_model import AudioTableModel

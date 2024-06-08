@@ -23,6 +23,9 @@ class TextEditTile(QWidget):
     def setTitle(self, text: str) -> None:
         self.title.setText(text)
 
+    def setText(self, text: str) -> None:
+        self.text_edit.setText(text)
+    
     def text(self) -> str:
         return self.text_edit.toPlainText()
 

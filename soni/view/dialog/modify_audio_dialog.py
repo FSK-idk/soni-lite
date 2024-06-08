@@ -6,10 +6,8 @@ from PySide6.QtWidgets import (
     QDialog,
     QMessageBox
 )
-from PySide6.QtGui import (
-    QScreen, QPixmap
-)
-from PySide6.QtCore import Qt, QByteArray
+from PySide6.QtGui import QScreen, QPixmap
+from PySide6.QtCore import Qt
 
 from etc.data_base import data_base
 
@@ -42,6 +40,7 @@ class ModifyAudioDialog(QDialog):
             pixmap.loadFromData(picture_png)
             self.illustration.setPixmap(pixmap)
         self.text.setTitle("Text")
+        self.text.setText(self.audio_data.text)
         self.audio_panel.setAudioData(self.audio_data)
         self.audio_panel.pictureChanged.connect(self.onPictureChanged)
         self.save_button.setText("Save")

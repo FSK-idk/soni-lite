@@ -141,7 +141,8 @@ class Query:
             CREATE TABLE IF NOT EXISTS PlaylistAudio (
                 id                  integer     PRIMARY KEY,
                 playlist_id         integer,
-                audio_id            integer
+                audio_id            integer,
+                serial              integer
             )
         """
 
@@ -246,8 +247,8 @@ class Query:
     @staticmethod
     def insertPlaylistAudio() -> str:
         return """
-            INSERT OR IGNORE INTO PlaylistAudio (playlist_id, audio_id)
-            VALUES (:playlist_id, :audio_id)
+            INSERT OR IGNORE INTO PlaylistAudio (playlist_id, audio_id, serial)
+            VALUES (:playlist_id, :audio_id, :serial)
         """
     
     # update
@@ -270,6 +271,17 @@ class Query:
                 text_author_id = :text_author_id
             WHERE id = :id
         """
+
+    @staticmethod
+    def updatePlaylistAudioSerial() -> str:
+        return """
+            UPDATE PlaylistAudio
+            SET serial = :serial
+            WHERE id = :id
+        """
+
+
+
 
     # select
 
@@ -427,6 +439,57 @@ class Query:
         """
 
     @staticmethod
+    def selectPlaylistIds() -> str:
+        return f"""
+            SELECT Playlist.id
+            FROM Playlist
+        """
+
+    @staticmethod
+    def selectPlaylistAudioId() -> str:
+        return f"""
+            SELECT PlaylistAudio.id
+            FROM PlaylistAudio
+            LEFT JOIN Audio ON PlaylistAudio.audio_id = Audio.id
+            LEFT JOIN Playlist ON PlaylistAudio.playlist_id = Playlist.id
+            WHERE Playlist.id = :playlist_id
+            AND Audio.id = :audio_id
+            LIMIT 1
+        """
+
+    @staticmethod
+    def selectPlaylistAudioIdsSerals() -> str:
+        return f"""
+            SELECT PlaylistAudio.id, PlaylistAudio.serial
+            FROM PlaylistAudio
+            LEFT JOIN Audio ON PlaylistAudio.audio_id = Audio.id
+            LEFT JOIN Playlist ON PlaylistAudio.playlist_id = Playlist.id
+            WHERE Playlist.id = :playlist_id
+        """
+    
+    @staticmethod
+    def selectPlaylistAudioSerial() -> str:
+        return f"""
+            SELECT PlaylistAudio.serial
+            FROM PlaylistAudio
+            LEFT JOIN Audio ON PlaylistAudio.audio_id = Audio.id
+            LEFT JOIN Playlist ON PlaylistAudio.playlist_id = Playlist.id
+            WHERE Playlist.id = :playlist_id
+            AND Audio.id = :audio_id
+            LIMIT 1
+        """
+
+    @staticmethod
+    def selectPlaylistAudioIdBySerial() -> str:
+        return f"""
+            SELECT PlaylistAudio.id
+            FROM PlaylistAudio
+            WHERE PlaylistAudio.playlist_id = :playlist_id
+            AND PlaylistAudio.serial = :serial
+            LIMIT 1
+        """
+
+    @staticmethod
     def selectAudioData() -> str:
         return f"""
             SELECT {', '.join(audio_attributes)}
@@ -549,13 +612,27 @@ class Query:
 
     @staticmethod
     def selectPlaylistAudioTable(descending: bool = True, sort_column: int = 0) -> str:
-        attributes = ["Audio.id", "Audio.name"]
+        attributes = ["Audio.id", "Audio.name", "PlaylistAudio.serial"]
         order = "DESC" if descending else "ASC"
         return f"""
             SELECT {', '.join(attributes)}
-            FROM Audio
-            LEFT JOIN PlaylistAudio ON PlaylistAudio.audio_id = Audio.id
+            FROM PlaylistAudio
+            LEFT JOIN Audio ON Audio.id = PlaylistAudio.audio_id
             WHERE PlaylistAudio.playlist_id = :id
+            ORDER BY {attributes[sort_column]} {order} NULLS LAST
+        """
+
+# DO I NEED IT? IF UP IS THE SAME
+    @staticmethod
+    def selectPlaylistAudios(descending: bool = True, sort_column: int = 0) -> str:
+        attributes = ["PlaylistAudio.id", "Audio.id", "Audio.name"]
+        order = "DESC" if descending else "ASC"
+        return f"""
+            SELECT {', '.join(attributes)}
+            FROM PlaylistAudio
+            LEFT JOIN Audio ON PlaylistAudio.audio_id = Audio.id
+            LEFT JOIN Playlist ON PlaylistAudio.playlist_id = Playlist.id
+            WHERE Playlist.name = :name
             ORDER BY {attributes[sort_column]} {order} NULLS LAST
         """
 
@@ -671,7 +748,16 @@ class Query:
             WHERE PlaylistAudio.id IN ({', '.join('?' * count)})
         """
 
+    # count
 
+    @staticmethod
+    def countPlaylistAudios() -> str:
+        return f"""
+            SELECT COUNT(*)
+            FROM PlaylistAudio
+            LEFT JOIN Playlist ON Playlist.id = PlaylistAudio.playlist_id
+            WHERE Playlist.id = :id
+        """
 
 
 

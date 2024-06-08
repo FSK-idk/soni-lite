@@ -15,14 +15,12 @@ from PySide6.QtCore import (
     QUrl,
     Signal,
 )
-from PySide6.QtMultimedia import (
-    QMediaPlayer,
-    QAudioOutput,
-)
 
 import resources.resources_rc
 
-# TODO: add functionality
+from model.audio_player_model import AudioPlayerModel
+
+
 class AudioPlayerWidget(QWidget):
     durationChanged = Signal(int)
     timeChanged = Signal(int)
@@ -32,27 +30,8 @@ class AudioPlayerWidget(QWidget):
         
         self.setMinimumSize(30, 30)
 
-        # attributes
-
-        self.audio_player = QMediaPlayer()
-        self.audio_output = QAudioOutput()
-
-        self.audio_player.setAudioOutput(self.audio_output)
-        self.audio_player.durationChanged.connect(self.durationChanged.emit)
-        self.audio_player.positionChanged.connect(self.timeChanged.emit)
-
-        self.audio_output.setVolume(50)
-
+        self.audio_player_model = AudioPlayerModel(self)
         self.filepath = ""
-
-        # TODO: debug
-        palette = QPalette()
-        palette.setColor(QPalette.ColorRole.Window, Qt.GlobalColor.black)
-
-        self.setAutoFillBackground(True)
-        self.setPalette(palette)
-
-        self.pause_triger = False
 
         # widgets
 
@@ -102,19 +81,14 @@ class AudioPlayerWidget(QWidget):
         self.setLayout(self.vlayout)
 
     def play(self):
-        self.audio_player.play()
+        self.audio_player_model.play()
  
     def pause(self):
-        if self.pause_triger == False:
-            self.audio_player.pause()
-            self.pause_triger = True
-        else:
-            self.audio_player.play()
-            self.pause_triger = False
+        self.audio_player_model.pause()
 
     def selectAudio(self) -> None:
         self.filepath, _ = QFileDialog.getOpenFileName(self,"Выбрать файл", '', '*mp3')
-        self.audio_player.setSource(QUrl.fromLocalFile(self.filepath))
+        self.audio_player_model.setAudio(QUrl.fromLocalFile(self.filepath))
 
     def loop(self):
         pass

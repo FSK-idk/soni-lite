@@ -113,5 +113,6 @@ class AudioPlayerWindow(QMainWindow):
 
     def test(self) -> None:
         print("test")
+        data_base.shrink()
 
         return

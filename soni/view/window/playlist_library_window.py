@@ -2,6 +2,7 @@ from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
     QWidget,
+    QDialog
 )
 from PySide6.QtGui import QScreen, QAction
 
@@ -12,6 +13,8 @@ from view.dialog.modify_audio_dialog import ModifyAudioDialog
 from view.dialog.remove_audio_dialog import RemoveAudioDialog
 
 from view.basic.h_box_layout_widget import HBoxLayoutWidget
+from view.basic.v_box_layout_widget import VBoxLayoutWidget
+from view.basic.push_button_widget import PushButtonWidget
 
 from view.widget.playlist_panel_widget import PlaylistPanelWidget
 from view.widget.playlist_audio_table_widget import PlaylistAudioTableWidget
@@ -22,13 +25,27 @@ class PlaylistLibraryWindow(QMainWindow):
 
         self.playlist_panel = PlaylistPanelWidget(self)
         self.playlist_audio_table = PlaylistAudioTableWidget(self)
+        self.button_up = PushButtonWidget(self)
+        self.button_down = PushButtonWidget(self)
 
         self.playlist_panel.changedPlaylist.connect(self.playlist_audio_table.setPlaylist)
+        self.button_up.setText("up")
+        self.button_up.clicked.connect(self.moveAudioUp)
+        self.button_down.setText("down")
+        self.button_down.clicked.connect(self.moveAudioDown)
+
+        self.button_layout = HBoxLayoutWidget()
+        self.button_layout.addWidget(self.button_up)
+        self.button_layout.addWidget(self.button_down)
+
+        self.right_layout = VBoxLayoutWidget()
+        self.right_layout.addWidget(self.playlist_audio_table)
+        self.right_layout.addLayout(self.button_layout)
 
         self.main_layout = HBoxLayoutWidget()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
         self.main_layout.addWidget(self.playlist_panel, 1)
-        self.main_layout.addWidget(self.playlist_audio_table, 3)
+        self.main_layout.addLayout(self.right_layout, 3)
 
         self.widget = QWidget(self)
         self.widget.setLayout(self.main_layout)
@@ -57,6 +74,18 @@ class PlaylistLibraryWindow(QMainWindow):
         geometry = self.geometry()
         geometry.moveCenter(center)
         self.move(geometry.topLeft())
+
+    def moveAudioUp(self) -> None:
+        if self.playlist_audio_table.selectionModel().selectedRows() \
+            and self.playlist_audio_table.selectionModel().selectedRows()[0].row() > 0:
+            self.playlist_audio_table.moveUp()
+            self.playlist_audio_table.updateTable()
+
+    def moveAudioDown(self) -> None:
+        if self.playlist_audio_table.selectionModel().selectedRows() \
+            and self.playlist_audio_table.selectionModel().selectedRows()[0].row() + 1 < self.playlist_audio_table.playlist_audio_table_model.rowCount():
+            self.playlist_audio_table.moveDown()
+            self.playlist_audio_table.updateTable()
 
     def newPlaylist(self) -> None:
         dialog = NewPlaylistDialog(self)

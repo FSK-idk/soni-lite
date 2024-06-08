@@ -3,9 +3,7 @@ from PySide6.QtWidgets import (
     QWidget,
     QDialog,
 )
-from PySide6.QtGui import (
-    QScreen,
-)
+from PySide6.QtGui import QScreen
 
 from etc.data_base import data_base
 
