@@ -35,7 +35,13 @@ class PlaylistTableWidget(QTableView):
         self.playlist_table_model.updateTable()
 
     def updateTable(self) -> None:
-        row = self.selectionModel().selectedRows()[0].row()
+        flag, row = False, 0
+        if self.selectionModel().selectedRows():
+            row = self.selectionModel().selectedRows()[0].row()
+            flag = True
+    
         self.playlist_table_model.updateTable()
         self.playlist_table_model.updateHeader()
-        self.selectRow(row)
+        
+        if flag:
+            self.selectRow(row)

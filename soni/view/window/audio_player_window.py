@@ -46,10 +46,12 @@ class AudioPlayerWindow(QMainWindow):
         self.audio_player = AudioPlayerWidget(self)
         self.playlist = PlaylistWidget(self)
 
+        self.timeline.timeChanged.connect(self.audio_player.setTime)
         self.track_header.clicked.connect(self.openPlaylist)
         self.audio_player.durationChanged.connect(self.timeline.setEndMilliseconds)
         self.audio_player.timeChanged.connect(self.timeline.setCurrentMilliseconds)
-        self.playlist.audioChanged.connect(self.test)
+        self.audio_player.audioEnded.connect(self.audio_player.onAudioEnded)
+        self.playlist.audioChanged.connect(self.audio_player.setAudioData)
 
         self.right_stack_layout = QStackedLayout()
         self.right_stack_layout.addWidget(self.audio_player)
@@ -83,11 +85,6 @@ class AudioPlayerWindow(QMainWindow):
         self.open_settings_action = QAction("settings", self)
         self.open_settings_action.triggered.connect(self.settings.show)
         self.menuBar().addAction(self.open_settings_action)
-
-        self.test_action = QAction("select", self)
-        self.test_action.setCheckable(True)
-        self.test_action.triggered.connect(self.audio_player.selectAudio)
-        self.menuBar().addAction(self.test_action)
 
         self.test_action = QAction("test", self)
         self.test_action.setCheckable(True)

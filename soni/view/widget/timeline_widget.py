@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QWidget
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 
 from etc.time import TimeFormat, TimeSpan
 
@@ -10,17 +10,14 @@ from view.basic.h_box_layout_widget import HBoxLayoutWidget
 
 
 class TimelineWidget(QWidget):
+    timeChanged = Signal(int)
+
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         
-        # attributes
         self.time_span = TimeSpan()
         self.time_reversed = False
 
-        # TODO: for debug
-        self.time_span.set_end_time(123456)
-
-        # widgets
         self.current_time = PushLabelWidget(self)
         self.current_time.setText(self.time_span.get_current_text())
         self.current_time.setAlignment(Qt.AlignmentFlag.AlignLeft)
@@ -33,9 +30,8 @@ class TimelineWidget(QWidget):
         self.timeline = SliderWidget(self)
         self.timeline.setMaximum(self.time_span.end.milliseconds)
         self.timeline.valueChanged.connect(self.setCurrentMilliseconds)
+        self.timeline.sliderMoved.connect(self.timeChanged)
 
-        # layout
-        
         self.time_layout = HBoxLayoutWidget()
         self.time_layout.addWidget(self.current_time)
         self.time_layout.addStretch()

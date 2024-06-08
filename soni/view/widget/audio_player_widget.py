@@ -1,48 +1,45 @@
-from PySide6.QtWidgets import (
-    QWidget,
-    QPushButton,
-    QFileDialog,
-
-)
+from PySide6.QtWidgets import QWidget
 from PySide6.QtGui import (
-    QPalette,
     QPixmap,
 )
-from PySide6.QtCore import (
-    Qt,
-    QUrl,
-    Signal,
-)
+from PySide6.QtCore import Signal
 
 import resources.resources_rc
 
 from model.audio_player_model import AudioPlayerModel
+from model.playlist_model import LoopFormat
 
 from view.basic.h_box_layout_widget import HBoxLayoutWidget
 from view.basic.v_box_layout_widget import VBoxLayoutWidget
+from view.basic.push_button_widget import PushButtonWidget
 
 
 class AudioPlayerWidget(QWidget):
     durationChanged = Signal(int)
     timeChanged = Signal(int)
+    audioEnded = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         
         self.audio_player_model = AudioPlayerModel(self)
 
-        self.button_play = QPushButton(self)
-        self.button_random = QPushButton(self)
-        self.button_loop = QPushButton(self)
-        self.button_next = QPushButton(self)
-        self.button_prev = QPushButton(self)
+        self.audio_player_model.durationChanged.connect(self.durationChanged.emit)
+        self.audio_player_model.timeChanged.connect(self.timeChanged.emit)
+        self.audio_player_model.audioEnded.connect(self.audioEnded.emit)
 
-        self.button_play.setText("Pause")
-        self.button_play.clicked.connect(self.audio_player_model.play)
-        self.button_random.setText("No Random")
-        self.button_random.clicked.connect(self.audio_player_model.random)
-        self.button_loop.setText("No Loop")
-        self.button_loop.clicked.connect(self.audio_player_model.loop)
+        self.button_play = PushButtonWidget(self)
+        self.button_random = PushButtonWidget(self)
+        self.button_loop = PushButtonWidget(self)
+        self.button_next = PushButtonWidget(self)
+        self.button_prev = PushButtonWidget(self)
+
+        self.button_play.setText("On pause")
+        self.button_play.clicked.connect(self.play)
+        self.button_random.setText("No random")
+        self.button_random.clicked.connect(self.random)
+        self.button_loop.setText("No loop")
+        self.button_loop.clicked.connect(self.loop)
         self.button_next.setText("Next")
         self.button_next.clicked.connect(self.audio_player_model.next)
         self.button_prev.setText("Prev")
@@ -67,6 +64,46 @@ class AudioPlayerWidget(QWidget):
         self.main_layout.addLayout(self.bottom_layout)
         self.setLayout(self.main_layout)
 
-    def selectAudio(self) -> None:
-        self.filepath, _ = QFileDialog.getOpenFileName(self,"Выбрать файл", '', '*mp3')
-        self.audio_player_model.setAudio(QUrl.fromLocalFile(self.filepath))
+    def onAudioEnded(self) -> None:
+        match self.audio_player_model.looping:
+            case LoopFormat.loop_none:
+                self.audio_player_model.pause()
+                self.button_play.setText("On pause")
+            case LoopFormat.loop_playlist:
+                self.audio_player_model.next()
+                self.audio_player_model.play()
+                self.button_loop.setText("Playing")
+            case LoopFormat.loop_audio:
+                self.audio_player_model.play()
+                self.button_loop.setText("Playing")
+
+    def play(self):
+        if not self.audio_player_model.playing:
+            self.audio_player_model.play()
+            self.button_play.setText("Playing")
+        else:
+            self.audio_player_model.pause()
+            self.button_play.setText("On pause")
+
+    def loop(self):
+        self.audio_player_model.loop()
+        match self.audio_player_model.looping:
+            case LoopFormat.loop_none:
+                self.button_loop.setText("No loop")
+            case LoopFormat.loop_playlist:
+                self.button_loop.setText("Loop playlist")
+            case LoopFormat.loop_audio:
+                self.button_loop.setText("Loop audio")
+
+    def random(self):
+        self.audio_player_model.random()
+        if self.audio_player_model.randoming:
+            self.button_random.setText("Random")
+        else:
+            self.button_random.setText("No random")
+
+    def setTime(self, milliseconds: int) -> None:
+        self.audio_player_model.setTime(milliseconds)
+
+    def setAudioData(self, audio_data) -> None:
+        self.audio_player_model.setAudioData(audio_data)

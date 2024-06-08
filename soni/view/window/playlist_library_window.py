@@ -79,13 +79,11 @@ class PlaylistLibraryWindow(QMainWindow):
         if self.playlist_audio_table.selectionModel().selectedRows() \
             and self.playlist_audio_table.selectionModel().selectedRows()[0].row() > 0:
             self.playlist_audio_table.moveUp()
-            # self.playlist_audio_table.updateTable()
 
     def moveAudioDown(self) -> None:
         if self.playlist_audio_table.selectionModel().selectedRows() \
             and self.playlist_audio_table.selectionModel().selectedRows()[0].row() + 1 < self.playlist_audio_table.playlist_audio_table_model.rowCount():
             self.playlist_audio_table.moveDown()
-            # self.playlist_audio_table.updateTable()
 
     def newPlaylist(self) -> None:
         dialog = NewPlaylistDialog(self)

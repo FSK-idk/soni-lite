@@ -33,6 +33,7 @@ class PlaylistWidget(QWidget):
         self.playlist_model = PlaylistModel()
         self.combo_box_model = ComboBoxModel()
 
+
         self.combo_box_model.setTable("Playlist")
 
         self.combo_box = ComboBoxWidget(self)

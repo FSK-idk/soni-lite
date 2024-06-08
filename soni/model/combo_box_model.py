@@ -20,7 +20,7 @@ class ComboBoxModel(QSqlQueryModel):
     def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
 
-        self.descending = True
+        self.descending = False
         self.table_name = ""
 
     def setOrder(self, descending: bool) -> None:
