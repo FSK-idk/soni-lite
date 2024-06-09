@@ -5,8 +5,6 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QStackedLayout,
     QWidget,
-    QSizePolicy,
-    QMenuBar,
 )
 from PySide6.QtGui import QScreen, QAction
 
@@ -47,6 +45,7 @@ class AudioPlayerWindow(QMainWindow):
         self.playlist = PlaylistWidget(self)
 
         self.timeline.timeChanged.connect(self.audio_player.setTime)
+        self.timeline.volumeChanged.connect(self.audio_player.setVolume)
         self.audio_header.clicked.connect(self.openPlaylist)
         self.audio_player.durationChanged.connect(self.timeline.setEndMilliseconds)
         self.audio_player.timeChanged.connect(self.timeline.setCurrentMilliseconds)

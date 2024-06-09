@@ -30,8 +30,8 @@ class PlaylistModel(QWidget):
     def setPlaylist(self, name: str) -> None:
         self.name = name
         self.id = data_base.selectPlaylistId(name)
-        self.playlistChanged.emit(self.id)
         self.audio_datas = data_base.selectPlaylistAudioDatas(str(self.id))
+        self.playlistChanged.emit(self.id)
 
     def updatePlaylist(self) -> None:
         self.audio_datas = data_base.selectPlaylistAudioDatas(str(self.id))

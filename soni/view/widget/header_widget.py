@@ -6,7 +6,7 @@ from PySide6.QtCore import Qt, Signal
 
 from etc.audio_data import AudioData
 
-from view.basic.push_label import PushLabelWidget
+from view.basic.push_label_widget import PushLabelWidget
 from view.basic.h_box_layout_widget import HBoxLayoutWidget
 
 

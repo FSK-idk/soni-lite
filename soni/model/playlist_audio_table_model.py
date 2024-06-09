@@ -12,13 +12,16 @@ class PlaylistAudioTableModel(QSqlQueryModel):
 
         self.descending = False
         self.sort_column = 2
-        self.playlist_id = AudioData()
+        self.playlist_id = -1
 
         self.updateTable()
         self.updateHeader()
 
-    def setSearchData(self, playlist_id: int):
+    def setPlaylistId(self, playlist_id: int):
         self.playlist_id = playlist_id
+
+    def setPlaylistName(self, name: str):
+        self.playlist_id = data_base.selectPlaylistId(name)
 
     def updateTable(self):
         query = QSqlQuery(data_base.data_base)
@@ -34,7 +37,7 @@ class PlaylistAudioTableModel(QSqlQueryModel):
 
 
     def moveUp(self, audio_id: int) -> None:
-        data_base.movePlaylistAudioUp(self.playlist_id, audio_id)
+        data_base.movePlaylistAudioUp(str(self.playlist_id), str(audio_id))
 
     def moveDown(self, audio_id: int) -> None:
-        data_base.movePlaylistAudioDown(self.playlist_id, audio_id)
+        data_base.movePlaylistAudioDown(str(self.playlist_id), str(audio_id))

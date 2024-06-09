@@ -28,7 +28,7 @@ class PlaylistLibraryWindow(QMainWindow):
         self.button_up = PushButtonWidget(self)
         self.button_down = PushButtonWidget(self)
 
-        self.playlist_panel.changedPlaylist.connect(self.playlist_audio_table.setPlaylist)
+        self.playlist_panel.changedPlaylist.connect(self.playlist_audio_table.setPlaylistId)
         self.button_up.setText("up")
         self.button_up.clicked.connect(self.moveAudioUp)
         self.button_down.setText("down")

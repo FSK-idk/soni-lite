@@ -11,11 +11,11 @@ class Config:
         self.filepath = "./soni/data/config.ini"
 
         if not os.path.isfile(self.filepath):
-            self.create_config()
+            self.createConfig()
         
         self.config.read(self.filepath)
 
-    def create_config(self):
+    def createConfig(self):
         self.config['Theme'] = {
             "dark_mode": "True",
             "main_color": "white"

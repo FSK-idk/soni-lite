@@ -28,8 +28,7 @@ class PlaylistWidget(QWidget):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
-        self.random = False
-        self.loop_format = LoopFormat.loop_none
+        self.current_idx = -1
 
         self.playlist_model = PlaylistModel()
         self.combo_box_model = ComboBoxModel()
@@ -44,12 +43,11 @@ class PlaylistWidget(QWidget):
         self.combo_box.setModel(self.combo_box_model)
         self.combo_box.setCurrentIndex(-1)
         self.combo_box.lineEdit().setEnabled(False)
-        self.combo_box.currentTextChanged.connect(self.playlist_model.setPlaylist)
+        self.combo_box.currentTextChanged.connect(self.playlist_audio_table.setPlaylistName)
         self.button_up.setText("up")
         self.button_up.clicked.connect(self.moveAudioUp)
         self.button_down.setText("down")
         self.button_down.clicked.connect(self.moveAudioDown)
-        self.playlist_model.playlistChanged.connect(self.playlist_audio_table.setPlaylist)
         self.playlist_audio_table.selectionModel().selectionChanged.connect(self.onSelectionChanged)
 
         self.button_layout = HBoxLayoutWidget()
@@ -64,24 +62,30 @@ class PlaylistWidget(QWidget):
         self.setLayout(self.main_layout)
 
     def onSelectionChanged(self, selected: QItemSelection, deselected: QItemSelection) -> None:
-        current_idx = self.playlist_audio_table.selectionModel().selectedRows()[0].row()
-        audio_data = self.playlist_model.audio_datas[current_idx]
+        self.playlist_model.setPlaylist(self.combo_box.currentText())
+        self.current_idx = self.playlist_audio_table.selectionModel().selectedRows()[0].row()
+        audio_data = self.playlist_model.audio_datas[self.current_idx]
         self.audioChanged.emit(audio_data)
 
     def next(self) -> None:
-        current_idx = self.playlist_audio_table.selectionModel().selectedRows()[0].row()
-        self.playlist_audio_table.selectRow((current_idx + 1) % len(self.playlist_model.audio_datas))
+        if self.playlist_model.audio_datas:
+            self.current_idx = (self.current_idx + 1) % len(self.playlist_model.audio_datas)
+            audio_data = self.playlist_model.audio_datas[self.current_idx]
+            self.audioChanged.emit(audio_data)
 
     def nextRandom(self) -> None:
-        current_idx = self.playlist_audio_table.selectionModel().selectedRows()[0].row()
-        idx = current_idx
-        while idx == current_idx:
-            idx = random.randint(0, len(self.playlist_model.audio_datas) - 1)
-        self.playlist_audio_table.selectRow(idx)
+        if self.playlist_model.audio_datas:
+            current_idx = self.current_idx
+            while self.current_idx == current_idx:
+                self.current_idx = random.randint(0, len(self.playlist_model.audio_datas) - 1)
+            audio_data = self.playlist_model.audio_datas[self.current_idx]
+            self.audioChanged.emit(audio_data)
 
     def prev(self):
-        current_idx = self.playlist_audio_table.selectionModel().selectedRows()[0].row()
-        self.playlist_audio_table.selectRow((current_idx - 1) % len(self.playlist_model.audio_datas))
+        if self.playlist_model.audio_datas:
+            self.current_idx = (self.current_idx - 1) % len(self.playlist_model.audio_datas)
+            audio_data = self.playlist_model.audio_datas[self.current_idx]
+            self.audioChanged.emit(audio_data)
 
     def moveAudioUp(self) -> None:
         if self.playlist_audio_table.selectionModel().selectedRows() \
@@ -92,9 +96,4 @@ class PlaylistWidget(QWidget):
         if self.playlist_audio_table.selectionModel().selectedRows() \
             and self.playlist_audio_table.selectionModel().selectedRows()[0].row() + 1 < self.playlist_audio_table.playlist_audio_table_model.rowCount():
             self.playlist_audio_table.moveDown()
-
-    def text(self, st: str = "!@3") -> None:
-        print("test", st)
-        
-        
-        pass
+            

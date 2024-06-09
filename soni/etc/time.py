@@ -23,10 +23,10 @@ class Time():
             case TimeFormat.HHmmss:
                 return f"{(self.milliseconds // 3600000):02d}:{((self.milliseconds // 60000) % 60):02d}:{((self.milliseconds // 1000) % 60):02d}"
 
-    def set_time(self, milliseconds : int) -> None:
+    def setTime(self, milliseconds : int) -> None:
         self.milliseconds = milliseconds
 
-    def set_time_format(self, time_format : TimeFormat) -> None:
+    def setTimeFormat(self, time_format : TimeFormat) -> None:
         self.time_format = time_format
 
 
@@ -39,24 +39,24 @@ class TimeSpan():
 
         self.reversed = False 
     
-    def get_current_text(self) -> str:
+    def getCurrentText(self) -> str:
         if self.reversed:
             return "-" + str(self.end - self.current)
         else:
             return str(self.current)
     
-    def get_end_text(self) -> str:
+    def getEndText(self) -> str:
         return str(self.end)
 
-    def set_reversed(self, reversed : bool) -> None:
+    def setReversed(self, reversed : bool) -> None:
         self.reversed = reversed
 
-    def set_current_time(self, milliseconds : int) -> None:
-        self.current.set_time(milliseconds)
+    def setCurrentTime(self, milliseconds : int) -> None:
+        self.current.setTime(milliseconds)
 
-    def set_end_time(self, milliseconds : int) -> None:
-        self.end.set_time(milliseconds)
+    def setEndTime(self, milliseconds : int) -> None:
+        self.end.setTime(milliseconds)
 
-    def set_time_format(self, time_format : TimeFormat) -> None:
-        self.end.set_time_format(time_format)
-        self.current.set_time_format(time_format)
+    def setTimeFormat(self, time_format : TimeFormat) -> None:
+        self.end.setTimeFormat(time_format)
+        self.current.setTimeFormat(time_format)

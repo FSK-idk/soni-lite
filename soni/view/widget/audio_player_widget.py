@@ -111,5 +111,8 @@ class AudioPlayerWidget(QWidget):
     def setTime(self, milliseconds: int) -> None:
         self.audio_player_model.setTime(milliseconds)
 
+    def setVolume(self, volume: int) -> None:
+        self.audio_player_model.setVolume(volume)
+
     def setAudioData(self, audio_data) -> None:
         self.audio_player_model.setAudioData(audio_data)

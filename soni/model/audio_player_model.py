@@ -43,7 +43,7 @@ class AudioPlayerModel(QWidget):
         self.audio_player.positionChanged.connect(self.timeChanged.emit)
         self.audio_player.mediaStatusChanged.connect(self.onStatusChanged)
 
-        self.audio_output.setVolume(50)
+        self.audio_output.setVolume(0.5)
 
     def onStatusChanged(self, status: QMediaPlayer.MediaStatus) -> None:
         match status:
@@ -79,6 +79,12 @@ class AudioPlayerModel(QWidget):
     def prev(self):
         self.prevAudio.emit()
 
+    def setTime(self, milliseconds: int) -> None:
+        self.audio_player.setPosition(milliseconds)
+
+    def setVolume(self, volume: int) -> None:
+        self.audio_output.setVolume(volume / 100)
+
     def setAudioData(self, audio_data: AudioData):
         self.audio_data = audio_data
         if os.path.isfile(audio_data.filepath):
@@ -91,6 +97,3 @@ class AudioPlayerModel(QWidget):
                 self.audio_player.play()
         else:
             self.nextAudio.emit()
-
-    def setTime(self, milliseconds: int) -> None:
-        self.audio_player.setPosition(milliseconds)

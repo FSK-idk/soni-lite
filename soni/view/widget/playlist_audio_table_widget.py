@@ -24,8 +24,12 @@ class PlaylistAudioTableWidget(QTableView):
         self.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
         self.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
 
-    def setPlaylist(self, id: int) -> None:
-        self.playlist_audio_table_model.setSearchData(id)
+    def setPlaylistId(self, id: int) -> None:
+        self.playlist_audio_table_model.setPlaylistId(id)
+        self.playlist_audio_table_model.updateTable()
+
+    def setPlaylistName(self, name: str) -> None:
+        self.playlist_audio_table_model.setPlaylistName(name)
         self.playlist_audio_table_model.updateTable()
 
     def updateTable(self) -> None:
