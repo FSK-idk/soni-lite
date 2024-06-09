@@ -90,6 +90,7 @@ class AudioPlayerWindow(QMainWindow):
         self.toolbar.addAction(self.open_audio_library_action)
 
         self.setWindowTitle("soni.lite")
+        self.setWindowIcon(QPixmap(":image/icon-s.png"))
         self.setGeometry(0, 0, 800, 400)
         self.setMinimumSize(400, 300)
 

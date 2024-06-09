@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QApplication, QWidget, QDialog
-from PySide6.QtGui import QScreen
+from PySide6.QtGui import QScreen, QPixmap
 
 from etc.data_base import data_base
 
@@ -37,6 +37,7 @@ class DeletePlaylistDialog(QDialog):
         self.setLayout(self.main_layout)
         
         self.setWindowTitle("delete.playlist")
+        self.setWindowIcon(QPixmap(":image/icon-s.png"))
         self.setFixedWidth(300)
         self.setMinimumWidth(200)
         self.setMaximumHeight(self.minimumHeight())

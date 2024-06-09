@@ -42,6 +42,7 @@ class NewPlaylistDialog(QDialog):
         self.setLayout(self.main_layout)
         
         self.setWindowTitle("new.playlist")
+        self.setWindowIcon(QPixmap(":image/icon-s.png"))
         self.setFixedWidth(300)
         self.setMinimumWidth(200)
         self.setMaximumHeight(self.minimumHeight())

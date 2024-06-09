@@ -11,6 +11,8 @@ from view.basic.h_box_layout_widget import HBoxLayoutWidget
 from view.widget.search_panel_widget import SearchPanelWidget
 from view.widget.audio_table_widget import AudioTableWidget
 
+import resources.resources_rc
+
 
 class AudioLibraryWindow(QMainWindow):
     def __init__(self) -> None:
@@ -50,6 +52,7 @@ class AudioLibraryWindow(QMainWindow):
         self.toolbar.addAction(self.delete_audio_action)
 
         self.setWindowTitle("audio.library")
+        self.setWindowIcon(QPixmap(":image/icon-s.png"))
         self.setGeometry(0, 0, 800, 400)
 
         center = QScreen.availableGeometry(QApplication.primaryScreen()).center()

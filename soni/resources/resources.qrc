@@ -2,6 +2,7 @@
     <RCC version="1.0">
     <qresource prefix="image">
         <file alias="icon.png">./image/icon.png</file>
+        <file alias="icon-s.png">./image/icon-s.png</file>
     </qresource>
     <qresource prefix="icon">
         <file alias="ban-white.svg">./lucide_icon/ban-white.svg</file>

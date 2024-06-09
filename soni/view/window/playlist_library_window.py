@@ -73,6 +73,7 @@ class PlaylistLibraryWindow(QMainWindow):
         self.toolbar.addAction(self.remove_audio_action)
 
         self.setWindowTitle("playlist.library")
+        self.setWindowIcon(QPixmap(":image/icon-s.png"))
         self.setGeometry(0, 0, 800, 400)
 
         center = QScreen.availableGeometry(QApplication.primaryScreen()).center()

@@ -69,6 +69,7 @@ class ModifyAudioDialog(QDialog):
         self.setLayout(self.main_layout)
 
         self.setWindowTitle("modify.audio")
+        self.setWindowIcon(QPixmap(":image/icon-s.png"))
         self.setGeometry(0, 0, 600, 400)
         self.setMinimumSize(400, 400)
 
