@@ -1,10 +1,6 @@
-from PySide6.QtWidgets import (
-    QApplication,
-    QMainWindow,
-    QWidget,
-    QDialog
-)
-from PySide6.QtGui import QScreen, QAction
+from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QToolBar
+from PySide6.QtGui import QScreen, QAction, QPixmap
+from PySide6.QtCore import Qt
 
 from view.dialog.new_playlist_dialog import NewPlaylistDialog
 from view.dialog.delete_playlist_dialog import DeletePlaylistDialog
@@ -19,6 +15,9 @@ from view.basic.push_button_widget import PushButtonWidget
 from view.widget.playlist_panel_widget import PlaylistPanelWidget
 from view.widget.playlist_audio_table_widget import PlaylistAudioTableWidget
 
+import resources.resources_rc
+
+
 class PlaylistLibraryWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
@@ -29,9 +28,9 @@ class PlaylistLibraryWindow(QMainWindow):
         self.button_down = PushButtonWidget(self)
 
         self.playlist_panel.changedPlaylist.connect(self.playlist_audio_table.setPlaylistId)
-        self.button_up.setText("up")
+        self.button_up.setIcon(QPixmap(":icon/chevron-up-white.svg"))
         self.button_up.clicked.connect(self.moveAudioUp)
-        self.button_down.setText("down")
+        self.button_down.setIcon(QPixmap(":icon/chevron-down-white.svg"))
         self.button_down.clicked.connect(self.moveAudioDown)
 
         self.button_layout = HBoxLayoutWidget()
@@ -51,21 +50,27 @@ class PlaylistLibraryWindow(QMainWindow):
         self.widget.setLayout(self.main_layout)
         self.setCentralWidget(self.widget)
 
-        self.new_playlist_action = QAction("new", self)
+        self.toolbar = QToolBar(self)
+        self.toolbar.setFloatable(False)
+        self.toolbar.setMovable(False)
+        self.addToolBar(self.toolbar)
+        self.toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
+
+        self.new_playlist_action = QAction(QPixmap(":icon/folder-plus-white.svg"), "new", self)
         self.new_playlist_action.triggered.connect(self.newPlaylist)
-        self.menuBar().addAction(self.new_playlist_action)
-        self.delete_playlist_action = QAction("delete", self)
+        self.toolbar.addAction(self.new_playlist_action)
+        self.delete_playlist_action = QAction(QPixmap(":icon/folder-x-white.svg"), "delete", self)
         self.delete_playlist_action.triggered.connect(self.deletePlaylist)
-        self.menuBar().addAction(self.delete_playlist_action)
-        self.add_audio_action = QAction("add", self)
+        self.toolbar.addAction(self.delete_playlist_action)
+        self.add_audio_action = QAction(QPixmap(":icon/file-plus-white.svg"), "add", self)
         self.add_audio_action.triggered.connect(self.addAudio)
-        self.menuBar().addAction(self.add_audio_action)
-        self.modify_audio_action = QAction("modify", self)
+        self.toolbar.addAction(self.add_audio_action)
+        self.modify_audio_action = QAction(QPixmap(":icon/pencil-white.svg"), "modify", self)
         self.modify_audio_action.triggered.connect(self.modifyAudio)
-        self.menuBar().addAction(self.modify_audio_action)
-        self.remove_audio_action = QAction("remove", self)
+        self.toolbar.addAction(self.modify_audio_action)
+        self.remove_audio_action = QAction(QPixmap(":icon/file-minus-white.svg"), "remove", self)
         self.remove_audio_action.triggered.connect(self.removeAudio)
-        self.menuBar().addAction(self.remove_audio_action)
+        self.toolbar.addAction(self.remove_audio_action)
 
         self.setWindowTitle("playlist.library")
         self.setGeometry(0, 0, 800, 400)

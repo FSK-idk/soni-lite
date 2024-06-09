@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QWidget, QLabel
 from PySide6.QtGui import QResizeEvent, QPixmap
-from PySide6.QtCore import Qt, QSize
+from PySide6.QtCore import Qt
 
 from etc.audio_data import AudioData
 
@@ -14,7 +14,7 @@ class IllustrationWidget(QWidget):
         super().__init__(parent)
 
         self.fullness = 0.8
-        self.pixmap = QPixmap(":/images/icon.png")
+        self.pixmap = QPixmap(":/image/icon.png")
         self.pixmap_ratio = self.pixmap.width() / self.pixmap.height()
 
         self.illustration = QLabel(self)
@@ -48,11 +48,11 @@ class IllustrationWidget(QWidget):
         self.updateIllustration()
 
     def clearPixmap(self) -> None:
-        self.pixmap = QPixmap(":/images/icon.png")
+        self.pixmap = QPixmap(":/image/icon.png")
         self.pixmap_ratio = self.pixmap.width() / self.pixmap.height()
         self.updateIllustration()
 
-    def updateIllustration(self):
+    def updateIllustration(self) -> None:
         size_x = int(self.width() * self.fullness)
         size_y = int(self.height() * self.fullness)
         screen_ratio = size_x / size_y

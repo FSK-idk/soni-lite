@@ -2,11 +2,8 @@ import os
 from typing import List
 
 from PySide6.QtGui import QPixmap
-from PySide6.QtCore import QByteArray, QBuffer, Qt, QIODevice
-from PySide6.QtSql import (
-    QSqlDatabase,
-    QSqlQuery
-)
+from PySide6.QtCore import QByteArray, QBuffer, QIODevice
+from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
 from etc.audio_data import AudioData
 from etc.table_default import TableDefault

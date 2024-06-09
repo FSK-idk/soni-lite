@@ -1,17 +1,14 @@
 import os
 
-from PySide6.QtWidgets import (
-    QApplication,
-    QMainWindow,
-    QStackedLayout,
-    QWidget,
-)
-from PySide6.QtGui import QScreen, QAction
+from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QToolBar
+from PySide6.QtGui import QScreen, QAction, QPixmap
+from PySide6.QtCore import Qt
 
 from etc.data_base import data_base
 
 from view.basic.v_box_layout_widget import VBoxLayoutWidget
 from view.basic.h_box_layout_widget import HBoxLayoutWidget
+from view.basic.stacked_layout_widget import StackedLayoutWidget
 
 from view.widget.header_widget import TrackHeaderWidget
 from view.widget.audio_player_widget import AudioPlayerWidget
@@ -21,7 +18,8 @@ from view.widget.playlist_widget import PlaylistWidget
 
 from view.window.audio_library_window import AudioLibraryWindow
 from view.window.playlist_library_window import PlaylistLibraryWindow
-from view.window.settings_window import SettingsWindow
+
+import resources.resources_rc
 
 
 class AudioPlayerWindow(QMainWindow):
@@ -36,7 +34,6 @@ class AudioPlayerWindow(QMainWindow):
 
         self.audio_library = AudioLibraryWindow()
         self.playlist_library = PlaylistLibraryWindow()
-        self.settings = SettingsWindow()
 
         self.timeline = TimelineWidget(self)
         self.illustration = IllustrationWidget(self)
@@ -57,7 +54,7 @@ class AudioPlayerWindow(QMainWindow):
         self.audio_player.nextRandomAudio.connect(self.playlist.nextRandom)
         self.audio_player.prevAudio.connect(self.playlist.prev)
 
-        self.right_stack_layout = QStackedLayout()
+        self.right_stack_layout = StackedLayoutWidget()
         self.right_stack_layout.addWidget(self.audio_player)
         self.right_stack_layout.addWidget(self.playlist)
 
@@ -78,22 +75,19 @@ class AudioPlayerWindow(QMainWindow):
         self.widget.setLayout(self.main_layout)
         self.setCentralWidget(self.widget)
 
-        self.open_playlist_library_action = QAction("playlist", self)
+        self.toolbar = QToolBar(self)
+        self.toolbar.setFloatable(False)
+        self.toolbar.setMovable(False)
+        self.addToolBar(self.toolbar)
+        self.toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+
+        self.open_playlist_library_action = QAction(QPixmap(":icon/list-music-white.svg"), "playlist", self)
         self.open_playlist_library_action.triggered.connect(self.playlist_library.show)
-        self.menuBar().addAction(self.open_playlist_library_action)
+        self.toolbar.addAction(self.open_playlist_library_action)
 
-        self.open_audio_library_action = QAction("library", self)
+        self.open_audio_library_action = QAction(QPixmap(":icon/library-white.svg"), "library", self)
         self.open_audio_library_action.triggered.connect(self.audio_library.show)
-        self.menuBar().addAction(self.open_audio_library_action)
-
-        self.open_settings_action = QAction("settings", self)
-        self.open_settings_action.triggered.connect(self.settings.show)
-        self.menuBar().addAction(self.open_settings_action)
-
-        self.test_action = QAction("test", self)
-        self.test_action.setCheckable(True)
-        self.test_action.triggered.connect(self.test)
-        self.menuBar().addAction(self.test_action)
+        self.toolbar.addAction(self.open_audio_library_action)
 
         self.setWindowTitle("soni.lite")
         self.setGeometry(0, 0, 800, 400)
@@ -108,12 +102,6 @@ class AudioPlayerWindow(QMainWindow):
         self.playlist_open = not self.playlist_open
         self.right_stack_layout.setCurrentIndex(1 if self.playlist_open else 0)
 
-    def closeEvent(self, event):
+    def closeEvent(self, event) -> None:
         self.audio_library.close()
         self.playlist_library.close()
-        self.settings.close()
-
-    def test(self) -> None:
-        print("test")
-
-        return

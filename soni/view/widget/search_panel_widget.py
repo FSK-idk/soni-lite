@@ -1,10 +1,11 @@
 from typing import List
 
 from PySide6.QtWidgets import QWidget
+from PySide6.QtGui import QPixmap
 from PySide6.QtCore import Qt, Signal
 
-from etc.audio_data import AudioData
 from etc.config import config
+from etc.audio_data import AudioData
 
 from view.basic.push_button_widget import PushButtonWidget
 from view.basic.v_box_layout_widget import VBoxLayoutWidget
@@ -16,6 +17,8 @@ from view.tile.combo_box_tile import ComboBoxTile
 from view.tile.line_edit_tile import LineEditTile
 
 from view.widget.audio_table_header_settings_widget import AudioTableHeaderSettingsWidget
+
+import resources.resources_rc
 
 
 class SearchPanelWidget(QWidget):
@@ -67,14 +70,17 @@ class SearchPanelWidget(QWidget):
 
         self.header_settings.headerChanged.connect(self.headerChanged.emit)
 
-        self.advanced_button.setText("Advanced")
+        self.advanced_button.setIcon(QPixmap(":icon/scroll-text-white.svg"))
+        self.advanced_button.setText("advanced")
         self.advanced_button.clicked.connect(self.openAdvancedPanel)
-        self.standard_button.setText("Standard")
+        self.standard_button.setIcon(QPixmap(":icon/scroll-white.svg"))
+        self.standard_button.setText("standard")
         self.standard_button.clicked.connect(self.openStandardPanel)
 
-        self.search_button.setText("Search")
+        self.search_button.setIcon(QPixmap(":icon/search-white.svg"))
+        self.search_button.setText("search")
         self.search_button.clicked.connect(self.onSearchClicked)
-        self.clear_button.setText("Clear")
+        self.clear_button.setIcon(QPixmap(":icon/eraser-white.svg"))
         self.clear_button.clicked.connect(self.clearInput)
 
         self.standard_parameters: List[QWidget] = []

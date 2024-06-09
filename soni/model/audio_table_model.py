@@ -23,7 +23,7 @@ header_title = {
 
 
 class AudioTableModel(QSqlQueryModel):
-    def __init__(self, parent: QWidget | None = None):
+    def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         
         self.descending = False
@@ -33,14 +33,14 @@ class AudioTableModel(QSqlQueryModel):
         self.updateTable()
         self.updateHeader()
 
-    def setSearchData(self, search_data: AudioData):
+    def setSearchData(self, search_data: AudioData) -> None:
         self.search_data = search_data
 
-    def setSortData(self, order: Qt.SortOrder, sort_column: int):
+    def setSortData(self, order: Qt.SortOrder, sort_column: int) -> None:
         self.descending = (order != Qt.SortOrder.DescendingOrder)
         self.sort_column = sort_column
 
-    def updateTable(self):
+    def updateTable(self) -> None:
         query = QSqlQuery(data_base.data_base)
         query.prepare(Query.selectAudioTable(self.descending, self.sort_column))
         query.bindValue(":name", self.search_data.name)
@@ -55,7 +55,7 @@ class AudioTableModel(QSqlQueryModel):
         query.exec()
         self.setQuery(query)
 
-    def updateHeader(self):
+    def updateHeader(self) -> None:
         idx = 0
         for key, val in config.items("Audio Library Shown Parameters"):
             if val == "True":

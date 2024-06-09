@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import QWidget
+from PySide6.QtGui import QPixmap
 from PySide6.QtCore import Signal, QModelIndex
 
 from view.basic.v_box_layout_widget import VBoxLayoutWidget
@@ -6,6 +7,8 @@ from view.basic.v_box_layout_widget import VBoxLayoutWidget
 from view.tile.push_line_edit_tile import PushLineEditTile
 
 from view.widget.playlist_table_widget import PlaylistTableWidget
+
+import resources.resources_rc
 
 
 class PlaylistPanelWidget(QWidget):
@@ -18,7 +21,7 @@ class PlaylistPanelWidget(QWidget):
         self.playlist_table = PlaylistTableWidget(self)
 
         self.line.setTitle("Name")
-        self.line.setButtonText("...")
+        self.line.setButtonPixmap(QPixmap(":icon/search-white.svg"))
         self.line.clicked.connect(self.playlist_table.search)
         self.playlist_table.selectionModel().currentRowChanged.connect(self.onChangedRow)
 

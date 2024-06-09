@@ -1,11 +1,6 @@
 import os
 
-from PySide6.QtWidgets import (
-    QApplication,
-    QWidget,
-    QDialog,
-    QMessageBox
-)
+from PySide6.QtWidgets import QApplication, QWidget, QDialog, QMessageBox
 from PySide6.QtGui import QScreen, QPixmap
 from PySide6.QtCore import Qt
 
@@ -19,6 +14,8 @@ from view.tile.text_edit_tile import TextEditTile
 
 from view.widget.illustration_widget import IllustrationWidget
 from view.widget.audio_panel_widget import AudioPanelWidget
+
+import resources.resources_rc
 
 
 class ModifyAudioDialog(QDialog):
@@ -43,9 +40,11 @@ class ModifyAudioDialog(QDialog):
         self.text.setText(self.audio_data.text)
         self.audio_panel.setAudioData(self.audio_data)
         self.audio_panel.pictureChanged.connect(self.onPictureChanged)
-        self.save_button.setText("Save")
+        self.save_button.setIcon(QPixmap(":icon/save-white.svg"))
+        self.save_button.setText("save")
         self.save_button.clicked.connect(self.save)
-        self.cancel_button.setText("Cancel")
+        self.cancel_button.setIcon(QPixmap(":icon/ban-white.svg"))
+        self.cancel_button.setText("cancel")
         self.cancel_button.clicked.connect(self.reject)
 
         self.left_layout = VBoxLayoutWidget()

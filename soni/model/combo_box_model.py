@@ -4,6 +4,7 @@ from PySide6.QtSql import QSqlQueryModel
 from etc.data_base import data_base
 from etc.query import Query
 
+
 select_query = {
     "Genre": Query.selectGenreNames,
     "Performer": Query.selectPerformerNames,
@@ -17,7 +18,7 @@ select_query = {
 
 
 class ComboBoxModel(QSqlQueryModel):
-    def __init__(self, parent: QWidget | None = None):
+    def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
         self.descending = False
@@ -29,7 +30,6 @@ class ComboBoxModel(QSqlQueryModel):
     def setTable(self, table_name: str) -> None:
         self.table_name = table_name
         self.setQuery(select_query[self.table_name](self.descending), data_base.data_base)
-        # self.sort(0, Qt.SortOrder.AscendingOrder) # TODO: CHECK IF NEED
     
     def updateTable(self) -> None:
         self.setQuery(select_query[self.table_name](self.descending), data_base.data_base)

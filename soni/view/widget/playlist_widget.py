@@ -1,18 +1,13 @@
 import random
 
-from PySide6.QtWidgets import (
-    QWidget,
-    QTableView,
-    QAbstractItemView,
-    QHeaderView,
-)
-from PySide6.QtGui import QFont ,QPalette
-from PySide6.QtCore import Qt, Signal, QItemSelection
+from PySide6.QtWidgets import QWidget
+from PySide6.QtGui import QPixmap
+from PySide6.QtCore import Signal, QItemSelection
 
 from etc.audio_data import AudioData
 
 from model.combo_box_model import ComboBoxModel
-from model.playlist_model import PlaylistModel, LoopFormat
+from model.playlist_model import PlaylistModel
 
 from view.basic.v_box_layout_widget import VBoxLayoutWidget
 from view.basic.h_box_layout_widget import HBoxLayoutWidget
@@ -20,6 +15,8 @@ from view.basic.combo_box_widget import ComboBoxWidget
 from view.basic.push_button_widget import PushButtonWidget
 
 from view.widget.playlist_audio_table_widget import PlaylistAudioTableWidget
+
+import resources.resources_rc
 
 
 class PlaylistWidget(QWidget):
@@ -44,9 +41,9 @@ class PlaylistWidget(QWidget):
         self.combo_box.setCurrentIndex(-1)
         self.combo_box.lineEdit().setEnabled(False)
         self.combo_box.currentTextChanged.connect(self.playlist_audio_table.setPlaylistName)
-        self.button_up.setText("up")
+        self.button_up.setIcon(QPixmap(":icon/chevron-up-white.svg"))
         self.button_up.clicked.connect(self.moveAudioUp)
-        self.button_down.setText("down")
+        self.button_down.setIcon(QPixmap(":icon/chevron-down-white.svg"))
         self.button_down.clicked.connect(self.moveAudioDown)
         self.playlist_audio_table.selectionModel().selectionChanged.connect(self.onSelectionChanged)
 
@@ -81,7 +78,7 @@ class PlaylistWidget(QWidget):
             audio_data = self.playlist_model.audio_datas[self.current_idx]
             self.audioChanged.emit(audio_data)
 
-    def prev(self):
+    def prev(self) -> None:
         if self.playlist_model.audio_datas:
             self.current_idx = (self.current_idx - 1) % len(self.playlist_model.audio_datas)
             audio_data = self.playlist_model.audio_datas[self.current_idx]

@@ -29,9 +29,8 @@ class ComboBoxTile(QWidget):
 
     def setTable(self, table_name: str) -> None:
         self.combo_box_model.setTable(table_name)
-        # self.combo_box.setModelColumn(0) # TODO: CHECK IF NEED
 
-    def setReadOnly(self, read_only: bool):
+    def setReadOnly(self, read_only: bool) -> None:
         self.combo_box.lineEdit().setReadOnly(read_only)
 
     def setEditable(self, editable: bool) -> None:

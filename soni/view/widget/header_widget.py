@@ -1,7 +1,5 @@
-from PySide6.QtWidgets import (
-    QWidget,
-    QSizePolicy,
-)
+from PySide6.QtWidgets import QWidget, QSizePolicy
+from PySide6.QtGui import QPalette, QColor
 from PySide6.QtCore import Qt, Signal
 
 from etc.audio_data import AudioData
@@ -28,6 +26,11 @@ class TrackHeaderWidget(QWidget):
         self.setLayout(self.main_layout)
 
         self.setMinimumSize(100, 30)
+
+        palette = QPalette()
+        palette.setColor(QPalette.ColorRole.Window, QColor(40, 40, 40))
+        self.setAutoFillBackground(True) 
+        self.setPalette(palette)
 
     def headerClickedEvent(self) -> None:
         self.clicked.emit()

@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import QWidget, QSizePolicy
+from PySide6.QtGui import QPixmap
 from PySide6.QtCore import Signal
 
 from view.basic.label_widget import LabelWidget
@@ -18,7 +19,6 @@ class PushLineEditTile(QWidget):
         self.line_edit = LineEditWidget(self)
         self.button = PushButtonWidget(self)
 
-        self.button.setText("...")
         self.button.setFixedWidth(30)
         self.button.clicked.connect(self.onClicked)
 
@@ -38,11 +38,14 @@ class PushLineEditTile(QWidget):
     def onClicked(self) -> None:
         self.clicked.emit(self.line_edit.text())
 
-    def setReadOnly(self, read_only: bool):
+    def setReadOnly(self, read_only: bool) -> None:
         self.line_edit.setReadOnly(read_only)
 
     def setButtonText(self, text: str) -> None:
         self.button.setText(text)
+
+    def setButtonPixmap(self, pixmap: QPixmap) -> None:
+        self.button.setIcon(pixmap)
 
     def setTitle(self, text: str) -> None:
         self.title.setText(text)

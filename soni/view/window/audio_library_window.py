@@ -1,12 +1,6 @@
-from PySide6.QtWidgets import (
-    QApplication,
-    QMainWindow,
-    QWidget,
-)
-from PySide6.QtGui import (
-    QScreen,
-    QAction,
-)
+from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QToolBar
+from PySide6.QtGui import QScreen, QAction, QPixmap
+from PySide6.QtCore import Qt
 
 from view.dialog.new_audio_dialog import NewAudioDialog
 from view.dialog.modify_audio_dialog import ModifyAudioDialog
@@ -39,15 +33,21 @@ class AudioLibraryWindow(QMainWindow):
         self.widget.setLayout(self.main_layout)
         self.setCentralWidget(self.widget)
 
-        self.new_audio_action = QAction("new", self)
+        self.toolbar = QToolBar(self)
+        self.toolbar.setFloatable(False)
+        self.toolbar.setMovable(False)
+        self.addToolBar(self.toolbar)
+        self.toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
+        
+        self.new_audio_action = QAction(QPixmap(":icon/file-plus-white.svg"), "new", self)
         self.new_audio_action.triggered.connect(self.newAudio)
-        self.menuBar().addAction(self.new_audio_action)
-        self.modify_audio_action = QAction("modify", self)
+        self.toolbar.addAction(self.new_audio_action)
+        self.modify_audio_action = QAction(QPixmap(":icon/pencil-white.svg"), "modify", self)
         self.modify_audio_action.triggered.connect(self.modifyAudio)
-        self.menuBar().addAction(self.modify_audio_action)
-        self.delete_audio_action = QAction("delete", self)
+        self.toolbar.addAction(self.modify_audio_action)
+        self.delete_audio_action = QAction(QPixmap(":icon/file-x-white.svg"), "delete", self)
         self.delete_audio_action.triggered.connect(self.deleteAudio)
-        self.menuBar().addAction(self.delete_audio_action)
+        self.toolbar.addAction(self.delete_audio_action)
 
         self.setWindowTitle("audio.library")
         self.setGeometry(0, 0, 800, 400)

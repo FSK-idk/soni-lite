@@ -1,8 +1,4 @@
-from PySide6.QtWidgets import (
-    QApplication,
-    QWidget,
-    QDialog,
-)
+from PySide6.QtWidgets import QApplication, QWidget, QDialog
 from PySide6.QtGui import QScreen
 
 from etc.data_base import data_base
@@ -14,7 +10,7 @@ from view.basic.h_box_layout_widget import HBoxLayoutWidget
 
 
 class DeleteAudioDialog(QDialog):
-    def __init__(self, id: int, parent: QWidget | None = None):
+    def __init__(self, id: int, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
         self.id = id
@@ -24,9 +20,9 @@ class DeleteAudioDialog(QDialog):
         self.no_button = PushButtonWidget(self)
 
         self.label.setText("Are you sure?")
-        self.yes_button.setText("Yes")
+        self.yes_button.setText("yes")
         self.yes_button.clicked.connect(self.yes)
-        self.no_button.setText("No")
+        self.no_button.setText("no")
         self.no_button.clicked.connect(self.reject)
 
         self.buttons_layout = HBoxLayoutWidget()
@@ -50,6 +46,6 @@ class DeleteAudioDialog(QDialog):
         geometry.moveCenter(center)
         self.move(geometry.topLeft())
     
-    def yes(self):
+    def yes(self) -> None:
         data_base.deleteAudio(self.id)
         self.accept()

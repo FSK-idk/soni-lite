@@ -1,10 +1,5 @@
-from PySide6.QtWidgets import (
-    QApplication,
-    QWidget,
-    QDialog,
-    QMessageBox
-)
-from PySide6.QtGui import QScreen
+from PySide6.QtWidgets import QApplication, QWidget, QDialog, QMessageBox
+from PySide6.QtGui import QScreen, QPixmap
 
 from etc.data_base import data_base
 
@@ -14,9 +9,11 @@ from view.basic.h_box_layout_widget import HBoxLayoutWidget
 
 from view.tile.line_edit_tile import LineEditTile
 
+import resources.resources_rc
+
 
 class NewPlaylistDialog(QDialog):
-    def __init__(self, parent: QWidget | None = None):
+    def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
         self.name = ""
@@ -26,9 +23,11 @@ class NewPlaylistDialog(QDialog):
         self.cancel_button = PushButtonWidget(self)
 
         self.line_edit.setTitle("Name")
-        self.save_button.setText("Save")
+        self.save_button.setIcon(QPixmap(":icon/save-white.svg"))
+        self.save_button.setText("save")
         self.save_button.clicked.connect(self.save)
-        self.cancel_button.setText("Cancel")
+        self.cancel_button.setIcon(QPixmap(":icon/ban-white.svg"))
+        self.cancel_button.setText("cancel")
         self.cancel_button.clicked.connect(self.reject)
 
         self.buttons_layout = HBoxLayoutWidget()
@@ -52,7 +51,7 @@ class NewPlaylistDialog(QDialog):
         geometry.moveCenter(center)
         self.move(geometry.topLeft())
     
-    def save(self):
+    def save(self) -> None:
         self.name = self.line_edit.text()
         if self.name == "":
             dlg = QMessageBox(self)

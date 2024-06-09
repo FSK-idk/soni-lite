@@ -1,11 +1,5 @@
-from PySide6.QtWidgets import (
-    QWidget,
-    QTableView,
-    QAbstractItemView,
-    QHeaderView
-)
+from PySide6.QtWidgets import QWidget, QTableView, QAbstractItemView, QHeaderView
 from PySide6.QtGui import QFont
-from PySide6.QtCore import QItemSelectionModel
 
 from model.playlist_audio_table_model import PlaylistAudioTableModel
 

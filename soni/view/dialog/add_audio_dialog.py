@@ -1,10 +1,5 @@
-from PySide6.QtWidgets import (
-    QApplication,
-    QWidget,
-    QDialog,
-    QMessageBox
-)
-from PySide6.QtGui import QScreen
+from PySide6.QtWidgets import QApplication, QWidget, QDialog, QMessageBox
+from PySide6.QtGui import QScreen, QPixmap
 from PySide6.QtCore import Qt
 
 from etc.data_base import data_base
@@ -16,9 +11,11 @@ from view.basic.h_box_layout_widget import HBoxLayoutWidget
 from view.widget.search_panel_widget import SearchPanelWidget
 from view.widget.audio_table_widget import AudioTableWidget
 
+import resources.resources_rc
+
 
 class AddAudioDialog(QDialog):
-    def __init__(self, playlist_id: str, parent: QWidget | None = None):
+    def __init__(self, playlist_id: str, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
         self.playlist_id = playlist_id
@@ -31,9 +28,11 @@ class AddAudioDialog(QDialog):
         self.search_panel.headerChanged.connect(self.audio_table.updateTable)
         self.search_panel.searchClicked.connect(self.audio_table.search)
 
-        self.add_button.setText("Add")
+        self.add_button.setIcon(QPixmap(":icon/save-white.svg"))
+        self.add_button.setText("add")
         self.add_button.clicked.connect(self.add)
-        self.cancel_button.setText("Cancel")
+        self.cancel_button.setIcon(QPixmap(":icon/ban-white.svg"))
+        self.cancel_button.setText("cancel")
         self.cancel_button.clicked.connect(self.reject)
 
         self.buttons_layout = HBoxLayoutWidget()
@@ -60,7 +59,7 @@ class AddAudioDialog(QDialog):
         geometry.moveCenter(center)
         self.move(geometry.topLeft())
     
-    def add(self):
+    def add(self) -> None:
         if not self.audio_table.selectionModel().selectedRows():
             dlg = QMessageBox(self)
             dlg.setWindowTitle("Attention")

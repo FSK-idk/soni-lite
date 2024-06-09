@@ -1,8 +1,4 @@
-from PySide6.QtWidgets import (
-    QWidget,
-    QScrollArea,
-    QFileDialog
-)
+from PySide6.QtWidgets import QWidget, QScrollArea, QFileDialog
 from PySide6.QtCore import Qt, Signal
 
 from etc.audio_data import AudioData
@@ -62,6 +58,7 @@ class AudioPanelWidget(QScrollArea):
         self.clearInput()
 
         self.main_layout = VBoxLayoutWidget()
+        self.main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.main_layout.addWidget(self.name)
         self.main_layout.addWidget(self.filepath)
         self.main_layout.addWidget(self.album_name)

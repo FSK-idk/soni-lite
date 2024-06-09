@@ -1,21 +1,13 @@
 import os
 import time
 
-from PySide6.QtWidgets import (
-    QWidget,
-)
-from PySide6.QtCore import (
-    Qt,
-    QUrl,
-    Signal,
-)
-from PySide6.QtMultimedia import (
-    QMediaPlayer,
-    QAudioOutput,
-)
+from PySide6.QtWidgets import QWidget
+from PySide6.QtCore import QUrl, Signal
+from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
+
+from etc.audio_data import AudioData
 
 from model.playlist_model import LoopFormat
-from etc.audio_data import AudioData
 
 
 class AudioPlayerModel(QWidget):
@@ -67,16 +59,16 @@ class AudioPlayerModel(QWidget):
             case LoopFormat.loop_audio:
                 self.looping = LoopFormat.loop_none
 
-    def random(self):
+    def random(self) -> None:
         self.randoming = not self.randoming
 
-    def next(self):
+    def next(self) -> None:
         if self.randoming:
             self.nextRandomAudio.emit()
         else:
             self.nextAudio.emit()
 
-    def prev(self):
+    def prev(self) -> None:
         self.prevAudio.emit()
 
     def setTime(self, milliseconds: int) -> None:
@@ -85,7 +77,7 @@ class AudioPlayerModel(QWidget):
     def setVolume(self, volume: int) -> None:
         self.audio_output.setVolume(volume / 100)
 
-    def setAudioData(self, audio_data: AudioData):
+    def setAudioData(self, audio_data: AudioData) -> None:
         self.audio_data = audio_data
         if os.path.isfile(audio_data.filepath):
             if self.playing:

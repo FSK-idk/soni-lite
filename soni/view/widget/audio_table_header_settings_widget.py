@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QWidget
-from PySide6.QtCore import Signal
+from PySide6.QtGui import QPixmap
+from PySide6.QtCore import Signal, Qt
 
 from etc.config import config
 
@@ -7,6 +8,8 @@ from view.basic.label_widget import LabelWidget
 from view.basic.push_button_widget import PushButtonWidget
 from view.basic.check_box_widget import CheckBoxWidget
 from view.basic.v_box_layout_widget import VBoxLayoutWidget
+
+import resources.resources_rc
 
 
 check_box_text = {
@@ -36,10 +39,12 @@ class AudioTableHeaderSettingsWidget(QWidget):
             if parameter in check_box_text:
                 self.parameter_check_box[parameter].setText(check_box_text[parameter])
                 self.parameter_check_box[parameter].setChecked(checked == "True")
-        self.apply_button.setText("Apply")
+        self.apply_button.setIcon(QPixmap(":icon/square-pen-white.svg"))
+        self.apply_button.setText("apply")
         self.apply_button.clicked.connect(self.apply)
 
         self.main_layout = VBoxLayoutWidget()
+        self.main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.main_layout.addWidget(self.title)
         for _, check_box in self.parameter_check_box.items():
             self.main_layout.addWidget(check_box)

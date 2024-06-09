@@ -2,11 +2,9 @@ import enum
 from typing import List
 
 from PySide6.QtWidgets import QWidget
-from PySide6.QtCore import Qt, Signal
-from PySide6.QtSql import QSqlQuery, QSqlQueryModel
+from PySide6.QtCore import Signal
 
 from etc.data_base import data_base
-from etc.query import Query
 from etc.audio_data import AudioData
 
 
@@ -19,7 +17,7 @@ class LoopFormat(enum.Enum):
 class PlaylistModel(QWidget):
     playlistChanged = Signal(int)
 
-    def __init__(self, parent: QWidget | None = None):
+    def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
         self.name = ""
