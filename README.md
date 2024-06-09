@@ -3,7 +3,7 @@
 A simple audio player based on sqlite database.
 
 
-## instalation
+## installation
 
 Clone repository to your local folder
 
