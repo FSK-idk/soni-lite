@@ -4,6 +4,8 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, Signal
 
+from etc.audio_data import AudioData
+
 from view.basic.push_label import PushLabelWidget
 from view.basic.h_box_layout_widget import HBoxLayoutWidget
 
@@ -29,6 +31,9 @@ class TrackHeaderWidget(QWidget):
 
     def headerClickedEvent(self) -> None:
         self.clicked.emit()
+
+    def setAudioData(self, audio_data: AudioData) -> None:
+        self.setName(audio_data.name)
 
     def setName(self, name: str) -> None:
         self.header.setText(name)

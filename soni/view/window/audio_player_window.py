@@ -42,24 +42,28 @@ class AudioPlayerWindow(QMainWindow):
 
         self.timeline = TimelineWidget(self)
         self.illustration = IllustrationWidget(self)
-        self.track_header = TrackHeaderWidget(self)
+        self.audio_header = TrackHeaderWidget(self)
         self.audio_player = AudioPlayerWidget(self)
         self.playlist = PlaylistWidget(self)
 
         self.timeline.timeChanged.connect(self.audio_player.setTime)
-        self.track_header.clicked.connect(self.openPlaylist)
+        self.audio_header.clicked.connect(self.openPlaylist)
         self.audio_player.durationChanged.connect(self.timeline.setEndMilliseconds)
         self.audio_player.timeChanged.connect(self.timeline.setCurrentMilliseconds)
         self.audio_player.audioEnded.connect(self.audio_player.onAudioEnded)
         self.playlist.audioChanged.connect(self.audio_player.setAudioData)
         self.playlist.audioChanged.connect(self.illustration.setAudioData)
+        self.playlist.audioChanged.connect(self.audio_header.setAudioData)
+        self.audio_player.nextAudio.connect(self.playlist.next)
+        self.audio_player.nextRandomAudio.connect(self.playlist.nextRandom)
+        self.audio_player.prevAudio.connect(self.playlist.prev)
 
         self.right_stack_layout = QStackedLayout()
         self.right_stack_layout.addWidget(self.audio_player)
         self.right_stack_layout.addWidget(self.playlist)
 
         self.right_side_layout = VBoxLayoutWidget()
-        self.right_side_layout.addWidget(self.track_header)
+        self.right_side_layout.addWidget(self.audio_header)
         self.right_side_layout.addLayout(self.right_stack_layout)
 
         self.center_layout = HBoxLayoutWidget()

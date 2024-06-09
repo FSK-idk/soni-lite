@@ -18,6 +18,9 @@ class AudioPlayerWidget(QWidget):
     durationChanged = Signal(int)
     timeChanged = Signal(int)
     audioEnded = Signal()
+    nextAudio = Signal()
+    nextRandomAudio = Signal()
+    prevAudio = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -26,7 +29,7 @@ class AudioPlayerWidget(QWidget):
 
         self.audio_player_model.durationChanged.connect(self.durationChanged.emit)
         self.audio_player_model.timeChanged.connect(self.timeChanged.emit)
-        self.audio_player_model.audioEnded.connect(self.audioEnded.emit)
+        self.audio_player_model.audioEnded.connect(self.onAudioEnded)
 
         self.button_play = PushButtonWidget(self)
         self.button_random = PushButtonWidget(self)
@@ -44,6 +47,9 @@ class AudioPlayerWidget(QWidget):
         self.button_next.clicked.connect(self.audio_player_model.next)
         self.button_prev.setText("Prev")
         self.button_prev.clicked.connect(self.audio_player_model.prev)
+        self.audio_player_model.nextAudio.connect(self.nextAudio.emit)
+        self.audio_player_model.nextRandomAudio.connect(self.nextRandomAudio.emit)
+        self.audio_player_model.prevAudio.connect(self.prevAudio.emit)
 
         self.center_layout = HBoxLayoutWidget()
         self.center_layout.addStretch(1)
@@ -72,10 +78,10 @@ class AudioPlayerWidget(QWidget):
             case LoopFormat.loop_playlist:
                 self.audio_player_model.next()
                 self.audio_player_model.play()
-                self.button_loop.setText("Playing")
+                self.button_play.setText("Playing")
             case LoopFormat.loop_audio:
                 self.audio_player_model.play()
-                self.button_loop.setText("Playing")
+                self.button_play.setText("Playing")
 
     def play(self):
         if not self.audio_player_model.playing:

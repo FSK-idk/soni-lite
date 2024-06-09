@@ -23,6 +23,7 @@ class AudioPlayerModel(QWidget):
     timeChanged = Signal(int)
     audioEnded = Signal()
     nextAudio = Signal()
+    nextRandomAudio = Signal()
     prevAudio = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
@@ -70,7 +71,10 @@ class AudioPlayerModel(QWidget):
         self.randoming = not self.randoming
 
     def next(self):
-        self.nextAudio.emit()
+        if self.randoming:
+            self.nextRandomAudio.emit()
+        else:
+            self.nextAudio.emit()
 
     def prev(self):
         self.prevAudio.emit()

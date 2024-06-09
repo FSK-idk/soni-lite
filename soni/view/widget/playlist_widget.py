@@ -1,3 +1,5 @@
+import random
+
 from PySide6.QtWidgets import (
     QWidget,
     QTableView,
@@ -28,11 +30,9 @@ class PlaylistWidget(QWidget):
 
         self.random = False
         self.loop_format = LoopFormat.loop_none
-        self.current_idx = -1
 
         self.playlist_model = PlaylistModel()
         self.combo_box_model = ComboBoxModel()
-
 
         self.combo_box_model.setTable("Playlist")
 
@@ -64,27 +64,24 @@ class PlaylistWidget(QWidget):
         self.setLayout(self.main_layout)
 
     def onSelectionChanged(self, selected: QItemSelection, deselected: QItemSelection) -> None:
-        self.current_idx = self.playlist_audio_table.selectionModel().selectedRows(2)[0].data() - 1
-        audio_data = self.playlist_model.audio_datas[self.current_idx]
+        current_idx = self.playlist_audio_table.selectionModel().selectedRows()[0].row()
+        audio_data = self.playlist_model.audio_datas[current_idx]
         self.audioChanged.emit(audio_data)
 
-    def next(self) -> AudioData:
-        audio_data = AudioData()
-        if self.current_idx != -1:
-            match self.loop_format:
-                case LoopFormat.loop_none:
-                    audio_data = self.playlist_model.audio_datas[self.current_idx]
-                case LoopFormat.loop_playlist:
-                    self.current_idx += 1
-                    self.current_idx %= len(self.playlist_model.audio_datas)
-                    audio_data = self.playlist_model.audio_datas[self.current_idx]
-                case LoopFormat.loop_audio:
-                    self.current_idx += 1
-                    if self.current_idx >= len(self.playlist_model.audio_datas):
-                        self.current_idx = -1
-                    else:
-                        audio_data = self.playlist_model.audio_datas[self.current_idx]
-        return audio_data
+    def next(self) -> None:
+        current_idx = self.playlist_audio_table.selectionModel().selectedRows()[0].row()
+        self.playlist_audio_table.selectRow((current_idx + 1) % len(self.playlist_model.audio_datas))
+
+    def nextRandom(self) -> None:
+        current_idx = self.playlist_audio_table.selectionModel().selectedRows()[0].row()
+        idx = current_idx
+        while idx == current_idx:
+            idx = random.randint(0, len(self.playlist_model.audio_datas) - 1)
+        self.playlist_audio_table.selectRow(idx)
+
+    def prev(self):
+        current_idx = self.playlist_audio_table.selectionModel().selectedRows()[0].row()
+        self.playlist_audio_table.selectRow((current_idx - 1) % len(self.playlist_model.audio_datas))
 
     def moveAudioUp(self) -> None:
         if self.playlist_audio_table.selectionModel().selectedRows() \
