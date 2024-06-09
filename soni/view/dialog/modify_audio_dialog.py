@@ -86,10 +86,11 @@ class ModifyAudioDialog(QDialog):
             self.illustration.clearPixmap()
 
     def save(self) -> None:
-        self.audio_data = self.audio_panel.audioData()
-        self.audio_data.id = self.id
-        self.audio_data.text = self.text.text()
-        if self.audio_data.name == "":
+        self.new_audio_data = self.audio_panel.audioData()
+        self.new_audio_data.id = self.id
+        self.new_audio_data.text = self.text.text()
+        self.new_audio_data.picture_png = self.audio_data.picture_png
+        if self.new_audio_data.name == "":
             dlg = QMessageBox(self)
             dlg.setWindowTitle("Attention")
             dlg.setText("You have not entered title")
@@ -97,5 +98,5 @@ class ModifyAudioDialog(QDialog):
             dlg.setIcon(QMessageBox.Icon.Warning)
             dlg.exec()
             return
-        data_base.updateAudio(self.audio_data)
+        data_base.updateAudio(self.new_audio_data)
         self.accept()

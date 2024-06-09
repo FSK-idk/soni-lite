@@ -52,6 +52,7 @@ class AudioPlayerWindow(QMainWindow):
         self.audio_player.timeChanged.connect(self.timeline.setCurrentMilliseconds)
         self.audio_player.audioEnded.connect(self.audio_player.onAudioEnded)
         self.playlist.audioChanged.connect(self.audio_player.setAudioData)
+        self.playlist.audioChanged.connect(self.illustration.setAudioData)
 
         self.right_stack_layout = QStackedLayout()
         self.right_stack_layout.addWidget(self.audio_player)

@@ -2,6 +2,8 @@ from PySide6.QtWidgets import QWidget, QLabel
 from PySide6.QtGui import QResizeEvent, QPixmap
 from PySide6.QtCore import Qt, QSize
 
+from etc.audio_data import AudioData
+
 from view.basic.v_box_layout_widget import VBoxLayoutWidget
 
 import resources.resources_rc
@@ -33,6 +35,13 @@ class IllustrationWidget(QWidget):
     def setFullness(self, fullness: int) -> None:
         self.fullness = fullness
     
+    def setAudioData(self, audio_data: AudioData) -> None:
+        picture_png = audio_data.picture_png
+        if picture_png:
+            pixmap = QPixmap()
+            pixmap.loadFromData(picture_png)
+            self.setPixmap(pixmap)
+
     def setPixmap(self, pixmap: QPixmap) -> None:
         self.pixmap = pixmap
         self.pixmap_ratio = self.pixmap.width() / self.pixmap.height()

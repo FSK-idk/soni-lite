@@ -83,6 +83,7 @@ class AudioPlayerModel(QWidget):
                 time.sleep(.05)
             self.audio_player.setSource(QUrl.fromLocalFile(audio_data.filepath))
             if self.playing:
+                time.sleep(.05)
                 self.audio_player.play()
         else:
             self.nextAudio.emit()

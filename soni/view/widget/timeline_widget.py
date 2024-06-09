@@ -28,6 +28,7 @@ class TimelineWidget(QWidget):
         self.end_time.setAlignment(Qt.AlignmentFlag.AlignRight)
 
         self.timeline = SliderWidget(self)
+        self.timeline.setTracking(False)
         self.timeline.setMaximum(self.time_span.end.milliseconds)
         self.timeline.valueChanged.connect(self.setCurrentMilliseconds)
         self.timeline.sliderMoved.connect(self.timeChanged)

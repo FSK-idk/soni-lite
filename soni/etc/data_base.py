@@ -286,6 +286,8 @@ class DataBase():
             buffer = QBuffer(picture_png)
             buffer.open(QIODevice.OpenModeFlag.WriteOnly)
             pixmap.save(buffer, "PNG")
+        elif audio_data.picture_png:
+            picture_png = audio_data.picture_png
 
         picture_artist_id = None
         if audio_data.picture_artist_name != "":
