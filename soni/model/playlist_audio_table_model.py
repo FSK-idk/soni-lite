@@ -21,18 +21,15 @@ class PlaylistAudioTableModel(QSqlQueryModel):
         self.updateHeader()
 
     def setPlaylistId(self, playlist_id: int) -> None:
-        # print("AAA")
         self.playlist_id = playlist_id
         self.updateTable()
 
     def setPlaylistName(self, name: str) -> None:
-        # print("BBB", name)
         if name != "":
             self.playlist_id = data_base.selectPlaylistId(name)
             self.updateTable()
 
     def updateTable(self) -> None:
-        print("id", self.playlist_id)
         query = QSqlQuery(data_base.data_base)
         query.prepare(Query.selectPlaylistAudioTable(self.descending, self.sort_column))
         query.bindValue(":id", self.playlist_id)

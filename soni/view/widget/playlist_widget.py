@@ -31,6 +31,8 @@ class PlaylistWidget(QWidget):
         self.combo_box_model = ComboBoxModel()
 
         self.combo_box_model.setTable("Playlist")
+        self.combo_box_model.preupdated.connect(self.preupdateComboBox)
+        self.combo_box_model.updated.connect(self.updateComboBox)
 
         self.combo_box = ComboBoxWidget(self)
         self.playlist_audio_table = PlaylistAudioTableWidget(self)
@@ -41,6 +43,7 @@ class PlaylistWidget(QWidget):
         self.combo_box.setCurrentIndex(-1)
         self.combo_box.lineEdit().setEnabled(False)
         self.combo_box.currentTextChanged.connect(self.playlist_audio_table.setPlaylistName)
+        self.combo_box.currentTextChanged.connect(self.combo_box_model.setText)
         self.button_up.setIcon(QPixmap(":icon/chevron-up-white.svg"))
         self.button_up.clicked.connect(self.moveAudioUp)
         self.button_down.setIcon(QPixmap(":icon/chevron-down-white.svg"))
@@ -57,6 +60,13 @@ class PlaylistWidget(QWidget):
         self.main_layout.addLayout(self.button_layout)
 
         self.setLayout(self.main_layout)
+
+    # Need to save text before update
+    def preupdateComboBox(self, text) -> None:
+        self.temp_text = text
+
+    def updateComboBox(self) -> None:
+        self.combo_box.setEditText(self.temp_text)
 
     def onSelectionChanged(self, selected: QItemSelection, deselected: QItemSelection) -> None:
         self.playlist_model.setPlaylist(self.combo_box.currentText())
