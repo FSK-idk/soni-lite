@@ -62,20 +62,14 @@ class AudioLibraryWindow(QMainWindow):
 
     def newAudio(self) -> None:
         dialog = NewAudioDialog(self)
-        if dialog.exec():
-            self.audio_table.updateTable()
-            self.search_panel.updatePanel()
+        dialog.exec()
 
     def modifyAudio(self) -> None:
         if self.audio_table.selectionModel().selectedRows():
             dialog = ModifyAudioDialog(self.audio_table.selectionModel().selectedRows()[0].data(), self)
-            if dialog.exec():
-                self.audio_table.updateTable()
-                self.search_panel.updatePanel()
+            dialog.exec()
         
     def deleteAudio(self) -> None:
         if self.audio_table.selectionModel().selectedRows():
             dialog = DeleteAudioDialog(self.audio_table.selectionModel().selectedRows()[0].data(), self)
-            if dialog.exec():
-                self.audio_table.updateTable()
-                self.search_panel.updatePanel()
+            dialog.exec()

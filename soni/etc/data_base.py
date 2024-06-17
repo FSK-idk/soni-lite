@@ -2,7 +2,7 @@ import os
 from typing import List
 
 from PySide6.QtGui import QPixmap
-from PySide6.QtCore import QByteArray, QBuffer, QIODevice
+from PySide6.QtCore import Signal, QObject, QByteArray, QBuffer, QIODevice
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
 from etc.audio_data import AudioData
@@ -10,7 +10,10 @@ from etc.table_default import TableDefault
 from etc.query import Query
 
 
-class DataBase():
+class DataBase(QObject):
+    updatedAudioTable = Signal()
+    updatedPlaylistTable = Signal()
+    
     def init(self) -> None:
         self.data_base = QSqlDatabase("QSQLITE")
         self.data_base.setDatabaseName("./soni/data/library.sqlite")
@@ -179,6 +182,8 @@ class DataBase():
         query.bindValue(":text_author_id", text_author_id)
         query.exec()
 
+        self.updatedAudioTable.emit()
+
     def selectAudioData(self, id: str) -> AudioData:
         query = QSqlQuery(self.data_base)
         query.prepare(Query.selectAudioData())
@@ -337,12 +342,19 @@ class DataBase():
 
         self.shrink()
 
+        self.updatedAudioTable.emit()
+        self.updatedPlaylistTable.emit()
+
     def deleteAudio(self, id: int) -> None:
         query = QSqlQuery(self.data_base)
         query.prepare(Query.deleteAudio())
         query.bindValue(":id", id)
         query.exec()
+
         self.shrink()
+
+        self.updatedAudioTable.emit()
+        self.updatedPlaylistTable.emit()
 
     def shrink(self):
         query = QSqlQuery(self.data_base)
@@ -491,12 +503,16 @@ class DataBase():
         query.bindValue(":name", name)
         query.exec()
 
+        self.updatedPlaylistTable.emit()
+
     def deletePlaylist(self, id: int) -> None:
         query = QSqlQuery(self.data_base)
         query.prepare(Query.deletePlaylist())
         query.bindValue(":id", id)
         query.exec()
         self.shrink()
+
+        self.updatedPlaylistTable.emit()
 
     def insertPlaylistAudio(self, playlist_id: str, audio_id: str) -> None:
         serial = data_base.countPlaylistAudios(int(playlist_id))
@@ -507,6 +523,8 @@ class DataBase():
         query.bindValue(":audio_id", audio_id)
         query.bindValue(":serial", serial + 1)
         query.exec()
+
+        self.updatedPlaylistTable.emit()
 
     def findPlaylistAudio(self, playlist_id: str, audio_id: str) -> int | None:
         query = QSqlQuery(self.data_base)
@@ -524,6 +542,8 @@ class DataBase():
         query.exec()
 
         self.shrink()
+
+        self.updatedPlaylistTable.emit()
 
     def countPlaylistAudios(self, playlist_id: int) -> int:
         query = QSqlQuery(self.data_base)
@@ -565,6 +585,8 @@ class DataBase():
         query.bindValue(":serial", cur_serial - 1)
         query.exec()
 
+        self.updatedPlaylistTable.emit()
+
     def movePlaylistAudioDown(self, playlist_id: str, audio_id: str) -> None:
         cur_id = self.findPlaylistAudio(playlist_id, audio_id)
         
@@ -597,6 +619,8 @@ class DataBase():
         query.bindValue(":id", cur_id)
         query.bindValue(":serial", cur_serial + 1)
         query.exec()
+
+        self.updatedPlaylistTable.emit()
 
     def selectPlaylistAudioDatas(self, playlist_id: str) -> List[AudioData]:
         query = QSqlQuery(self.data_base)

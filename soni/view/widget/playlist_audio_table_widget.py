@@ -20,24 +20,16 @@ class PlaylistAudioTableWidget(QTableView):
 
     def setPlaylistId(self, id: int) -> None:
         self.playlist_audio_table_model.setPlaylistId(id)
-        self.playlist_audio_table_model.updateTable()
 
     def setPlaylistName(self, name: str) -> None:
         self.playlist_audio_table_model.setPlaylistName(name)
-        self.playlist_audio_table_model.updateTable()
-
-    def updateTable(self) -> None:
-        self.playlist_audio_table_model.updateTable()
-        self.playlist_audio_table_model.updateHeader()
 
     def moveUp(self) -> None:
         row = self.selectionModel().selectedRows()[0].row()
         self.playlist_audio_table_model.moveUp(self.selectionModel().selectedRows()[0].data())
-        self.updateTable()
         self.selectRow(row - 1)
 
     def moveDown(self) -> None:
         row = self.selectionModel().selectedRows()[0].row()
         self.playlist_audio_table_model.moveDown(self.selectionModel().selectedRows()[0].data())
-        self.updateTable()
         self.selectRow(row + 1)

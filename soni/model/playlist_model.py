@@ -23,6 +23,8 @@ class PlaylistModel(QWidget):
         self.name = ""
         self.id = 0
 
+        data_base.updatedPlaylistTable.connect(self.updatePlaylist)
+
         self.audio_datas: List[AudioData] = []
 
     def setPlaylist(self, name: str) -> None:

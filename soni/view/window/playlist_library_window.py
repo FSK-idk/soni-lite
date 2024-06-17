@@ -93,36 +93,27 @@ class PlaylistLibraryWindow(QMainWindow):
 
     def newPlaylist(self) -> None:
         dialog = NewPlaylistDialog(self)
-        if dialog.exec():
-            self.playlist_audio_table.updateTable()
-            self.playlist_panel.updatePanel()
+        dialog.exec()
 
     def deletePlaylist(self) -> None:
         if self.playlist_panel.playlist_table.selectionModel().selectedRows():
             dialog = DeletePlaylistDialog(self.playlist_panel.playlist_table.selectionModel().selectedRows()[0].data(), self)
-            if dialog.exec():
-                self.playlist_audio_table.updateTable()
-                self.playlist_panel.updatePanel()
+            dialog.exec()
 
     def addAudio(self) -> None:
         if self.playlist_panel.playlist_table.selectionModel().selectedRows():
             dialog = AddAudioDialog(self.playlist_panel.playlist_table.selectionModel().selectedRows()[0].data(), self)
-            if dialog.exec():
-                self.playlist_audio_table.updateTable()
-                self.playlist_panel.updatePanel()
+            dialog.exec()
 
     def modifyAudio(self) -> None:
         if self.playlist_audio_table.selectionModel().selectedRows():
             dialog = ModifyAudioDialog(self.playlist_audio_table.selectionModel().selectedRows()[0].data(), self)
-            if dialog.exec():
-                self.playlist_audio_table.updateTable()
-                self.playlist_panel.updatePanel()
+            dialog.exec()
 
     def removeAudio(self) -> None:
         if self.playlist_audio_table.selectionModel().selectedRows() \
             and self.playlist_panel.playlist_table.selectionModel().selectedRows():
             dialog = RemoveAudioDialog(self.playlist_panel.playlist_table.selectionModel().selectedRows()[0].data(),
                                        self.playlist_audio_table.selectionModel().selectedRows()[0].data(), self)
-            if dialog.exec():
-                self.playlist_audio_table.updateTable()
-                self.playlist_panel.updatePanel()
+            dialog.exec()
+            

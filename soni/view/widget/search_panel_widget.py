@@ -134,16 +134,6 @@ class SearchPanelWidget(QWidget):
     def openAdvancedPanel(self) -> None:
         self.stacked_layout.setCurrentIndex(1)
 
-    def updatePanel(self) -> None:
-        self.playlist_name.updateTable()
-        self.genre_name.updateTable()
-        self.performer_name.updateTable()
-        self.composer_name.updateTable()
-        self.publisher_name.updateTable()
-        self.modified_by_name.updateTable()
-        self.picture_artist_name.updateTable()
-        self.text_author_name.updateTable()
-
     def clearInput(self) -> None:
         self.name.clearInput()
         self.playlist_name.clearInput()

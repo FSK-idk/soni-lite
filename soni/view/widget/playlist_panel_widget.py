@@ -34,6 +34,3 @@ class PlaylistPanelWidget(QWidget):
     def onChangedRow(self, cur: QModelIndex, prev: QModelIndex) -> None:
         idx = self.playlist_table.model().index(cur.row(), 0)
         self.changedPlaylist.emit(self.playlist_table.model().data(idx))
-
-    def updatePanel(self) -> None:
-        self.playlist_table.updateTable()

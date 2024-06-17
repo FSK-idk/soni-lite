@@ -30,6 +30,9 @@ class AudioTableModel(QSqlQueryModel):
         self.sort_column = 0
         self.search_data = AudioData()
 
+        data_base.updatedAudioTable.connect(self.updateTable)
+        data_base.updatedAudioTable.connect(self.updateHeader)
+
         self.updateTable()
         self.updateHeader()
 
