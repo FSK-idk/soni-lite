@@ -2,13 +2,24 @@
 
 A simple audio player based on sqlite database.
 
+Works only on Windows, however if you are a Linux user you are able to make it work on your os.
+
+Features:
+- Only black theme
+- Store audio data in your library
+- Combine your audios into playlists
+- Play playlists in audio player
+- The player has random and loop playback functions
+
+![image](https://github.com/FSK-idk/soni-lite/assets/81324348/117f64f9-bb3d-4718-96b4-76d853e0e23a)
+
 
 ## installation
 
 Clone repository to your local folder
 
 ```
-git clone git@github.com:FSK-idk/soni.git
+git clone git@github.com:FSK-idk/soni-lite.git
 ```
 
 Download required packages from requirements.txt
